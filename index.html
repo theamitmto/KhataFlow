@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KhataFlow Pro - Smart Expense & Budget Manager</title>
+    <title>KhataFlow - Smart Expense & Budget Manager</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -13,11 +13,18 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        },
+                        prime: {
+                            emerald: '#10b981',
+                            violet: '#8b5cf6',
+                            indigo: '#6366f1',
+                            sky: '#0284c7',
+                            amber: '#f59e0b'
                         }
                     }
                 }
@@ -29,48 +36,132 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { 
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
+                        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+                        #f8fafc;
+        }
+        .dark body {
+            background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
+                        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                        #030712;
+        }
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(229, 231, 235, 0.5);
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.06);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .dark .glass-card {
-            background: rgba(30, 41, 59, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(51, 65, 85, 0.5);
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .interactive-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .interactive-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #6366f1, #10b981, #ec4899);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .interactive-card:hover::before {
+            opacity: 1;
+        }
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 35px -10px rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+        .prime-gradient-text {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 50%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .dark .prime-gradient-text {
+            background: linear-gradient(135deg, #818cf8 0%, #22d3ee 50%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes pulseSoft {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+            50% { transform: scale(1.03); box-shadow: 0 0 30px rgba(16, 185, 129, 0.5); }
+        }
+        .animate-pulse-soft {
+            animation: pulseSoft 4s infinite ease-in-out;
+        }
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-3px) rotate(3deg); }
+        }
+        .animate-float-icon {
+            animation: floatIcon 3s infinite ease-in-out;
+        }
+        @keyframes spinSlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spinSlow 12s infinite linear;
+        }
+        @keyframes bounceGlow {
+            0%, 100% { transform: translateY(0); filter: drop-shadow(0 2px 4px rgba(16,185,129,0.3)); }
+            50% { transform: translateY(-4px); filter: drop-shadow(0 6px 8px rgba(99,102,241,0.5)); }
+        }
+        .animate-bounce-glow {
+            animation: bounceGlow 2.5s infinite ease-in-out;
         }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300">
+<body class="text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300">
 
     <!-- App Wrapper -->
     <div class="max-w-md mx-auto sm:max-w-2xl md:max-w-4xl lg:max-w-6xl p-3 sm:p-6 pb-20">
 
         <!-- Header / Navigation -->
-        <header class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 p-4 rounded-2xl glass-card shadow-sm">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30 text-2xl font-bold">
-                    <i class="fa-solid fa-wallet"></i>
+        <header class="flex items-center justify-between gap-4 mb-6 px-6 py-4 rounded-3xl glass-card shadow-sm border border-slate-200/80 dark:border-slate-800/80">
+            <div class="flex items-center gap-3.5">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-teal-500 to-emerald-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 animate-pulse-soft">
+                    <!-- SVG Wallet Logo -->
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                        <path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">KhataFlow Pro</h1>
-                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">100% Free & Private Expense & Budget OS</p>
+                    <h1 class="text-xl sm:text-2xl font-black tracking-tight prime-gradient-text">
+                        KhataFlow Pro
+                    </h1>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 flex-wrap justify-center">
+            <div class="flex items-center gap-2">
                 <!-- Theme Toggle -->
-                <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-200/70 dark:bg-slate-800/80 hover:scale-105 transition active:scale-95 text-slate-700 dark:text-yellow-400 shadow-sm" title="Toggle Theme">
-                    <i id="theme-icon" class="fa-solid fa-moon text-lg"></i>
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-2xl bg-white/80 hover:bg-white dark:bg-slate-800/80 dark:hover:bg-slate-700/80 transition flex items-center justify-center text-slate-700 dark:text-amber-400 shadow-sm border border-slate-200/60 dark:border-slate-700/60 active:scale-95" title="Toggle Theme">
+                    <i id="theme-icon" class="fa-solid fa-moon text-base"></i>
                 </button>
             </div>
         </header>
@@ -79,89 +170,148 @@
         <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 px-4 py-3 rounded-xl shadow-xl text-sm font-medium flex items-center gap-2 pointer-events-none"></div>
 
         <!-- Main Navigation Tabs -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
-            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn py-3 px-3 rounded-xl font-semibold text-xs transition flex items-center justify-center gap-1.5 bg-emerald-600 text-white shadow-lg shadow-emerald-600/20">
-                <i class="fa-solid fa-chart-pie"></i> Dashboard
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-6">
+            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-indigo-600 via-indigo-700 to-emerald-600 text-white shadow-lg shadow-indigo-600/25">
+                <svg class="w-4 h-4 flex-shrink-0 animate-spin-slow" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" fill="#34d399" opacity="0.3"/>
+                    <path d="M12 2a10 10 0 0 1 10 10h-10V2z" fill="#f59e0b"/>
+                    <path d="M12 12L4.93 4.93A10 10 0 0 1 12 2v10z" fill="#38bdf8"/>
+                    <path d="M12 12v10A10 10 0 0 1 2 12h10z" fill="#10b981"/>
+                </svg> Dashboard
             </button>
-            <button onclick="switchTab('transactions')" id="tab-transactions" class="tab-btn py-3 px-3 rounded-xl font-semibold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-slate-200 dark:hover:bg-slate-800">
-                <i class="fa-solid fa-receipt"></i> History
+            <button onclick="switchTab('grocery')" id="tab-grocery" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-slate-800/90 text-slate-700 dark:text-slate-200">
+                <svg class="w-4 h-4 flex-shrink-0 animate-float-icon" viewBox="0 0 24 24">
+                    <path d="M17.21 9l-4.38-6.56a.993.993 0 0 0-.83-.42c-.32 0-.64.14-.83.43L6.79 9H2c-.55 0-1 .45-1 1 0 .09.01.18.04.27l2.54 9.27c.23.84 1 1.46 1.92 1.46h13c.92 0 1.69-.62 1.93-1.46l2.54-9.27L23 10c0-.55-.45-1-1-1h-4.79z" fill="#f97316"/>
+                    <circle cx="9" cy="14" r="1.5" fill="#fde047"/>
+                    <circle cx="15" cy="14" r="1.5" fill="#38bdf8"/>
+                </svg> Grocery & Shopping
             </button>
-            <button onclick="switchTab('hub')" id="tab-hub" class="tab-btn py-3 px-3 rounded-xl font-semibold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-slate-200 dark:hover:bg-slate-800">
-                <i class="fa-solid fa-users-rectangle"></i> Group & Friends Hub
+            <button onclick="switchTab('hub')" id="tab-hub" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-slate-800/90 text-slate-700 dark:text-slate-200">
+                <svg class="w-4 h-4 flex-shrink-0 animate-bounce-glow" viewBox="0 0 24 24">
+                    <circle cx="9" cy="8" r="3.5" fill="#ec4899"/>
+                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-.32 0-.63.05-.91.15.57.81.91 1.79.91 2.85s-.34 2.04-.91 2.85c.28.1.59.15.91.15z" fill="#a855f7"/>
+                    <path d="M9 13c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#06b6d4"/>
+                    <path d="M16 14.5c-.32 0-.68.04-1.05.09 1.25.9 2.05 2.11 2.05 3.41V20h6v-2c0-2.33-4.67-3.5-7-3.5z" fill="#3b82f6"/>
+                </svg> Friends Hub
             </button>
-            <button onclick="switchTab('analytics')" id="tab-analytics" class="tab-btn py-3 px-3 rounded-xl font-semibold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-slate-200 dark:hover:bg-slate-800">
-                <i class="fa-solid fa-chart-line"></i> Reports
+            <button onclick="switchTab('analytics')" id="tab-analytics" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-slate-800/90 text-slate-700 dark:text-slate-200">
+                <svg class="w-4 h-4 flex-shrink-0 animate-float-icon" viewBox="0 0 24 24">
+                    <rect x="3" y="12" width="4" height="9" rx="1.5" fill="#38bdf8"/>
+                    <rect x="10" y="7" width="4" height="14" rx="1.5" fill="#10b981"/>
+                    <rect x="17" y="3" width="4" height="18" rx="1.5" fill="#f43f5e"/>
+                </svg> Reports
             </button>
         </div>
 
         <!-- ================= SECTION 1: DASHBOARD ================= -->
         <section id="section-dashboard" class="space-y-6">
-            <div class="glass-card p-6 rounded-3xl shadow-sm bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-transparent border border-emerald-500/20 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="glass-card p-6 sm:p-7 rounded-3xl shadow-sm bg-gradient-to-r from-indigo-500/10 via-purple-500/5 to-emerald-500/10 border border-indigo-500/20 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-xl sm:text-2xl font-black tracking-tight text-slate-800 dark:text-white">Welcome back, Boss! 👋</h2>
-                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Here is your financial pulse breakdown. Everything is stored locally.</p>
+                    <h2 class="text-xl sm:text-2xl font-black tracking-tight text-slate-800 dark:text-white flex items-center gap-2">
+                        Welcome back, Boss! 
+                        <svg class="w-6 h-6 inline-block animate-bounce-glow" viewBox="0 0 24 24">
+                            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14.93V18a1 1 0 0 1-2 0v-1.07A4 4 0 0 1 8 13a1 1 0 0 1 2 0 2 2 0 0 0 2 2 2 2 0 0 0 2-2c0-1.1-.9-1.6-2.5-2C9.5 10.5 8 9.5 8 7.5A3.5 3.5 0 0 1 11 4.07V3a1 1 0 0 1 2 0v1.07A3.5 3.5 0 0 1 16 7.5a1 1 0 0 1-2 0 1.5 1.5 0 0 0-1.5-1.5 1.5 1.5 0 0 0-1.5 1.5c0 1.05.8 1.5 2.5 1.95 2 .55 3.5 1.5 3.5 3.55a4 4 0 0 1-3 3.93z" fill="#f59e0b"/>
+                        </svg>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Here is your financial pulse breakdown. Stored locally with privacy.</p>
                 </div>
                 <div class="flex items-center gap-2.5 w-full md:w-auto justify-end flex-wrap">
-                    <button onclick="openBudgetModal()" class="px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold text-xs hover:scale-105 transition shadow-md flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-emerald-400 dark:text-emerald-600"></i> Set Budget Limit
+                    <button onclick="openBudgetModal()" class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 dark:from-slate-100 dark:to-slate-200 text-white dark:text-slate-900 font-bold text-xs hover:scale-105 transition shadow-md flex items-center gap-2">
+                        <svg class="w-4 h-4 animate-float-icon" viewBox="0 0 24 24">
+                            <circle cx="7" cy="12" r="3" fill="#10b981"/>
+                            <circle cx="17" cy="7" r="3" fill="#3b82f6"/>
+                            <circle cx="17" cy="17" r="3" fill="#f59e0b"/>
+                            <path d="M7 4v5m0 6v5m10-16v1m0 6v4m0 6v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg> Set Budget Limit
                     </button>
-                    <button onclick="openCategoryBudgetModal()" class="px-4 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:scale-105 transition shadow-md flex items-center gap-2">
-                        <i class="fa-solid fa-chart-pie"></i> Category Limits
+                    <button onclick="openCategoryBudgetModal()" class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-teal-600 text-white font-bold text-xs hover:scale-105 transition shadow-md shadow-indigo-500/20 flex items-center gap-2">
+                        <svg class="w-4 h-4 animate-spin-slow" viewBox="0 0 24 24">
+                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10h-10V2z" fill="#ffffff"/>
+                            <path d="M14 2.1c4.5.9 8 4.4 8.9 8.9H14V2.1z" fill="#fbbf24"/>
+                        </svg> Category Limits
                     </button>
                 </div>
             </div>
 
-            <!-- Time-Bound Expense Dashboard Cards -->
+            <!-- Time-Bound Expense Dashboard Cards with Color SVGs & Prime Glow -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                <div class="glass-card p-5 rounded-3xl shadow-sm relative overflow-hidden group">
+                <div class="glass-card interactive-card p-5 rounded-3xl shadow-sm group">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Today's Expense</span>
-                        <div class="w-7 h-7 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs font-bold">
-                            <i class="fa-solid fa-calendar-day"></i>
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center p-1.5 transition-transform group-hover:scale-110">
+                            <svg class="w-5 h-5 animate-bounce-glow" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="17" rx="3" fill="#10b981"/>
+                                <rect x="3" y="4" width="18" height="5" rx="2" fill="#047857"/>
+                                <circle cx="8" cy="14" r="1.5" fill="#fde047"/>
+                                <circle cx="12" cy="14" r="1.5" fill="#fde047"/>
+                                <circle cx="16" cy="14" r="1.5" fill="#ffffff"/>
+                            </svg>
                         </div>
                     </div>
                     <div class="text-2xl font-black tracking-tight text-emerald-600 dark:text-emerald-400" id="dash-today">₹0</div>
                     <p class="text-[10px] text-slate-500 mt-1">Spent today</p>
                 </div>
 
-                <div class="glass-card p-5 rounded-3xl shadow-sm relative overflow-hidden group">
+                <div class="glass-card interactive-card p-5 rounded-3xl shadow-sm group">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Yesterday's Expense</span>
-                        <div class="w-7 h-7 rounded-xl bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center text-xs font-bold">
-                            <i class="fa-solid fa-clock-rotate-left"></i>
+                        <div class="w-8 h-8 rounded-xl bg-teal-500/10 flex items-center justify-center p-1.5 transition-transform group-hover:scale-110">
+                            <svg class="w-5 h-5 animate-spin-slow" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" fill="#06b6d4"/>
+                                <path d="M12 6v6l4 2" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+                                <circle cx="12" cy="12" r="2" fill="#f59e0b"/>
+                            </svg>
                         </div>
                     </div>
                     <div class="text-2xl font-black tracking-tight text-teal-600 dark:text-teal-400" id="dash-yesterday">₹0</div>
                     <p class="text-[10px] text-slate-500 mt-1">Spent yesterday</p>
                 </div>
 
-                <div class="glass-card p-5 rounded-3xl shadow-sm relative overflow-hidden group">
+                <div class="glass-card interactive-card p-5 rounded-3xl shadow-sm group">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Last 7 Days</span>
-                        <div class="w-7 h-7 rounded-xl bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs font-bold">
-                            <i class="fa-solid fa-calendar-week"></i>
+                        <div class="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center p-1.5 transition-transform group-hover:scale-110">
+                            <svg class="w-5 h-5 animate-float-icon" viewBox="0 0 24 24">
+                                <path d="M3 18l6-6 4 4 8-9" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                <circle cx="9" cy="12" r="2" fill="#06b6d4"/>
+                                <circle cx="13" cy="16" r="2" fill="#8b5cf6"/>
+                                <circle cx="21" cy="7" r="2.5" fill="#f43f5e"/>
+                            </svg>
                         </div>
                     </div>
-                    <div class="text-2xl font-black tracking-tight text-blue-600 dark:text-blue-400" id="dash-7days">₹0</div>
+                    <div class="text-2xl font-black tracking-tight text-indigo-600 dark:text-indigo-400" id="dash-7days">₹0</div>
                     <p class="text-[10px] text-slate-500 mt-1">Past week outflow</p>
                 </div>
 
-                <div class="glass-card p-5 rounded-3xl shadow-sm relative overflow-hidden group">
+                <div class="glass-card interactive-card p-5 rounded-3xl shadow-sm group">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Last 30 Days</span>
-                        <div class="w-7 h-7 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xs font-bold">
-                            <i class="fa-solid fa-calendar-days"></i>
+                        <div class="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center p-1.5 transition-transform group-hover:scale-110">
+                            <svg class="w-5 h-5 animate-float-icon" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="17" rx="3" fill="#f59e0b"/>
+                                <path d="M3 9h18" stroke="#ffffff" stroke-width="2"/>
+                                <circle cx="8" cy="13" r="1.5" fill="#ffffff"/>
+                                <circle cx="12" cy="13" r="1.5" fill="#ffffff"/>
+                                <circle cx="16" cy="13" r="1.5" fill="#ffffff"/>
+                                <circle cx="8" cy="17" r="1.5" fill="#ef4444"/>
+                                <circle cx="12" cy="17" r="1.5" fill="#10b981"/>
+                            </svg>
                         </div>
                     </div>
                     <div class="text-2xl font-black tracking-tight text-amber-600 dark:text-amber-400" id="dash-30days">₹0</div>
                     <p class="text-[10px] text-slate-500 mt-1">Past month outflow</p>
                 </div>
 
-                <div class="glass-card p-5 rounded-3xl shadow-sm relative overflow-hidden group sm:col-span-2 lg:col-span-1">
+                <div class="glass-card interactive-card p-5 rounded-3xl shadow-sm group sm:col-span-2 lg:col-span-1">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Lifetime</span>
-                        <div class="w-7 h-7 rounded-xl bg-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center justify-center text-xs font-bold">
-                            <i class="fa-solid fa-wallet"></i>
+                        <div class="w-8 h-8 rounded-xl bg-rose-500/10 flex items-center justify-center p-1.5 transition-transform group-hover:scale-110">
+                            <svg class="w-5 h-5 animate-spin-slow" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" fill="#ec4899"/>
+                                <path d="M12 6a6 6 0 0 1 6 6h-6V6z" fill="#f43f5e"/>
+                                <circle cx="12" cy="12" r="3" fill="#ffffff"/>
+                                <circle cx="12" cy="12" r="1.5" fill="#f59e0b"/>
+                            </svg>
                         </div>
                     </div>
                     <div class="text-2xl font-black tracking-tight text-rose-600 dark:text-rose-400" id="dash-total">₹0</div>
@@ -169,8 +319,8 @@
                 </div>
             </div>
 
-            <!-- Budget Progress Card -->
-            <div class="glass-card p-6 rounded-3xl shadow-sm">
+            <!-- Budget Progress Card with Prime Gradient Bar -->
+            <div class="glass-card p-6 sm:p-7 rounded-3xl shadow-sm">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                     <div>
                         <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Monthly Budget Status</span>
@@ -178,15 +328,15 @@
                     </div>
                     <div class="text-right">
                         <span class="text-xs text-slate-500">Remaining Balance:</span>
-                        <div class="text-2xl font-black text-teal-600 dark:text-teal-400" id="display-balance">₹0</div>
+                        <div class="text-2xl font-black text-indigo-600 dark:text-indigo-400" id="display-balance">₹0</div>
                     </div>
                 </div>
-                <div class="w-full bg-slate-200 dark:bg-slate-800 h-3 rounded-full overflow-hidden mb-2">
-                    <div id="budget-progress-bar" class="bg-emerald-500 h-full transition-all duration-500 rounded-full" style="width: 0%"></div>
+                <div class="w-full bg-slate-200/70 dark:bg-slate-800/80 h-3.5 rounded-full overflow-hidden p-0.5 mb-2 shadow-inner">
+                    <div id="budget-progress-bar" class="bg-gradient-to-r from-indigo-500 via-teal-400 to-emerald-500 h-full transition-all duration-700 rounded-full" style="width: 0%"></div>
                 </div>
                 <div class="flex justify-between items-center text-xs">
                     <span id="budget-status-text" class="font-semibold text-slate-500">Target safe</span>
-                    <span id="budget-percent" class="font-bold text-emerald-600 dark:text-emerald-400">0%</span>
+                    <span id="budget-percent" class="font-bold text-indigo-600 dark:text-indigo-400">0%</span>
                 </div>
             </div>
 
@@ -194,7 +344,10 @@
                 <div class="flex items-center justify-between mb-6">
                     <div>
                         <h3 class="text-lg font-black tracking-tight flex items-center gap-2">
-                            <i class="fa-solid fa-circle-plus text-emerald-500"></i> Quick Transaction Entry
+                            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" fill="#6366f1"/>
+                                <path d="M12 7v10m-5-5h10" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+                            </svg> Quick Transaction Entry
                         </h3>
                         <p class="text-xs text-slate-500 dark:text-slate-400">Record your day-to-day income or expense instantly</p>
                     </div>
@@ -203,18 +356,18 @@
                 <form id="transaction-form" onsubmit="addTransaction(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-slate-600 dark:text-slate-300">Type</label>
-                        <select id="tx-type" class="w-full p-3 rounded-2xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-emerald-500 transition">
+                        <select id="tx-type" class="w-full p-3 rounded-2xl bg-white/70 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-indigo-500 transition">
                             <option value="expense">Expense (-)</option>
                             <option value="income">Income (+)</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-slate-600 dark:text-slate-300">Amount (₹)</label>
-                        <input type="number" id="tx-amount" step="any" required placeholder="e.g. 350" class="w-full p-3 rounded-2xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-emerald-500 transition">
+                        <input type="number" id="tx-amount" step="any" required placeholder="e.g. 350" class="w-full p-3 rounded-2xl bg-white/70 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-indigo-500 transition">
                     </div>
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-slate-600 dark:text-slate-300">Category</label>
-                        <select id="tx-category" class="w-full p-3 rounded-2xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-emerald-500 transition">
+                        <select id="tx-category" class="w-full p-3 rounded-2xl bg-white/70 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-indigo-500 transition">
                             <option value="Food">🍔 Food & Dining</option>
                             <option value="Fast Food">🍟 Fast Food</option>
                             <option value="Kirana">🛒 Kirana & Grocery</option>
@@ -229,7 +382,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-slate-600 dark:text-slate-300">Payment Mode</label>
-                        <select id="tx-mode" class="w-full p-3 rounded-2xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-emerald-500 transition">
+                        <select id="tx-mode" class="w-full p-3 rounded-2xl bg-white/70 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-indigo-500 transition">
                             <option value="UPI">📱 UPI / GPay</option>
                             <option value="Cash">💵 Cash</option>
                             <option value="Bank">🏦 Bank Transfer</option>
@@ -237,14 +390,17 @@
                     </div>
                     <div class="sm:col-span-2">
                         <label class="block text-xs font-bold mb-1.5 text-slate-600 dark:text-slate-300">Date</label>
-                        <input type="date" id="tx-date" class="w-full p-3 rounded-2xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-xs font-medium focus:outline-none focus:border-emerald-500 transition text-slate-600 dark:text-slate-300">
+                        <input type="date" id="tx-date" class="w-full p-3 rounded-2xl bg-white/70 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-xs font-medium focus:outline-none focus:border-indigo-500 transition text-slate-600 dark:text-slate-300">
                     </div>
                     <div class="sm:col-span-2 lg:col-span-6 flex flex-col sm:flex-row gap-3 items-center justify-between pt-2">
                         <div class="w-full">
-                            <input type="text" id="tx-note" placeholder="Add note or description..." class="w-full p-3 rounded-2xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-xs font-medium focus:outline-none focus:border-emerald-500 transition">
+                            <input type="text" id="tx-note" placeholder="Add note or description..." class="w-full p-3 rounded-2xl bg-white/70 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-xs font-medium focus:outline-none focus:border-indigo-500 transition">
                         </div>
-                        <button type="submit" class="w-full sm:w-auto px-8 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 whitespace-nowrap active:scale-95">
-                            <i class="fa-solid fa-plus"></i> Add Entry
+                        <button type="submit" class="w-full sm:w-auto px-8 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-emerald-600 hover:from-indigo-700 hover:to-emerald-700 text-white font-bold text-xs transition shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 whitespace-nowrap active:scale-95">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg> Add Entry
                         </button>
                     </div>
                 </form>
@@ -253,8 +409,44 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="glass-card p-6 rounded-3xl shadow-sm">
                     <h3 class="text-base font-bold mb-4 flex items-center justify-between">
-                        <span>Category Breakdown</span>
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" fill="#3b82f6"/>
+                                <path d="M12 2a10 10 0 0 1 10 10H12V2z" fill="#f59e0b"/>
+                            </svg> Category Breakdown
+                        </span>
                         <span class="text-xs bg-slate-200 dark:bg-slate-800 px-2.5 py-1 rounded-full font-semibold text-slate-600 dark:text-slate-300">This Month</span>
+                    </h3>
+                    <div class="h-64 flex items-center justify-center">
+                        <canvas id="categoryPieChart"></canvas>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-3xl shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold mb-2 flex items-center gap-2">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                <path d="M12 2l2.4 7.2h7.6l-6.1 4.5 2.3 7.1-6.2-4.6-6.2 4.6 2.3-7.1-6.1-4.5h7.6z" fill="#f59e0b"/>
+                                <circle cx="12" cy="12" r="2" fill="#ffffff"/>
+                            </svg> Local AI Financial Insights
+                        </h3>
+                        <p id="ai-insight-text" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-3 p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-900/70 border border-slate-200/50 dark:border-slate-800/50">
+                            Analysing your spending patterns... Add a few transactions to receive smart personalized recommendations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 2: TRANSACTIONS HISTORY ================= -->
+        <section id="section-transactions" class="space-y-6 hidden">
+            <div class="glass-card p-5 sm:p-6 rounded-2xl shadow-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                    <h3 class="text-lg font-bold flex items-center gap-2">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9" fill="#10b981" opacity="0.2"/>
+                            <circle cx="12" cy="12" r="9" stroke="#10b981" stroke-width="2"/>
+                            <path d="M12 7v5l3 3" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg> All Transactions History
                     </h3>
                     <div class="h-64 flex items-center justify-center">
                         <canvas id="categoryPieChart"></canvas>
@@ -268,13 +460,13 @@
                         <p id="ai-insight-text" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-3 p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-900/70 border border-slate-200/50 dark:border-slate-800/50">
                             Analysing your spending patterns... Add a few transactions to receive smart personalized recommendations.
                         </p>
-                    </div>
-                    <div class="mt-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3">
-                        <i class="fa-solid fa-shield-halved text-emerald-600 dark:text-emerald-400 text-xl"></i>
-                        <p class="text-xs text-emerald-700 dark:text-emerald-300 font-medium">
-                            <strong>100% Privacy Guaranteed:</strong> All data is stored locally in your browser storage.
-                        </p>
-                    </div>
+                <div id="no-tx-msg" class="text-center py-12 text-slate-400 hidden animate-fade-in">
+                    <!-- SVG Empty State Illustration -->
+                    <svg class="w-20 h-20 mx-auto mb-3 opacity-60 text-slate-400 fill-current" viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-7-2h5v-2h-5v2zm0-4h5v-2h-5v2zm-5 4h3v-2H7v2zm0-4h3v-2H7v2zm0-4h10V7H7v2z"/>
+                    </svg>
+                    <p class="text-sm font-medium">No transactions found</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Start adding transactions to see them listed here.</p>
                 </div>
             </div>
         </section>
@@ -339,25 +531,179 @@
             </div>
         </section>
 
+        <!-- ================= SECTION 2.5: SMART GROCERY & SHOPPING CHECKLIST ================= -->
+        <section id="section-grocery" class="space-y-6 hidden">
+            <div class="glass-card p-5 sm:p-6 rounded-3xl shadow-sm border border-slate-200/80 dark:border-slate-800/80">
+                <!-- Section Header -->
+                <div class="mb-5">
+                    <h3 class="text-lg font-bold flex items-center gap-2 text-slate-800 dark:text-slate-100">
+                        <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
+                            <path d="M17.21 9l-4.38-6.56a.993.993 0 0 0-.83-.42c-.32 0-.64.14-.83.43L6.79 9H2c-.55 0-1 .45-1 1 0 .09.01.18.04.27l2.54 9.27c.23.84 1 1.46 1.92 1.46h13c.92 0 1.69-.62 1.93-1.46l2.54-9.27L23 10c0-.55-.45-1-1-1h-4.79z" fill="#f97316"/>
+                            <circle cx="9" cy="14" r="1.5" fill="#fde047"/>
+                            <circle cx="15" cy="14" r="1.5" fill="#38bdf8"/>
+                        </svg> Smart Grocery & Shopping Checklist
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        Add household items with mandatory quantity/unit, check off while shopping, and convert directly to bill!
+                    </p>
+                </div>
+
+                <!-- Add Item Form Card -->
+                <div class="p-4 sm:p-5 rounded-2xl bg-slate-100/70 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 mb-6">
+                    <form onsubmit="addGroceryItem(event)" class="space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+                            <div class="sm:col-span-6">
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                                    Item Name (e.g. Basmati Rice, Sugar, Milk)
+                                </label>
+                                <input type="text" id="grocery-name" required placeholder="Enter item name..." class="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                                    Qty (Required)
+                                </label>
+                                <input type="number" step="any" min="0.1" id="grocery-qty" required placeholder="Qty" class="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                                    Unit (Required)
+                                </label>
+                                <select id="grocery-unit" required class="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500 font-medium">
+                                    <option value="Kg">Kg</option>
+                                    <option value="Grams (gm)">Grams (gm)</option>
+                                    <option value="Packets">Packets</option>
+                                    <option value="Pieces (pcs)">Pieces (pcs)</option>
+                                    <option value="Litre (L)">Litre (L)</option>
+                                </select>
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <button type="submit" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-md shadow-emerald-600/30 flex items-center justify-center gap-1.5 active:scale-95">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg> Add Item
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Suggested Chips -->
+                        <div class="flex items-center gap-2 flex-wrap pt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                            <span class="font-semibold text-xs">Quick Add:</span>
+                            <button type="button" onclick="quickFillGrocery('Aata', 5, 'Kg')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 transition text-[11px] font-medium">+ Aata 5kg</button>
+                            <button type="button" onclick="quickFillGrocery('Oil', 1, 'Litre (L)')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 transition text-[11px] font-medium">+ Oil 1L</button>
+                            <button type="button" onclick="quickFillGrocery('Sugar', 2, 'Kg')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 transition text-[11px] font-medium">+ Sugar 2kg</button>
+                            <button type="button" onclick="quickFillGrocery('Milk', 2, 'Packets')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 transition text-[11px] font-medium">+ Milk 2Pac</button>
+                            <button type="button" onclick="quickFillGrocery('Dal', 1, 'Kg')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 transition text-[11px] font-medium">+ Dal 1kg</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Two-Column Display: Checklist vs Pricing Bill -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Column 1: Pending Checklist -->
+                    <div class="p-4 rounded-2xl bg-white/60 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="text-xs sm:text-sm font-bold flex items-center gap-2 text-slate-800 dark:text-slate-200">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24">
+                                    <path d="M3 5h2v2H3V5zm0 6h2v2H3v-2zm0 6h2v2H3v-2zm4-12h14v2H7V5zm0 6h14v2H7v-2zm0 6h14v2H7v-2z" fill="#10b981"/>
+                                </svg> Pending Shopping Items ( <span id="grocery-pending-count">0</span> )
+                            </h4>
+                            <button onclick="clearCheckedGrocery()" class="text-[11px] font-semibold text-rose-500 hover:underline">
+                                Clear Checked
+                            </button>
+                        </div>
+                        <div id="grocery-checklist" class="space-y-2 max-h-80 overflow-y-auto pr-1">
+                            <!-- Items injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Final Grocery Bill & Pricing -->
+                    <div class="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-900/30 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <div>
+                                    <h4 class="text-xs sm:text-sm font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
+                                        <svg class="w-4 h-4" viewBox="0 0 24 24">
+                                            <path d="M4 4v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6a2 2 0 0 0-2 2z" fill="#10b981"/>
+                                            <path d="M14 2v6h6" fill="#059669"/>
+                                            <path d="M8 13h8m-8 4h5" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+                                        </svg> Final Grocery Bill & Pricing
+                                    </h4>
+                                    <p class="text-[10px] text-slate-500 dark:text-slate-400">Add prices for the checked items below to generate the final bill:</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] text-slate-500 uppercase font-semibold">Total:</span>
+                                    <div class="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400" id="grocery-bill-total">₹0</div>
+                                </div>
+                            </div>
+
+                            <div id="grocery-pricing-list" class="space-y-2 max-h-72 overflow-y-auto pr-1 mb-4">
+                                <!-- Checked items with price input injected here -->
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons with Colorful SVGs -->
+                        <div class="pt-3 border-t border-emerald-200/50 dark:border-emerald-900/30 flex flex-wrap gap-2 items-center justify-between">
+                            <button onclick="shareGroceryWhatsApp()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95 transition">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24">
+                                    <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2z" fill="#25d366"/>
+                                    <path d="M8.5 7.5c-.3 0-.6.1-.8.4-.5.5-.7 1.2-.7 2 0 1.2.6 2.4 1.7 3.5s2.3 1.7 3.5 1.7c.8 0 1.5-.2 2-.7.3-.2.4-.5.4-.8 0-.3-.4-.7-.8-.9l-1.2-.5c-.3-.1-.5 0-.7.2l-.4.5c-.2.2-.4.2-.7.1-.6-.3-1.4-1.1-1.7-1.7-.1-.3-.1-.5.1-.7l.5-.4c.2-.2.3-.4.2-.7l-.5-1.2c-.2-.4-.6-.8-.9-.8z" fill="#ffffff"/>
+                                </svg> Share Bill WhatsApp
+                            </button>
+                            <button onclick="printGroceryReceipt()" class="px-3.5 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95 transition">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                    <path d="M12 3v13m-5-5l5 5 5-5M4 21h16" />
+                                </svg> Download PDF / Print
+                            </button>
+                            <button onclick="addGroceryBillToDashboard()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24">
+                                    <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" fill="#38bdf8"/>
+                                    <path d="M12 11l-3 3h2v4h2v-4h2l-3-3z" fill="#ffffff"/>
+                                </svg> Add Bill to Dashboard & History
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- ================= SECTION 3: UNIFIED GROUP & FRIENDS HUB (MERGED) ================= -->
         <section id="section-hub" class="space-y-6 hidden">
             <div class="glass-card p-5 sm:p-6 rounded-2xl shadow-sm">
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
                     <div>
                         <h3 class="text-lg font-bold flex items-center gap-2">
-                            <i class="fa-solid fa-users-rectangle text-emerald-500"></i> Premium Group & Friends Hub
+                            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                <rect x="2" y="4" width="20" height="16" rx="4" fill="#6366f1"/>
+                                <circle cx="8" cy="11" r="2.5" fill="#fde047"/>
+                                <path d="M4 17c0-1.5 2-2.5 4-2.5s4 1 4 2.5" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+                                <circle cx="16" cy="11" r="2.5" fill="#38bdf8"/>
+                                <path d="M12 17c0-1.5 2-2.5 4-2.5s4 1 4 2.5" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+                            </svg> Premium Group & Friends Hub
                         </h3>
                         <p class="text-xs text-slate-500 dark:text-slate-400">Advanced Fintech Hub: Percentage Share, Quick UPI Copy & Financial Health Score.</p>
                     </div>
                     <div class="flex items-center gap-2 flex-wrap">
                         <button onclick="openAddMemberModal()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition shadow-md flex items-center gap-2">
-                            <i class="fa-solid fa-user-plus"></i> Add Member
+                            <svg class="w-4 h-4" viewBox="0 0 24 24">
+                                <circle cx="10" cy="8" r="4" fill="#ffffff"/>
+                                <path d="M2 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6" fill="#ffffff"/>
+                                <path d="M19 8v6m-3-3h6" stroke="#facc15" stroke-width="2.5" stroke-linecap="round"/>
+                            </svg> Add Member
                         </button>
                         <button onclick="shareSplitSummaryWhatsApp()" class="px-4 py-2 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500 hover:text-white text-xs font-semibold transition flex items-center gap-1.5">
-                            <i class="fa-brands fa-whatsapp"></i> WhatsApp Summary
+                            <svg class="w-4 h-4" viewBox="0 0 24 24">
+                                <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2z" fill="#25d366"/>
+                            </svg> WhatsApp Summary
                         </button>
                         <button onclick="exportGroupReportCSV()" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-xs font-semibold transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-file-excel"></i> Export Group CSV
+                            <svg class="w-4 h-4" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="3" fill="#10b981"/>
+                                <path d="M8 8l8 8m0-8l-8 8" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+                            </svg> Export Group CSV
                         </button>
                     </div>
                 </div>
@@ -365,8 +711,11 @@
                 <!-- Group Financial Health Score Banner -->
                 <div class="p-4 rounded-2xl bg-gradient-to-r from-teal-500/10 via-emerald-500/10 to-transparent border border-emerald-500/20 mb-6 flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-black text-lg shadow-md">
-                            <i class="fa-solid fa-shield-heart"></i>
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center font-black text-lg shadow-md">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24">
+                                <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" fill="#10b981"/>
+                                <path d="M12 7l1.5 3 3.5.5-2.5 2.5.5 3.5-3-1.5-3 1.5.5-3.5-2.5-2.5 3.5-.5z" fill="#fde047"/>
+                            </svg>
                         </div>
                         <div>
                             <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">Group Financial Health Score</h4>
@@ -620,6 +969,39 @@
             </div>
         </section>
 
+        <!-- ================= MODERN FOOTER WITH SOCIAL LINKS ================= -->
+        <footer class="mt-12 pt-8 pb-4 border-t border-slate-200/80 dark:border-slate-800/80">
+            <div class="glass-card p-6 rounded-3xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-3 text-center md:text-left">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 text-lg font-bold">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-black tracking-tight text-slate-800 dark:text-slate-100">KhataFlow Pro</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Smart Daily Expense, Budget Splitter & Shopping OS</p>
+                    </div>
+                </div>
+
+                <!-- Social Media Links -->
+                <div class="flex items-center gap-3">
+                    <!-- Instagram -->
+                    <a href="https://instagram.com/theamitmto" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-2xl bg-slate-100 hover:bg-gradient-to-tr hover:from-amber-500 hover:via-pink-500 hover:to-purple-600 hover:text-white dark:bg-slate-800 dark:hover:bg-gradient-to-tr dark:hover:from-amber-500 dark:hover:via-pink-500 dark:hover:to-purple-600 dark:hover:text-white transition-all duration-300 flex items-center justify-center text-pink-600 dark:text-pink-400 border border-slate-200/60 dark:border-slate-700/60 shadow-sm active:scale-95 group" title="Follow on Instagram (@theamitmto)">
+                        <i class="fa-brands fa-instagram text-lg group-hover:scale-110 transition-transform"></i>
+                    </a>
+
+                    <!-- X (Twitter) with crisp vector SVG -->
+                    <a href="https://x.com/theamitmto" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-2xl bg-slate-100 hover:bg-black hover:text-white dark:bg-slate-800 dark:hover:bg-white dark:hover:text-black transition-all duration-300 flex items-center justify-center text-slate-800 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60 shadow-sm active:scale-95 group" title="Follow on X (@theamitmto)">
+                        <svg class="w-4 h-4 fill-current group-hover:scale-110 transition-transform" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <p class="text-[11px] text-slate-400 dark:text-slate-500">© 2026 KhataFlow Pro. All rights reserved.</p>
+            </div>
+        </footer>
+
     </div>
 
     <!-- ================= MODALS ================= -->
@@ -756,28 +1138,20 @@
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
         let appState = JSON.parse(localStorage.getItem('khataflow_state')) || {
-            budget: 15000,
-            categoryBudgets: { Food: 6000, Rent: 5000 },
-            transactions: [
-                { id: 101, type: 'expense', amount: 450, category: 'Food', mode: 'UPI', note: 'Mess Dinner Party', date: new Date().toISOString() },
-                { id: 102, type: 'expense', amount: 1200, category: 'Bills', mode: 'Bank', note: 'WiFi & Electricity Bill', date: new Date(Date.now() - 86400000).toISOString() }
-            ],
+            budget: 0,
+            categoryBudgets: {},
+            transactions: [],
             splitMembers: [
-                { name: 'You', upi: 'you@okaxis' },
-                { name: 'Rahul Sharma', upi: 'rahul@oksbi' },
-                { name: 'Aman Verma', upi: 'aman@paytm' },
-                { name: 'Priya Singh', upi: 'priya@ybl' },
-                { name: 'Rohit Gupta', upi: 'rohit@oksbi' },
-                { name: 'Neha Sharma', upi: 'neha@icici' }
+                { name: 'You', upi: '' }
             ],
-            splitBills: [
-                { id: 201, desc: 'Weekend Party Snacks', amount: 1200, category: 'Party', payer: 'You', splitWith: ['Rahul Sharma', 'Aman Verma', 'Priya Singh'], date: new Date().toISOString() }
-            ]
+            splitBills: [],
+            groceryItems: []
         };
 
         if(!appState.categoryBudgets) appState.categoryBudgets = {};
         if(!appState.splitBills) appState.splitBills = [];
         if(!appState.splitMembers) appState.splitMembers = [{ name: 'You', upi: '' }];
+        if(!appState.groceryItems) appState.groceryItems = [];
 
         if (!appState.splitMembers.some(m => m.name === 'You')) {
             appState.splitMembers.unshift({ name: 'You', upi: '' });
@@ -811,64 +1185,282 @@
             const icon = document.getElementById('theme-icon');
             if (html.classList.contains('dark')) {
                 html.classList.remove('dark');
-                icon.className = 'fa-solid fa-sun text-lg';
+                icon.className = 'fa-solid fa-moon text-base';
                 localStorage.setItem('khataflow_theme', 'light');
             } else {
                 html.classList.add('dark');
-                icon.className = 'fa-solid fa-moon text-lg';
+                icon.className = 'fa-solid fa-sun text-base';
                 localStorage.setItem('khataflow_theme', 'dark');
             }
         }
 
-        if (localStorage.getItem('khataflow_theme') === 'light') {
+        if (localStorage.getItem('khataflow_theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+            const icon = document.getElementById('theme-icon');
+            if(icon) icon.className = 'fa-solid fa-sun text-base';
+        } else {
             document.documentElement.classList.remove('dark');
-            document.getElementById('theme-icon').className = 'fa-solid fa-sun text-lg';
+            const icon = document.getElementById('theme-icon');
+            if(icon) icon.className = 'fa-solid fa-moon text-base';
         }
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = "tab-btn py-3 px-3 rounded-xl font-semibold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200";
+                btn.className = "tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-slate-800/90 text-slate-700 dark:text-slate-200";
             });
             const activeBtn = document.getElementById(`tab-${tabId}`);
-            activeBtn.className = "tab-btn py-3 px-3 rounded-xl font-semibold text-xs transition flex items-center justify-center gap-1.5 bg-emerald-600 text-white shadow-lg shadow-emerald-600/20";
+            if(activeBtn) {
+                activeBtn.className = "tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-indigo-600 via-indigo-700 to-emerald-600 text-white shadow-lg shadow-indigo-600/25";
+            }
 
-            ['dashboard', 'transactions', 'hub', 'analytics'].forEach(id => {
-                document.getElementById(`section-${id}`).classList.add('hidden');
+            ['dashboard', 'grocery', 'hub', 'analytics'].forEach(id => {
+                const sec = document.getElementById(`section-${id}`);
+                if(sec) {
+                    sec.classList.add('hidden');
+                    sec.classList.remove('animate-fade-in');
+                }
             });
-            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+            const targetSec = document.getElementById(`section-${tabId}`);
+            if(targetSec) {
+                targetSec.classList.remove('hidden');
+                targetSec.classList.add('animate-fade-in');
+            }
 
             if(tabId === 'dashboard' || tabId === 'analytics') {
                 updateCharts();
             }
+            if(tabId === 'grocery') {
+                renderGrocery();
+            }
         }
 
+        function quickFillGrocery(name, qty, unit) {
+            document.getElementById('grocery-name').value = name;
+            document.getElementById('grocery-qty').value = qty;
+            document.getElementById('grocery-unit').value = unit;
+        }
+
+        function addGroceryItem(e) {
+            e.preventDefault();
+            const name = document.getElementById('grocery-name').value.trim();
+            const qty = parseFloat(document.getElementById('grocery-qty').value);
+            const unit = document.getElementById('grocery-unit').value;
+
+            if(!name || isNaN(qty) || qty <= 0) {
+                showToast("Please enter a valid item name and quantity", "error");
+                return;
+            }
+
+            const newItem = {
+                id: Date.now(),
+                name,
+                qty,
+                unit,
+                checked: false,
+                price: 0
+            };
+
+            appState.groceryItems.push(newItem);
+            saveState();
+            renderGrocery();
+            document.getElementById('grocery-name').value = '';
+            document.getElementById('grocery-qty').value = '';
+            showToast(`Added ${name} to shopping list!`);
+        }
+
+        function toggleGroceryItem(id) {
+            const item = appState.groceryItems.find(i => i.id === id);
+            if(item) {
+                item.checked = !item.checked;
+                saveState();
+                renderGrocery();
+            }
+        }
+
+        function deleteGroceryItem(id) {
+            appState.groceryItems = appState.groceryItems.filter(i => i.id !== id);
+            saveState();
+            renderGrocery();
+            showToast("Item removed", "error");
+        }
+
+        function clearCheckedGrocery() {
+            appState.groceryItems = appState.groceryItems.filter(i => !i.checked);
+            saveState();
+            renderGrocery();
+            showToast("Cleared all checked items!");
+        }
+
+        function updateGroceryPrice(id, val) {
+            const item = appState.groceryItems.find(i => i.id === id);
+            if(item) {
+                item.price = parseFloat(val) || 0;
+                saveState();
+                calculateGroceryTotal();
+            }
+        }
+
+        function calculateGroceryTotal() {
+            let total = 0;
+            appState.groceryItems.filter(i => i.checked).forEach(i => {
+                total += (Number(i.price) || 0);
+            });
+            const totalEl = document.getElementById('grocery-bill-total');
+            if(totalEl) totalEl.textContent = `₹${total.toLocaleString('en-IN')}`;
+            return total;
+        }
+
+        function renderGrocery() {
+            const checklistContainer = document.getElementById('grocery-checklist');
+            const pricingContainer = document.getElementById('grocery-pricing-list');
+            const pendingCountEl = document.getElementById('grocery-pending-count');
+
+            if(!checklistContainer || !pricingContainer) return;
+
+            checklistContainer.innerHTML = '';
+            pricingContainer.innerHTML = '';
+
+            const uncheckedItems = appState.groceryItems.filter(i => !i.checked);
+            const checkedItems = appState.groceryItems.filter(i => i.checked);
+
+            if(pendingCountEl) {
+                pendingCountEl.textContent = uncheckedItems.length;
+            }
+
+            if(appState.groceryItems.length === 0) {
+                checklistContainer.innerHTML = `
+                    <div class="text-center py-8 text-slate-400 text-xs animate-fade-in">
+                        <svg class="w-12 h-12 mx-auto mb-2 opacity-50 fill-current" viewBox="0 0 24 24">
+                            <path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/>
+                        </svg>
+                        No items in your shopping checklist. Add items above!
+                    </div>`;
+            } else {
+                appState.groceryItems.forEach(item => {
+                    checklistContainer.innerHTML += `
+                        <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/60 transition hover:border-emerald-500 hover:shadow-sm">
+                            <label class="flex items-center gap-2.5 cursor-pointer flex-1">
+                                <input type="checkbox" onchange="toggleGroceryItem(${item.id})" ${item.checked ? 'checked' : ''} class="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500">
+                                <span class="text-xs font-semibold ${item.checked ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-700 dark:text-slate-200'}">
+                                    ${item.name} <span class="font-normal text-slate-500">(${item.qty} ${item.unit})</span>
+                                </span>
+                            </label>
+                            <button onclick="deleteGroceryItem(${item.id})" class="text-rose-500 hover:text-rose-700 p-1 text-xs">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+
+            if(checkedItems.length === 0) {
+                pricingContainer.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs">Check items from the list above to build the final bill.</div>`;
+            } else {
+                checkedItems.forEach(item => {
+                    pricingContainer.innerHTML += `
+                        <div class="flex items-center justify-between gap-3 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
+                            <div class="truncate flex-1">
+                                <span class="font-bold text-slate-700 dark:text-slate-200">${item.name}</span>
+                                <span class="text-[11px] text-slate-500 ml-1">(${item.qty} ${item.unit})</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 w-28">
+                                <span class="text-xs font-bold text-slate-500">₹</span>
+                                <input type="number" step="any" min="0" value="${item.price > 0 ? item.price : ''}" oninput="updateGroceryPrice(${item.id}, this.value)" placeholder="Price" class="w-full p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-semibold focus:outline-none focus:border-emerald-500 text-right">
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            calculateGroceryTotal();
+        }
+
+        function shareGroceryWhatsApp() {
+            const checkedItems = appState.groceryItems.filter(i => i.checked);
+            if(checkedItems.length === 0) {
+                showToast("Please check at least one item to share the bill", "error");
+                return;
+            }
+
+            const total = calculateGroceryTotal();
+            let text = `🛒 *KhataFlow Pro - Grocery & Shopping Bill*%0A`;
+            text += `📅 Date: ${new Date().toLocaleDateString('en-IN')}%0A`;
+            text += `--------------------------------%0A`;
+            checkedItems.forEach((item, idx) => {
+                text += `${idx + 1}. *${item.name}* (${item.qty} ${item.unit}) : ₹${item.price || 0}%0A`;
+            });
+            text += `--------------------------------%0A`;
+            text += `💰 *Total Amount: ₹${total}*%0A`;
+            text += `%0ASent via KhataFlow Pro 🚀`;
+
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+        }
+
+        function printGroceryReceipt() {
+            const checkedItems = appState.groceryItems.filter(i => i.checked);
+            if(checkedItems.length === 0) {
+                showToast("Please check items before downloading or printing receipt", "error");
+                return;
+            }
+            window.print();
+        }
+
+        function addGroceryBillToDashboard() {
+            const checkedItems = appState.groceryItems.filter(i => i.checked);
+            if(checkedItems.length === 0) {
+                showToast("No checked items to record!", "error");
+                return;
+            }
+
+            const total = calculateGroceryTotal();
+            if(total <= 0) {
+                showToast("Please enter prices for checked items first!", "error");
+                return;
+            }
+
+            const itemListStr = checkedItems.map(i => `${i.name} (${i.qty} ${i.unit})`).join(', ');
+
+            appState.transactions.unshift({
+                id: Date.now(),
+                type: 'expense',
+                amount: total,
+                category: 'Kirana',
+                mode: 'UPI',
+                note: `[Grocery Bill] ${itemListStr}`,
+                date: new Date().toISOString()
+            });
+
+            saveState();
+            updateAll();
+            showToast(`Added ₹${total} Grocery bill to Dashboard & History!`);
+        }
+
+        // ================= DASHBOARD CALCULATION & UPDATES =================
         function updateDashboard() {
-            let totalIncome = 0;
-            let totalExpense = 0;
             let todayExpense = 0;
             let yesterdayExpense = 0;
             let last7DaysExpense = 0;
             let last30DaysExpense = 0;
+            let totalExpense = 0;
+            let totalIncome = 0;
 
             const now = new Date();
             const todayStr = now.toISOString().split('T')[0];
-            
-            const yesterday = new Date();
-            yesterday.setDate(now.getDate() - 1);
-            const yesterdayStr = yesterday.toISOString().split('T')[0];
+            const yesterdayDate = new Date(Date.now() - 86400000);
+            const yesterdayStr = yesterdayDate.toISOString().split('T')[0];
 
             appState.transactions.forEach(tx => {
-                if(tx.type === 'income') {
-                    totalIncome += Number(tx.amount);
-                } else {
-                    const amt = Number(tx.amount);
+                const amt = Number(tx.amount) || 0;
+                if (tx.type === 'income') {
+                    totalIncome += amt;
+                } else if (tx.type === 'expense') {
                     totalExpense += amt;
+                    const txDateStr = tx.date ? tx.date.split('T')[0] : '';
 
-                    const txDateStr = tx.date.split('T')[0];
-                    if(txDateStr === todayStr) {
+                    if (txDateStr === todayStr) {
                         todayExpense += amt;
                     }
-                    if(txDateStr === yesterdayStr) {
+                    if (txDateStr === yesterdayStr) {
                         yesterdayExpense += amt;
                     }
 
@@ -876,10 +1468,10 @@
                     const diffTime = Math.abs(now - txDate);
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                    if(diffDays <= 7) {
+                    if (diffDays <= 7) {
                         last7DaysExpense += amt;
                     }
-                    if(diffDays <= 30) {
+                    if (diffDays <= 30) {
                         last30DaysExpense += amt;
                     }
                 }
@@ -1625,8 +2217,8 @@
 
         function updateAll() {
             updateDashboard();
-            renderTransactions();
             renderSplitter();
+            renderGrocery();
         }
 
         window.onload = function() {
