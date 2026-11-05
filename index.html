@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KhataFlow - Smart Expense & Budget Manager</title>
+    <title>KhataFlow Pro - Smart Expense & Budget Manager</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -153,7 +153,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl sm:text-2xl font-black tracking-tight prime-gradient-text">
-                        KhataFlow Pro
+                        KhataFlow
                     </h1>
                 </div>
             </div>
@@ -170,7 +170,7 @@
         <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 px-4 py-3 rounded-xl shadow-xl text-sm font-medium flex items-center gap-2 pointer-events-none"></div>
 
         <!-- Main Navigation Tabs -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-6">
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-6">
             <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-indigo-600 via-indigo-700 to-emerald-600 text-white shadow-lg shadow-indigo-600/25">
                 <svg class="w-4 h-4 flex-shrink-0 animate-spin-slow" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="10" fill="#34d399" opacity="0.3"/>
@@ -178,6 +178,13 @@
                     <path d="M12 12L4.93 4.93A10 10 0 0 1 12 2v10z" fill="#38bdf8"/>
                     <path d="M12 12v10A10 10 0 0 1 2 12h10z" fill="#10b981"/>
                 </svg> Dashboard
+            </button>
+            <button onclick="switchTab('transactions')" id="tab-transactions" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-slate-800/90 text-slate-700 dark:text-slate-200">
+                <svg class="w-4 h-4 flex-shrink-0 animate-float-icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" fill="#10b981" opacity="0.2"/>
+                    <circle cx="12" cy="12" r="9" stroke="#10b981" stroke-width="2"/>
+                    <path d="M12 7v5l3 3" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/>
+                </svg> History
             </button>
             <button onclick="switchTab('grocery')" id="tab-grocery" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-slate-800/90 text-slate-700 dark:text-slate-200">
                 <svg class="w-4 h-4 flex-shrink-0 animate-float-icon" viewBox="0 0 24 24">
@@ -194,7 +201,7 @@
                     <path d="M16 14.5c-.32 0-.68.04-1.05.09 1.25.9 2.05 2.11 2.05 3.41V20h6v-2c0-2.33-4.67-3.5-7-3.5z" fill="#3b82f6"/>
                 </svg> Friends Hub
             </button>
-            <button onclick="switchTab('analytics')" id="tab-analytics" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-slate-800/90 text-slate-700 dark:text-slate-200">
+            <button onclick="switchTab('analytics')" id="tab-analytics" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-slate-800/90 text-slate-700 dark:text-slate-200 col-span-2 sm:col-span-1">
                 <svg class="w-4 h-4 flex-shrink-0 animate-float-icon" viewBox="0 0 24 24">
                     <rect x="3" y="12" width="4" height="9" rx="1.5" fill="#38bdf8"/>
                     <rect x="10" y="7" width="4" height="14" rx="1.5" fill="#10b981"/>
@@ -442,45 +449,15 @@
             <div class="glass-card p-5 sm:p-6 rounded-2xl shadow-sm">
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
                     <h3 class="text-lg font-bold flex items-center gap-2">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 animate-float-icon" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="9" fill="#10b981" opacity="0.2"/>
                             <circle cx="12" cy="12" r="9" stroke="#10b981" stroke-width="2"/>
                             <path d="M12 7v5l3 3" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/>
                         </svg> All Transactions History
                     </h3>
-                    <div class="h-64 flex items-center justify-center">
-                        <canvas id="categoryPieChart"></canvas>
-                    </div>
-                </div>
-                <div class="glass-card p-6 rounded-3xl shadow-sm flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-base font-bold mb-2 flex items-center gap-2">
-                            <i class="fa-solid fa-wand-magic-sparkles text-emerald-500"></i> Local AI Financial Insights
-                        </h3>
-                        <p id="ai-insight-text" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-3 p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-900/70 border border-slate-200/50 dark:border-slate-800/50">
-                            Analysing your spending patterns... Add a few transactions to receive smart personalized recommendations.
-                        </p>
-                <div id="no-tx-msg" class="text-center py-12 text-slate-400 hidden animate-fade-in">
-                    <!-- SVG Empty State Illustration -->
-                    <svg class="w-20 h-20 mx-auto mb-3 opacity-60 text-slate-400 fill-current" viewBox="0 0 24 24">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-7-2h5v-2h-5v2zm0-4h5v-2h-5v2zm-5 4h3v-2H7v2zm0-4h3v-2H7v2zm0-4h10V7H7v2z"/>
-                    </svg>
-                    <p class="text-sm font-medium">No transactions found</p>
-                    <p class="text-xs text-slate-400 mt-0.5">Start adding transactions to see them listed here.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= SECTION 2: TRANSACTIONS HISTORY ================= -->
-        <section id="section-transactions" class="space-y-6 hidden">
-            <div class="glass-card p-5 sm:p-6 rounded-2xl shadow-sm">
-                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-                    <h3 class="text-lg font-bold flex items-center gap-2">
-                        <i class="fa-solid fa-clock-rotate-left text-emerald-500"></i> All Transactions History
-                    </h3>
                     <div class="flex items-center gap-3 w-full sm:w-auto flex-wrap">
-                        <input type="text" id="search-tx" onkeyup="renderTransactions()" placeholder="Search note..." class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs w-full sm:w-48 focus:outline-none focus:border-emerald-500">
-                        <select id="filter-category" onchange="renderTransactions()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
+                        <input type="text" id="search-tx" onkeyup="renderTransactions()" placeholder="Search note..." class="p-2.5 rounded-xl bg-white/70 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs w-full sm:w-48 focus:outline-none focus:border-emerald-500">
+                        <select id="filter-category" onchange="renderTransactions()" class="p-2.5 rounded-xl bg-white/70 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
                             <option value="ALL">All Categories</option>
                             <option value="Food">Food</option>
                             <option value="Fast Food">Fast Food</option>
@@ -493,13 +470,13 @@
                             <option value="Medical">Medical</option>
                             <option value="Other">Other</option>
                         </select>
-                        <select id="filter-mode" onchange="renderTransactions()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
+                        <select id="filter-mode" onchange="renderTransactions()" class="p-2.5 rounded-xl bg-white/70 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
                             <option value="ALL">All Modes</option>
                             <option value="UPI">UPI</option>
                             <option value="Cash">Cash</option>
                             <option value="Bank">Bank</option>
                         </select>
-                        <select id="sort-order" onchange="renderTransactions()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
+                        <select id="sort-order" onchange="renderTransactions()" class="p-2.5 rounded-xl bg-white/70 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs focus:outline-none focus:border-emerald-500">
                             <option value="newest">Newest First</option>
                             <option value="oldest">Oldest First</option>
                             <option value="highest">Highest Amount</option>
@@ -524,9 +501,12 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="no-tx-msg" class="text-center py-10 text-slate-400 hidden">
-                    <i class="fa-solid fa-receipt text-4xl mb-2"></i>
-                    <p class="text-sm">No transactions found.</p>
+                <div id="no-tx-msg" class="text-center py-12 text-slate-400 hidden animate-fade-in">
+                    <svg class="w-16 h-16 mx-auto mb-2 opacity-50 fill-current" viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+                    </svg>
+                    <p class="text-sm font-medium">No transactions found</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Start adding transactions to see them listed here.</p>
                 </div>
             </div>
         </section>
@@ -741,11 +721,11 @@
                 </div>
 
                 <!-- Unified Bill Splitting Form with Multiple Friend Checkboxes & Category -->
-        <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200/50 dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-800 mb-6 shadow-inner">
-            <h4 class="text-sm font-bold mb-3 flex items-center gap-2">
-                <i class="fa-solid fa-file-invoice-dollar text-emerald-500"></i> Add Group Bill / Party Expense
-            </h4>
-            <form onsubmit="addUnifiedSplitBill(event)" class="space-y-4">
+                <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200/50 dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-800 mb-6 shadow-inner">
+                    <h4 class="text-sm font-bold mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice-dollar text-emerald-500"></i> Add Group Bill / Party Expense
+                    </h4>
+                    <form onsubmit="addUnifiedSplitBill(event)" class="space-y-4">
                         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
                             <div class="sm:col-span-2">
                                 <label class="block text-[11px] font-semibold text-slate-500 mb-1">Bill Description</label>
@@ -839,26 +819,6 @@
                         <div id="settlement-results" class="space-y-3 max-h-72 overflow-y-auto pr-1">
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= SECTION 4: GULLAK SAVINGS ================= -->
-        <section id="section-gullak" class="space-y-6 hidden">
-            <div class="glass-card p-5 sm:p-6 rounded-2xl shadow-sm">
-                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-                    <div>
-                        <h3 class="text-lg font-bold flex items-center gap-2">
-                            <i class="fa-solid fa-piggy-bank text-emerald-500"></i> Gullak - Smart Savings Goal
-                        </h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Save for your dream gadgets, emergency fund, or trips.</p>
-                    </div>
-                    <button onclick="openGullakModal()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition shadow-md flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> New Gullak Goal
-                    </button>
-                </div>
-
-                <div id="gullak-goals-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 </div>
             </div>
         </section>
@@ -1152,6 +1112,7 @@
         if(!appState.splitBills) appState.splitBills = [];
         if(!appState.splitMembers) appState.splitMembers = [{ name: 'You', upi: '' }];
         if(!appState.groceryItems) appState.groceryItems = [];
+        if(!appState.transactions) appState.transactions = [];
 
         if (!appState.splitMembers.some(m => m.name === 'You')) {
             appState.splitMembers.unshift({ name: 'You', upi: '' });
@@ -1213,7 +1174,7 @@
                 activeBtn.className = "tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-indigo-600 via-indigo-700 to-emerald-600 text-white shadow-lg shadow-indigo-600/25";
             }
 
-            ['dashboard', 'grocery', 'hub', 'analytics'].forEach(id => {
+            ['dashboard', 'transactions', 'grocery', 'hub', 'analytics'].forEach(id => {
                 const sec = document.getElementById(`section-${id}`);
                 if(sec) {
                     sec.classList.add('hidden');
@@ -1228,6 +1189,9 @@
 
             if(tabId === 'dashboard' || tabId === 'analytics') {
                 updateCharts();
+            }
+            if(tabId === 'transactions') {
+                renderTransactions();
             }
             if(tabId === 'grocery') {
                 renderGrocery();
@@ -1432,6 +1396,7 @@
 
             saveState();
             updateAll();
+            renderTransactions();
             showToast(`Added ₹${total} Grocery bill to Dashboard & History!`);
         }
 
@@ -1560,60 +1525,78 @@
                 date: txDateObj
             };
 
+            if(!appState.transactions) appState.transactions = [];
             appState.transactions.unshift(newTx);
+            
             saveState();
             updateAll();
+            renderTransactions();
+            
             document.getElementById('transaction-form').reset();
-            showToast("Transaction added successfully!");
+            showToast("Transaction added successfully & saved to History!");
         }
 
         function deleteTransaction(id) {
             appState.transactions = appState.transactions.filter(t => t.id !== id);
             saveState();
             updateAll();
+            renderTransactions();
             showToast("Transaction deleted", "error");
         }
 
         function renderTransactions() {
             const tbody = document.getElementById('transaction-table-body');
-            const search = document.getElementById('search-tx').value.toLowerCase();
-            const filterCat = document.getElementById('filter-category').value;
-            const filterMode = document.getElementById('filter-mode').value;
-            const sortOrder = document.getElementById('sort-order').value;
+            const searchInput = document.getElementById('search-tx');
+            const filterCatEl = document.getElementById('filter-category');
+            const filterModeEl = document.getElementById('filter-mode');
+            const sortOrderEl = document.getElementById('sort-order');
+
+            if(!tbody) return;
+
+            const search = searchInput ? searchInput.value.toLowerCase() : '';
+            const filterCat = filterCatEl ? filterCatEl.value : 'ALL';
+            const filterMode = filterModeEl ? filterModeEl.value : 'ALL';
+            const sortOrder = sortOrderEl ? sortOrderEl.value : 'newest';
 
             tbody.innerHTML = '';
+            
+            if(!appState.transactions) appState.transactions = [];
+
             let filtered = appState.transactions.filter(t => {
-                const matchesSearch = t.note.toLowerCase().includes(search) || t.category.toLowerCase().includes(search);
+                const noteVal = t.note ? t.note.toLowerCase() : '';
+                const catVal = t.category ? t.category.toLowerCase() : '';
+                const matchesSearch = noteVal.includes(search) || catVal.includes(search);
                 const matchesCat = filterCat === 'ALL' || t.category === filterCat;
                 const matchesMode = filterMode === 'ALL' || t.mode === filterMode;
                 return matchesSearch && matchesCat && matchesMode;
             });
 
             filtered.sort((a, b) => {
-                if(sortOrder === 'newest') return new Date(b.date) - new Date(a.date);
-                if(sortOrder === 'oldest') return new Date(a.date) - new Date(b.date);
-                if(sortOrder === 'highest') return b.amount - a.amount;
-                if(sortOrder === 'lowest') return a.amount - b.amount;
+                if(sortOrder === 'newest') return new Date(b.date || 0) - new Date(a.date || 0);
+                if(sortOrder === 'oldest') return new Date(a.date || 0) - new Date(b.date || 0);
+                if(sortOrder === 'highest') return (b.amount || 0) - (a.amount || 0);
+                if(sortOrder === 'lowest') return (a.amount || 0) - (b.amount || 0);
             });
 
+            const noTxMsg = document.getElementById('no-tx-msg');
             if(filtered.length === 0) {
-                document.getElementById('no-tx-msg').classList.remove('hidden');
+                if(noTxMsg) noTxMsg.classList.remove('hidden');
             } else {
-                document.getElementById('no-tx-msg').classList.add('hidden');
+                if(noTxMsg) noTxMsg.classList.add('hidden');
             }
 
             filtered.forEach(t => {
-                const d = new Date(t.date);
+                const d = new Date(t.date || Date.now());
                 const dateStr = d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition";
                 tr.innerHTML = `
                     <td class="py-3 px-4 text-xs text-slate-500">${dateStr}</td>
-                    <td class="py-3 px-4 font-medium"><span class="px-2 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-xs">${t.category}</span></td>
-                    <td class="py-3 px-4 text-sm">${t.note}</td>
-                    <td class="py-3 px-4 text-xs text-slate-500">${t.mode}</td>
+                    <td class="py-3 px-4 font-medium"><span class="px-2 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-xs">${t.category || 'General'}</span></td>
+                    <td class="py-3 px-4 text-sm">${t.note || '-'}</td>
+                    <td class="py-3 px-4 text-xs text-slate-500">${t.mode || 'UPI'}</td>
                     <td class="py-3 px-4 text-right font-bold ${t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}">
-                        ${t.type === 'income' ? '+' : '-'}₹${Number(t.amount).toLocaleString('en-IN')}
+                        ${t.type === 'income' ? '+' : '-'}₹${Number(t.amount || 0).toLocaleString('en-IN')}
                     </td>
                     <td class="py-3 px-4 text-center">
                         <button onclick="deleteTransaction(${t.id})" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash"></i></button>
@@ -1672,7 +1655,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
 
-            // Chart 2: Payment Mode Breakdown
             let modeData = { UPI: 0, Cash: 0, Bank: 0 };
             appState.transactions.filter(t => t.type === 'expense').forEach(t => {
                 if(modeData[t.mode] !== undefined) modeData[t.mode] += Number(t.amount);
@@ -1692,7 +1674,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } } }
             });
 
-            // Chart 3: Income vs Expense Comparison
             let totalInc = appState.transactions.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
             let totalExp = appState.transactions.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
             const incExpCtx = document.getElementById('incomeExpenseBarChart').getContext('2d');
@@ -1710,7 +1691,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
 
-            // Chart 4: Polar Area Category
             const polarCtx = document.getElementById('polarCategoryChart').getContext('2d');
             if(polarCategoryChartInstance) polarCategoryChartInstance.destroy();
             polarCategoryChartInstance = new Chart(polarCtx, {
@@ -1725,7 +1705,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
             });
 
-            // Chart 5: Cumulative Line Chart
             let cumulativeSum = 0;
             let sortedTxs = [...appState.transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
             let cumulativeDates = [];
@@ -1753,7 +1732,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
 
-            // Chart 6: Radar Category Chart
             const radarCtx = document.getElementById('radarCategoryChart').getContext('2d');
             if(radarCategoryChartInstance) radarCategoryChartInstance.destroy();
             radarCategoryChartInstance = new Chart(radarCtx, {
@@ -1860,21 +1838,17 @@
 
             appState.splitBills.unshift(newBill);
 
-            // AUTO SYNC WITH DASHBOARD: If you paid or if it affects your share, add to main expense history
-            let myShareAmt = amount;
             if (payer === 'You') {
-                // If you paid the bill, your total out-of-pocket expense increases by the full bill amount
                 appState.transactions.unshift({
                     id: Date.now() + 1,
                     type: 'expense',
                     amount: amount,
                     category: category === 'Party' ? 'Food' : category,
                     mode: 'UPI',
-                    note: `[Group Bill Paid] ${desc}`,
+                    note: `[Group Bill Paid by You for ${selectedMembers.join(', ')}] ${desc}`,
                     date: new Date().toISOString()
                 });
             } else {
-                // If someone else paid, but you are part of the split, your personal liability/share is added as expense or tracked
                 let participantsCount = [payer, ...selectedMembers].length;
                 let yourIndividualShare = amount / participantsCount;
                 if(selectedMembers.includes('You')) {
@@ -1884,7 +1858,7 @@
                         amount: yourIndividualShare,
                         category: category === 'Party' ? 'Food' : category,
                         mode: 'UPI',
-                        note: `[Group Share - ${payer} paid] ${desc}`,
+                        note: `[Group Share - Paid by ${payer}] ${desc}`,
                         date: new Date().toISOString()
                     });
                 }
@@ -1892,13 +1866,15 @@
 
             saveState();
             updateAll();
+            renderTransactions();
             document.getElementById('hub-desc').value = '';
             document.getElementById('hub-amount').value = '';
-            showToast("Split bill added and successfully synced with Dashboard!");
+            showToast("Split bill added and successfully synced with History & Dashboard!");
         }
 
         function renderSplitter() {
             const membersList = document.getElementById('splitter-members-list');
+            if(!membersList) return;
             membersList.innerHTML = '';
             
             let totalGroupExpense = appState.splitBills.reduce((sum, b) => sum + Number(b.amount), 0);
@@ -1984,7 +1960,7 @@
                     <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 text-xs">
                         <div>
                             <div class="font-bold text-slate-800 dark:text-slate-200">${b.desc} <span class="text-[10px] font-normal px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 ml-1">${b.category || 'Other'}</span></div>
-                            <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5"><i class="fa-solid fa-calendar-days"></i> Date: ${dStr} | Paid by <span class="font-bold">${b.payer}</span></div>
+                            <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5"><i class="fa-solid fa-calendar-days"></i> Date: ${dStr} | Paid by <span class="font-bold text-indigo-600 dark:text-indigo-400">${b.payer}</span> (For: ${(b.splitWith || []).join(', ')})</div>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="font-black text-sm">₹${b.amount}</div>
@@ -2053,6 +2029,7 @@
 
         function calculateSettlements() {
             const results = document.getElementById('settlement-results');
+            if(!results) return;
             results.innerHTML = '';
 
             if(appState.splitMembers.length < 2 || appState.splitBills.length === 0) {
@@ -2217,6 +2194,7 @@
 
         function updateAll() {
             updateDashboard();
+            renderTransactions();
             renderSplitter();
             renderGrocery();
         }
