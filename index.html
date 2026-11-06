@@ -842,9 +842,10 @@
                     <!-- Purchaser & Payee Info Grid -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 20px 0; border-bottom: 1px solid #f1f5f9; font-size: 12px;">
                         <div>
-                            <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.8px;">Billed To / Purchaser</div>
-                            <div style="font-weight: 800; color: #1e293b; margin-top: 3px; font-size: 13px;">Self / Household Grocery</div>
-                            <div style="font-size: 11px; color: #64748b; margin-top: 1px;">Category: Kirana, Grocery & Essentials</div>
+                            <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.8px;">Billed To / Customer</div>
+                            <div id="invoice-billed-user-name" style="font-weight: 900; color: #0f172a; margin-top: 3px; font-size: 17px; letter-spacing: -0.3px; text-transform: capitalize;">Amit Kumar</div>
+                            <div id="invoice-billed-user-phone" style="font-size: 12px; color: #2453d6; margin-top: 2px; font-weight: 700; font-family: monospace;">+91 9876543210</div>
+                            <div style="font-size: 10px; color: #64748b; margin-top: 2px;">Category: Kirana, Grocery & Essentials</div>
                         </div>
                         <div style="text-align: right;">
                             <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.8px;">Store Payment Target</div>
@@ -1193,53 +1194,154 @@
     </div>
 
     <!-- ================= MODALS ================= -->
-    <div id="budget-modal" class="fixed inset-0 z-50 bg-neutral-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 rounded-3xl shadow-2xl relative">
-            <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-neutral-900 dark:text-white">
-                <i class="fa-solid fa-wallet text-primary-600"></i> Set Monthly Budget
-            </h3>
-            <form onsubmit="saveBudget(event)">
-                <div class="mb-4">
-                    <label class="block text-xs font-semibold mb-1 text-neutral-600 dark:text-neutral-300">Monthly Budget Limit (₹)</label>
-                    <input type="number" id="modal-budget-input" required placeholder="e.g. 15000" class="w-full p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-sm focus:outline-none focus:border-primary-500">
+    <!-- Redesigned High-Quality Monthly Budget Modal -->
+    <div id="budget-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 sm:p-7 rounded-[2rem] shadow-2xl relative border border-white/60 dark:border-neutral-800 overflow-hidden animate-fade-in bg-white/95 dark:bg-neutral-900/95">
+            <!-- Top Ambient Gradient Accent Line -->
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary-700 via-primary-600 to-primary-400"></div>
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-5 pt-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-primary-700 via-primary-600 to-primary-500 flex items-center justify-center text-white shadow-lg shadow-primary-500/30">
+                        <i class="fa-solid fa-wallet text-base"></i>
+                    </div>
+                    <div>
+                        <span class="text-[9px] font-black uppercase tracking-wider text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/70 px-2.5 py-0.5 rounded-full border border-primary-200/70 dark:border-primary-800/70">Target Allocation</span>
+                        <h3 class="text-base sm:text-lg font-black text-neutral-900 dark:text-white tracking-tight mt-0.5">
+                            Set Monthly Budget
+                        </h3>
+                    </div>
                 </div>
-                <div class="flex justify-end gap-3">
-                    <button type="button" onclick="closeBudgetModal()" class="px-4 py-2 rounded-xl bg-neutral-200 dark:bg-neutral-800 text-xs font-semibold">Cancel</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold shadow-md">Save Budget</button>
+                <button type="button" onclick="closeBudgetModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 flex items-center justify-center transition active:scale-95 text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="saveBudget(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-200 mb-1.5 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-indian-rupee-sign text-primary-600 text-xs"></i> Monthly Budget Limit
+                        </span>
+                        <span class="text-[10px] text-neutral-400 font-semibold">In INR (₹)</span>
+                    </label>
+                    <div class="relative flex items-center rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300/80 dark:border-neutral-700 overflow-hidden focus-within:border-primary-500 focus-within:ring-4 focus-within:ring-primary-500/10 transition shadow-inner">
+                        <span class="px-4 py-3 text-sm font-black text-primary-600 dark:text-primary-400 select-none bg-primary-50 dark:bg-primary-950/60 border-r border-neutral-300/80 dark:border-neutral-700">₹</span>
+                        <input type="number" id="modal-budget-input" step="any" min="0" required placeholder="e.g. 15000" class="w-full px-4 py-3 bg-transparent text-sm sm:text-base font-black tracking-wider focus:outline-none text-neutral-900 dark:text-white placeholder:font-normal placeholder:tracking-normal">
+                    </div>
+                </div>
+
+                <!-- Quick Preset Chips -->
+                <div>
+                    <label class="block text-[11px] font-bold text-neutral-500 dark:text-neutral-400 mb-1.5">Quick Presets:</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button type="button" onclick="setQuickBudget(5000)" class="py-1.5 px-2 rounded-xl bg-neutral-100 hover:bg-primary-50 dark:bg-neutral-800 dark:hover:bg-primary-950/40 text-neutral-700 hover:text-primary-600 dark:text-neutral-300 text-xs font-bold border border-neutral-200 dark:border-neutral-700 transition active:scale-95">₹5k</button>
+                        <button type="button" onclick="setQuickBudget(10000)" class="py-1.5 px-2 rounded-xl bg-neutral-100 hover:bg-primary-50 dark:bg-neutral-800 dark:hover:bg-primary-950/40 text-neutral-700 hover:text-primary-600 dark:text-neutral-300 text-xs font-bold border border-neutral-200 dark:border-neutral-700 transition active:scale-95">₹10k</button>
+                        <button type="button" onclick="setQuickBudget(25000)" class="py-1.5 px-2 rounded-xl bg-neutral-100 hover:bg-primary-50 dark:bg-neutral-800 dark:hover:bg-primary-950/40 text-neutral-700 hover:text-primary-600 dark:text-neutral-300 text-xs font-bold border border-neutral-200 dark:border-neutral-700 transition active:scale-95">₹25k</button>
+                        <button type="button" onclick="setQuickBudget(50000)" class="py-1.5 px-2 rounded-xl bg-neutral-100 hover:bg-primary-50 dark:bg-neutral-800 dark:hover:bg-primary-950/40 text-neutral-700 hover:text-primary-600 dark:text-neutral-300 text-xs font-bold border border-neutral-200 dark:border-neutral-700 transition active:scale-95">₹50k</button>
+                    </div>
+                </div>
+
+                <div class="p-3 rounded-2xl bg-primary-50/70 dark:bg-primary-950/40 border border-primary-200/60 dark:border-primary-800/60 text-[11px] text-neutral-600 dark:text-neutral-300 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-primary-600 text-sm flex-shrink-0"></i>
+                    <span>This threshold calibrates real-time health progress bars and spending velocity alerts.</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button type="button" onclick="closeBudgetModal()" class="w-full py-3 px-4 rounded-2xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-bold text-xs transition border border-neutral-200 dark:border-neutral-700 active:scale-95">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 hover:from-primary-800 hover:to-primary-600 text-white font-extrabold text-xs tracking-wider uppercase transition shadow-lg shadow-primary-600/30 flex items-center justify-center gap-1.5 active:scale-95 border border-primary-400/20">
+                        <i class="fa-solid fa-check text-xs"></i> Save Budget
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Category Budget Modal -->
-    <div id="cat-budget-modal" class="fixed inset-0 z-50 bg-neutral-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 rounded-3xl shadow-2xl relative">
-            <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-neutral-900 dark:text-white">
-                <i class="fa-solid fa-bullseye text-primary-600"></i> Set Category Ceiling Limit
-            </h3>
-            <form onsubmit="saveCategoryBudget(event)">
-                <div class="mb-3">
-                    <label class="block text-xs font-semibold mb-1 text-neutral-600 dark:text-neutral-300">Category</label>
-                    <select id="modal-cat-name" class="w-full p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-sm focus:outline-none focus:border-primary-500 font-semibold">
-                        <option value="Food">🍔 Food & Dining</option>
-                        <option value="Fast Food">🍟 Fast Food</option>
-                        <option value="Kirana">🛒 Kirana & Grocery</option>
-                        <option value="Rent">🏠 Rent & Stay</option>
-                        <option value="Bills">⚡ Utilities & Bills</option>
-                        <option value="Shopping">🛍️ Shopping</option>
-                        <option value="Travel">🚗 Travel & Fuel</option>
-                        <option value="Education">📚 Education & Books</option>
-                        <option value="Medical">💊 Medical & Health</option>
-                        <option value="Other">✨ Other</option>
-                    </select>
+    <!-- Redesigned High-Quality Category Budget Ceiling Modal -->
+    <div id="cat-budget-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 sm:p-7 rounded-[2rem] shadow-2xl relative border border-white/60 dark:border-neutral-800 overflow-hidden animate-fade-in bg-white/95 dark:bg-neutral-900/95">
+            <!-- Top Ambient Gradient Accent Line -->
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-500 via-primary-600 to-emerald-500"></div>
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-5 pt-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 via-primary-600 to-primary-700 flex items-center justify-center text-white shadow-lg shadow-primary-500/30">
+                        <i class="fa-solid fa-bullseye text-base"></i>
+                    </div>
+                    <div>
+                        <span class="text-[9px] font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/70 px-2.5 py-0.5 rounded-full border border-amber-200/70 dark:border-amber-800/70">Discretionary Cap</span>
+                        <h3 class="text-base sm:text-lg font-black text-neutral-900 dark:text-white tracking-tight mt-0.5">
+                            Category Ceiling Limit
+                        </h3>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-xs font-semibold mb-1 text-neutral-600 dark:text-neutral-300">Ceiling Limit (₹)</label>
-                    <input type="number" id="modal-cat-limit" required placeholder="e.g. 5000" class="w-full p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-sm focus:outline-none focus:border-primary-500">
+                <button type="button" onclick="closeCategoryBudgetModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 flex items-center justify-center transition active:scale-95 text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="saveCategoryBudget(event)" class="space-y-4">
+                <!-- Select Category -->
+                <div>
+                    <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-200 mb-1.5 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-tags text-primary-600 text-xs"></i> Select Category
+                        </span>
+                        <span class="text-[10px] text-neutral-400 font-semibold">Expense Area</span>
+                    </label>
+                    <div class="relative">
+                        <select id="modal-cat-name" onchange="syncCurrentCategoryLimit(this.value)" class="w-full px-4 py-3 rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300/80 dark:border-neutral-700 text-xs sm:text-sm font-bold focus:outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 text-neutral-800 dark:text-neutral-100 transition shadow-inner">
+                            <option value="Food">🍔 Food & Dining</option>
+                            <option value="Fast Food">🍟 Fast Food</option>
+                            <option value="Kirana">🛒 Kirana & Grocery</option>
+                            <option value="Rent">🏠 Rent & Stay</option>
+                            <option value="Bills">⚡ Utilities & Bills</option>
+                            <option value="Shopping">🛍️ Shopping</option>
+                            <option value="Travel">🚗 Travel & Fuel</option>
+                            <option value="Education">📚 Education & Books</option>
+                            <option value="Medical">💊 Medical & Health</option>
+                            <option value="Other">✨ Other</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="flex justify-end gap-3">
-                    <button type="button" onclick="closeCategoryBudgetModal()" class="px-4 py-2 rounded-xl bg-neutral-200 dark:bg-neutral-800 text-xs font-semibold">Cancel</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold shadow-md">Save Limit</button>
+
+                <!-- Ceiling Limit Amount -->
+                <div>
+                    <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-200 mb-1.5 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield text-amber-500 text-xs"></i> Maximum Monthly Ceiling Limit
+                        </span>
+                        <span id="cat-current-limit-badge" class="text-[10px] text-primary-600 dark:text-primary-400 font-bold">Current: ₹0</span>
+                    </label>
+                    <div class="relative flex items-center rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300/80 dark:border-neutral-700 overflow-hidden focus-within:border-primary-500 focus-within:ring-4 focus-within:ring-primary-500/10 transition shadow-inner">
+                        <span class="px-4 py-3 text-sm font-black text-amber-600 dark:text-amber-400 select-none bg-amber-50 dark:bg-amber-950/60 border-r border-neutral-300/80 dark:border-neutral-700">₹</span>
+                        <input type="number" id="modal-cat-limit" step="any" min="0" required placeholder="e.g. 5000" class="w-full px-4 py-3 bg-transparent text-sm sm:text-base font-black tracking-wider focus:outline-none text-neutral-900 dark:text-white placeholder:font-normal placeholder:tracking-normal">
+                    </div>
+                </div>
+
+                <!-- Category Limit Preset Chips -->
+                <div>
+                    <label class="block text-[11px] font-bold text-neutral-500 dark:text-neutral-400 mb-1.5">Quick Presets:</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="setQuickCategoryLimit(2000)" class="py-1.5 px-2 rounded-xl bg-neutral-100 hover:bg-amber-50 dark:bg-neutral-800 dark:hover:bg-amber-950/40 text-neutral-700 hover:text-amber-600 dark:text-neutral-300 text-xs font-bold border border-neutral-200 dark:border-neutral-700 transition active:scale-95">₹2,000</button>
+                        <button type="button" onclick="setQuickCategoryLimit(5000)" class="py-1.5 px-2 rounded-xl bg-neutral-100 hover:bg-amber-50 dark:bg-neutral-800 dark:hover:bg-amber-950/40 text-neutral-700 hover:text-amber-600 dark:text-neutral-300 text-xs font-bold border border-neutral-200 dark:border-neutral-700 transition active:scale-95">₹5,000</button>
+                        <button type="button" onclick="setQuickCategoryLimit(10000)" class="py-1.5 px-2 rounded-xl bg-neutral-100 hover:bg-amber-50 dark:bg-neutral-800 dark:hover:bg-amber-950/40 text-neutral-700 hover:text-amber-600 dark:text-neutral-300 text-xs font-bold border border-neutral-200 dark:border-neutral-700 transition active:scale-95">₹10,000</button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button type="button" onclick="closeCategoryBudgetModal()" class="w-full py-3 px-4 rounded-2xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-bold text-xs transition border border-neutral-200 dark:border-neutral-700 active:scale-95">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-amber-600 via-primary-600 to-primary-700 hover:from-amber-700 hover:to-primary-800 text-white font-extrabold text-xs tracking-wider uppercase transition shadow-lg shadow-primary-600/30 flex items-center justify-center gap-1.5 active:scale-95 border border-primary-400/20">
+                        <i class="fa-solid fa-check text-xs"></i> Save Limit
+                    </button>
                 </div>
             </form>
         </div>
@@ -1267,24 +1369,71 @@
         </div>
     </div>
 
-    <!-- Add Member Modal -->
-    <div id="member-modal" class="fixed inset-0 z-50 bg-neutral-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 rounded-3xl shadow-2xl relative">
-            <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-neutral-900 dark:text-white">
-                <i class="fa-solid fa-user-plus text-success-600"></i> Add Group Member
-            </h3>
-            <form onsubmit="saveMember(event)">
-                <div class="mb-3">
-                    <label class="block text-xs font-semibold mb-1 text-neutral-600 dark:text-neutral-300">Member Name</label>
-                    <input type="text" id="modal-member-name" required placeholder="e.g. Rahul Verma" class="w-full p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-sm focus:outline-none focus:border-primary-500">
+    <!-- Add Member Modal - Aligned with App's Primary Blue Brand Palette -->
+    <div id="member-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 sm:p-7 rounded-[2rem] shadow-2xl relative border border-white/60 dark:border-neutral-800 overflow-hidden animate-fade-in bg-white/95 dark:bg-neutral-900/95">
+            <!-- Top Ambient Accent Line matching app's primary gradient -->
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary-700 via-primary-500 to-primary-400"></div>
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-5 pt-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-primary-700 via-primary-600 to-primary-500 flex items-center justify-center text-white shadow-lg shadow-primary-500/30">
+                        <i class="fa-solid fa-user-plus text-base"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[9px] font-black uppercase tracking-wider text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/70 px-2.5 py-0.5 rounded-full border border-primary-200/70 dark:border-primary-800/70">Split Directory</span>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-black text-neutral-900 dark:text-white tracking-tight mt-0.5">
+                            Add Group Member
+                        </h3>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-xs font-semibold mb-1 text-neutral-600 dark:text-neutral-300">UPI ID / Mobile Number (Optional)</label>
-                    <input type="text" id="modal-member-upi" placeholder="e.g. 9876543210@upi or rahul@okhdfc" class="w-full p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-sm focus:outline-none focus:border-primary-500">
+                <button type="button" onclick="closeAddMemberModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 flex items-center justify-center transition active:scale-95 text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="saveMember(event)" class="space-y-4">
+                <!-- Member Name Input -->
+                <div>
+                    <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-200 mb-1.5 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-signature text-primary-600 text-xs"></i> Member Name
+                        </span>
+                        <span class="text-[10px] text-neutral-400 font-semibold">Required</span>
+                    </label>
+                    <input type="text" id="modal-member-name" required placeholder="e.g. Rahul Verma" class="w-full px-4 py-3 rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300/80 dark:border-neutral-700 text-xs sm:text-sm font-semibold focus:outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 text-neutral-800 dark:text-neutral-100 transition shadow-inner">
                 </div>
-                <div class="flex justify-end gap-3">
-                    <button type="button" onclick="closeAddMemberModal()" class="px-4 py-2 rounded-xl bg-neutral-200 dark:bg-neutral-800 text-xs font-semibold">Cancel</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl bg-success-600 hover:bg-success-700 text-white text-xs font-semibold shadow-md">Add Friend</button>
+
+                <!-- UPI / Mobile Field with Locked @upi & 10-Digit Validation -->
+                <div>
+                    <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-200 mb-1.5 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-mobile-screen-button text-primary-600 text-xs"></i> Mobile Number (UPI Linked)
+                        </span>
+                        <span id="member-digit-count" class="text-[10px] text-neutral-400 font-bold bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-full border border-neutral-200 dark:border-neutral-700">0/10 Digits</span>
+                    </label>
+                    <div class="flex items-center rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300/80 dark:border-neutral-700 overflow-hidden focus-within:border-primary-500 focus-within:ring-4 focus-within:ring-primary-500/10 transition shadow-inner">
+                        <span class="px-3.5 py-3 text-xs font-black text-neutral-600 dark:text-neutral-300 select-none bg-neutral-200/70 dark:bg-neutral-700/60 border-r border-neutral-300/80 dark:border-neutral-700 tracking-wider">+91</span>
+                        <input type="tel" id="modal-member-phone" maxlength="10" oninput="handleMemberPhoneInput(this.value)" placeholder="Enter 10-digit mobile number" class="w-full px-3 py-3 bg-transparent text-xs sm:text-sm font-black tracking-widest focus:outline-none text-neutral-800 dark:text-neutral-100 placeholder:font-normal placeholder:tracking-normal">
+                        <span class="px-3.5 py-3 text-xs font-black text-primary-600 dark:text-primary-400 bg-primary-100/70 dark:bg-primary-950/80 border-l border-neutral-300/80 dark:border-neutral-700 select-none tracking-wide font-mono">@upi</span>
+                    </div>
+                    <div class="flex justify-between items-center mt-1.5 px-1 text-[11px]">
+                        <span class="text-neutral-400">Auto UPI: <strong id="member-preview-upi" class="text-primary-600 font-mono font-bold">@upi</strong></span>
+                        <span id="member-valid-badge" class="font-bold text-neutral-400 text-[10px]">Optional (Needs 10 digits)</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons: Cancel + Brand Primary Gradient Button -->
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button type="button" onclick="closeAddMemberModal()" class="w-full py-3 px-4 rounded-2xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-bold text-xs transition border border-neutral-200 dark:border-neutral-700 active:scale-95">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 hover:from-primary-800 hover:to-primary-600 text-white font-extrabold text-xs tracking-wider uppercase transition shadow-lg shadow-primary-600/30 flex items-center justify-center gap-1.5 active:scale-95 border border-primary-400/20">
+                        <i class="fa-solid fa-user-plus text-xs"></i> Add Friend
+                    </button>
                 </div>
             </form>
         </div>
@@ -1428,13 +1577,95 @@
 
             <!-- Dual Action Buttons: Direct Mobile Pay Intent + Done -->
             <div class="grid grid-cols-2 gap-2">
-                <a id="qr-direct-pay-link" href="#" class="py-2 px-2.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition active:scale-95 border border-neutral-200 dark:border-neutral-700">
+                <button type="button" onclick="openPaymentAppChooser()" class="py-2 px-2.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition active:scale-95 border border-neutral-200 dark:border-neutral-700">
                     <i class="fa-solid fa-mobile-screen"></i> Pay on App
-                </a>
+                </button>
                 <button onclick="closeUpiQrModal()" class="py-2 px-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-[11px] tracking-wider uppercase shadow-md shadow-primary-600/25 transition active:scale-[0.98]">
                     Done / Close
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Payment App Chooser Sheet (Excludes WhatsApp, directly triggers PhonePe, GPay, Paytm) -->
+    <div id="payment-app-sheet" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-md hidden items-end sm:items-center justify-center p-3 sm:p-4 animate-fade-in">
+        <div class="w-full max-w-sm bg-white dark:bg-neutral-900 rounded-[2rem] p-5 shadow-2xl border border-neutral-200 dark:border-neutral-800 relative">
+            <div class="flex items-center justify-between mb-4 pb-2 border-b border-neutral-200 dark:border-neutral-800">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 flex items-center justify-center text-sm font-bold">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs sm:text-sm font-black text-neutral-900 dark:text-white">Choose Payment App</h4>
+                        <p class="text-[10px] text-neutral-400">Direct instant transfer (Excludes WhatsApp)</p>
+                    </div>
+                </div>
+                <button onclick="closePaymentAppChooser()" class="w-7 h-7 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-500 text-xs flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-2 mb-3">
+                <!-- PhonePe Direct App Intent -->
+                <button onclick="launchTargetPaymentApp('phonepe')" class="w-full p-3 rounded-2xl bg-[#5f259f]/10 hover:bg-[#5f259f]/20 border border-[#5f259f]/30 flex items-center justify-between transition active:scale-95 text-left group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-[#5f259f] text-white flex items-center justify-center font-black text-base shadow-sm">
+                            पे
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-neutral-900 dark:text-white group-hover:text-[#5f259f]">PhonePe</div>
+                            <div class="text-[10px] text-neutral-500">Launch directly in PhonePe App</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-neutral-400"></i>
+                </button>
+
+                <!-- Google Pay Direct App Intent -->
+                <button onclick="launchTargetPaymentApp('gpay')" class="w-full p-3 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 flex items-center justify-between transition active:scale-95 text-left group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-white text-blue-600 flex items-center justify-center font-black text-base shadow-sm border border-neutral-200">
+                            <span class="text-blue-500 font-extrabold text-sm">G</span><span class="text-red-500 font-extrabold text-sm">P</span>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-neutral-900 dark:text-white group-hover:text-blue-600">Google Pay (GPay)</div>
+                            <div class="text-[10px] text-neutral-500">Launch directly in Tez / Google Pay</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-neutral-400"></i>
+                </button>
+
+                <!-- Paytm Direct App Intent -->
+                <button onclick="launchTargetPaymentApp('paytm')" class="w-full p-3 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 flex items-center justify-between transition active:scale-95 text-left group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-[#002e6e] text-[#00baf2] flex items-center justify-center font-black text-xs shadow-sm">
+                            paytm
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-neutral-900 dark:text-white group-hover:text-sky-600">Paytm UPI</div>
+                            <div class="text-[10px] text-neutral-500">Launch directly in Paytm App</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-neutral-400"></i>
+                </button>
+
+                <!-- Any Default Bank / BHIM App -->
+                <button onclick="launchTargetPaymentApp('generic')" class="w-full p-3 rounded-2xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700/80 border border-neutral-200 dark:border-neutral-700 flex items-center justify-between transition active:scale-95 text-left group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900 flex items-center justify-center font-bold text-xs shadow-sm">
+                            <i class="fa-solid fa-building-columns"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-neutral-900 dark:text-white">BHIM / Other Banking App</div>
+                            <div class="text-[10px] text-neutral-500">Standard system chooser</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-neutral-400"></i>
+                </button>
+            </div>
+
+            <button onclick="closePaymentAppChooser()" class="w-full py-2.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300 font-bold text-xs transition">
+                Back to QR
+            </button>
         </div>
     </div>
 
@@ -1803,6 +2034,34 @@
         let cumulativeLineChartInstance = null;
         let radarCategoryChartInstance = null;
 
+        function handleMemberPhoneInput(val) {
+            const phoneClean = extractCleanPhone(val);
+            const inputEl = document.getElementById('modal-member-phone');
+            if(inputEl && inputEl.value !== phoneClean) {
+                inputEl.value = phoneClean;
+            }
+
+            const countEl = document.getElementById('member-digit-count');
+            const previewEl = document.getElementById('member-preview-upi');
+            const badgeEl = document.getElementById('member-valid-badge');
+
+            if(countEl) countEl.textContent = `${phoneClean.length}/10 Digits`;
+            if(previewEl) previewEl.textContent = phoneClean ? `${phoneClean}@upi` : `@upi`;
+
+            if(badgeEl) {
+                if(phoneClean.length === 10) {
+                    badgeEl.textContent = "✓ Ready for Instant QR Pay";
+                    badgeEl.className = "font-bold text-success-700 dark:text-success-500 text-[10px]";
+                } else if(phoneClean.length > 0) {
+                    badgeEl.textContent = `Needs ${10 - phoneClean.length} more digits`;
+                    badgeEl.className = "font-bold text-error-500 text-[10px]";
+                } else {
+                    badgeEl.textContent = "Optional (Needs 10 digits)";
+                    badgeEl.className = "font-bold text-neutral-400 text-[10px]";
+                }
+            }
+        }
+
         function saveState() {
             localStorage.setItem('khataflow_state', JSON.stringify(appState));
         }
@@ -2013,6 +2272,8 @@
             const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
             const merchantUpi = appState.merchantUpi || 'store@upi';
             const upiPayLink = `upi://pay?pa=${merchantUpi}&pn=KhataFlowStore&am=${total}&cu=INR`;
+            const userName = getPrimaryUserName();
+            const userPhone = appState.merchantPhone ? `+91 ${appState.merchantPhone}` : '';
             
             // Automatically record in History as a Shopping Invoice
             recordGroceryInvoiceToHistory(invId, checkedItems, total, merchantUpi, 'WhatsApp');
@@ -2020,6 +2281,7 @@
             let text = `🧾 *KHATAFLOW - GROCERY TAX INVOICE*%0A`;
             text += `🆔 *Invoice No:* ${invId}%0A`;
             text += `📅 *Date:* ${dateStr}%0A`;
+            text += `👤 *Customer:* ${userName} ${userPhone ? `(${userPhone})` : ''}%0A`;
             text += `🏪 *Payable UPI:* ${merchantUpi}%0A`;
             text += `----------------------------------------------%0A`;
             checkedItems.forEach((item, idx) => {
@@ -2052,12 +2314,22 @@
                 method: method
             };
 
+            // Safeguard transactions array
+            if(!Array.isArray(appState.transactions)) {
+                appState.transactions = [];
+            }
+
             // Avoid double insertion if same invoiceId exists
             const existingIdx = appState.transactions.findIndex(t => t.invoiceId === invId);
             if(existingIdx >= 0) {
                 appState.transactions[existingIdx] = invoiceRecord;
             } else {
                 appState.transactions.unshift(invoiceRecord);
+            }
+
+            // Ensure groceryInvoices is initialized before accessing .some()
+            if(!Array.isArray(appState.groceryInvoices)) {
+                appState.groceryInvoices = [];
             }
 
             // Save dedicated invoice collection as well
@@ -2142,10 +2414,19 @@
             // Automatically log to History with full invoice details, date and time
             recordGroceryInvoiceToHistory(invoiceNo, checkedItems, total, merchantUpi, format.toUpperCase());
 
+            const userName = getPrimaryUserName();
+            const userPhone = appState.merchantPhone || cleanPhone;
+
             document.getElementById('invoice-bill-no').textContent = invoiceNo;
             document.getElementById('invoice-bill-date').textContent = `Date: ${dateNow}`;
             document.getElementById('invoice-bill-grand-total').textContent = `₹${total.toLocaleString('en-IN')}`;
             document.getElementById('invoice-merchant-upi-display').textContent = merchantUpi;
+
+            // Dynamically populate customer's name and 10-digit mobile number in bold typography
+            const billedNameEl = document.getElementById('invoice-billed-user-name');
+            const billedPhoneEl = document.getElementById('invoice-billed-user-phone');
+            if (billedNameEl) billedNameEl.textContent = userName;
+            if (billedPhoneEl) billedPhoneEl.textContent = userPhone ? `+91 ${userPhone}` : '+91 9876543210';
 
             // Generate NPCI Compliant Dynamic Payment QR with exact amount and 10-digit @upi handle
             const amountFormatted = total.toFixed(2);
@@ -2762,7 +3043,20 @@
         function saveMember(e) {
             e.preventDefault();
             const name = document.getElementById('modal-member-name').value.trim();
-            const upi = document.getElementById('modal-member-upi').value.trim();
+            const rawPhone = document.getElementById('modal-member-phone')?.value || '';
+            const phoneClean = extractCleanPhone(rawPhone);
+
+            if(!name) {
+                showToast("Please enter member name", "error");
+                return;
+            }
+
+            if(rawPhone.trim().length > 0 && phoneClean.length !== 10) {
+                showToast("Please enter exactly 10 digits for mobile number or leave blank", "error");
+                return;
+            }
+
+            const upi = phoneClean.length === 10 ? `${phoneClean}@upi` : '';
 
             if(appState.splitMembers.some(m => m.name.toLowerCase() === name.toLowerCase())) {
                 showToast("Member already exists", "error");
@@ -2774,8 +3068,11 @@
             renderSplitter();
             closeAddMemberModal();
             document.getElementById('modal-member-name').value = '';
-            document.getElementById('modal-member-upi').value = '';
-            showToast("Member added successfully!");
+            if(document.getElementById('modal-member-phone')) {
+                document.getElementById('modal-member-phone').value = '';
+                handleMemberPhoneInput('');
+            }
+            showToast(`Added ${name} to group directory!`);
         }
 
         function saveSelfUpi(e) {
@@ -3141,8 +3438,9 @@
             const cleanPayer = (payerName || primaryName || 'You').trim();
             const refCode = `REF-${Math.floor(10000 + Math.random() * 90000)}`;
             
-            // Standard NPCI deep link
-            const upiString = `upi://pay?pa=${encodeURIComponent(cleanUpi)}&pn=${encodeURIComponent(cleanPayee)}&am=${formattedAmt}&cu=INR&tn=Settlement_${refCode}`;
+            // Standard NPCI query parameters
+            const queryParams = `pa=${encodeURIComponent(cleanUpi)}&pn=${encodeURIComponent(cleanPayee)}&am=${formattedAmt}&cu=INR&tn=Settlement_${refCode}`;
+            const upiString = `upi://pay?${queryParams}`;
             
             // Populate Redesigned Elements
             const amountEl = document.getElementById('qr-display-amount');
@@ -3151,7 +3449,6 @@
             const avatarEl = document.getElementById('qr-payee-avatar');
             const refCodeEl = document.getElementById('qr-ref-code');
             const routeEl = document.getElementById('qr-transfer-route');
-            const directPayBtn = document.getElementById('qr-direct-pay-link');
 
             if(amountEl) amountEl.textContent = `₹${Math.round(numericAmt).toLocaleString('en-IN')}`;
             if(payeeNameEl) payeeNameEl.textContent = cleanPayee;
@@ -3159,16 +3456,83 @@
             if(avatarEl) avatarEl.textContent = cleanPayee.charAt(0).toUpperCase();
             if(refCodeEl) refCodeEl.textContent = refCode;
             if(routeEl) routeEl.textContent = `${cleanPayer} ➔ ${cleanPayee}`;
-            if(directPayBtn) directPayBtn.href = upiString;
 
-            // Store current UPI on modal for instant copy
-            document.getElementById('upi-qr-modal').dataset.currentUpi = cleanUpi;
+            // Save details on modal for specific app deep linking
+            const qrModal = document.getElementById('upi-qr-modal');
+            qrModal.dataset.currentUpi = cleanUpi;
+            qrModal.dataset.currentAmount = formattedAmt;
+            qrModal.dataset.currentPayee = cleanPayee;
+            qrModal.dataset.currentRef = refCode;
+            qrModal.dataset.currentParams = queryParams;
 
             // Generate crisp QR code
             document.getElementById('upi-qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=4&data=${encodeURIComponent(upiString)}`;
             
             document.getElementById('upi-qr-modal').classList.remove('hidden');
             document.getElementById('upi-qr-modal').classList.add('flex');
+        }
+
+        function openPaymentAppChooser() {
+            const qrModal = document.getElementById('upi-qr-modal');
+            const currentUpi = qrModal.dataset.currentUpi;
+            if(!currentUpi) {
+                showToast("No UPI ID specified for this settlement", "error");
+                return;
+            }
+            const sheet = document.getElementById('payment-app-sheet');
+            if(sheet) {
+                sheet.classList.remove('hidden');
+                sheet.classList.add('flex');
+            }
+        }
+
+        function closePaymentAppChooser() {
+            const sheet = document.getElementById('payment-app-sheet');
+            if(sheet) {
+                sheet.classList.add('hidden');
+                sheet.classList.remove('flex');
+            }
+        }
+
+        // Direct Deep Link Invocation for PhonePe, GPay, Paytm (Bypassing WhatsApp default interceptor)
+        function launchTargetPaymentApp(targetApp) {
+            const qrModal = document.getElementById('upi-qr-modal');
+            const queryParams = qrModal.dataset.currentParams || '';
+            const upiId = qrModal.dataset.currentUpi || '';
+            
+            if(!upiId || !queryParams) {
+                showToast("Invalid UPI settlement payload", "error");
+                return;
+            }
+
+            let appUrl = '';
+            if(targetApp === 'phonepe') {
+                // Official PhonePe deep link scheme
+                appUrl = `phonepe://pay?${queryParams}`;
+            } else if(targetApp === 'gpay') {
+                // Official Google Pay (Tez) deep link scheme
+                appUrl = `tez://upi/pay?${queryParams}`;
+            } else if(targetApp === 'paytm') {
+                // Official Paytm App deep link scheme
+                appUrl = `paytmmp://pay?${queryParams}`;
+            } else {
+                // Generic fallback
+                appUrl = `upi://pay?${queryParams}`;
+            }
+
+            // Close sheet and trigger intent
+            closePaymentAppChooser();
+            
+            // Try explicit app launch
+            const start = Date.now();
+            window.location.href = appUrl;
+
+            // If on desktop or app not installed, notify user smoothly
+            setTimeout(() => {
+                if(Date.now() - start < 1500) {
+                    showToast("If payment app didn't open automatically, scan the QR code above!");
+                }
+            }, 1000);
         }
 
         function copyUpiFromQrModal() {
@@ -3195,13 +3559,16 @@
         }
 
         function openBudgetModal() {
-            document.getElementById('modal-budget-input').value = appState.budget;
+            document.getElementById('modal-budget-input').value = appState.budget > 0 ? appState.budget : '';
             document.getElementById('budget-modal').classList.remove('hidden');
             document.getElementById('budget-modal').classList.add('flex');
         }
         function closeBudgetModal() {
             document.getElementById('budget-modal').classList.add('hidden');
             document.getElementById('budget-modal').classList.remove('flex');
+        }
+        function setQuickBudget(amt) {
+            document.getElementById('modal-budget-input').value = amt;
         }
         function saveBudget(e) {
             e.preventDefault();
@@ -3211,11 +3578,26 @@
                 saveState();
                 updateAll();
                 closeBudgetModal();
-                showToast("Target budget updated!");
+                showToast(`Monthly budget set to ₹${val.toLocaleString('en-IN')}!`);
             }
         }
 
+        function syncCurrentCategoryLimit(cat) {
+            const current = (appState.categoryBudgets && appState.categoryBudgets[cat]) || 0;
+            const badge = document.getElementById('cat-current-limit-badge');
+            const input = document.getElementById('modal-cat-limit');
+            if(badge) badge.textContent = current > 0 ? `Current: ₹${current.toLocaleString('en-IN')}` : 'Current: None';
+            if(input) input.value = current > 0 ? current : '';
+        }
+
+        function setQuickCategoryLimit(amt) {
+            document.getElementById('modal-cat-limit').value = amt;
+        }
+
         function openCategoryBudgetModal() {
+            const selectEl = document.getElementById('modal-cat-name');
+            const initialCat = selectEl ? selectEl.value : 'Food';
+            syncCurrentCategoryLimit(initialCat);
             document.getElementById('cat-budget-modal').classList.remove('hidden');
             document.getElementById('cat-budget-modal').classList.add('flex');
         }
@@ -3227,10 +3609,15 @@
             e.preventDefault();
             const cat = document.getElementById('modal-cat-name').value;
             const limit = parseFloat(document.getElementById('modal-cat-limit').value);
+            if(isNaN(limit) || limit < 0) {
+                showToast("Please enter a valid ceiling amount", "error");
+                return;
+            }
+            if(!appState.categoryBudgets) appState.categoryBudgets = {};
             appState.categoryBudgets[cat] = limit;
             saveState();
             closeCategoryBudgetModal();
-            showToast(`Ceiling limit set for ${cat}!`);
+            showToast(`Ceiling limit of ₹${limit.toLocaleString('en-IN')} set for ${cat}!`);
         }
 
         function exportGroupReportCSV() {
@@ -3247,6 +3634,12 @@
         }
 
         function openAddMemberModal() {
+            document.getElementById('modal-member-name').value = '';
+            const phoneEl = document.getElementById('modal-member-phone');
+            if (phoneEl) {
+                phoneEl.value = '';
+                handleMemberPhoneInput('');
+            }
             document.getElementById('member-modal').classList.remove('hidden');
             document.getElementById('member-modal').classList.add('flex');
         }
