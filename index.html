@@ -454,9 +454,167 @@
                         <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
                             <div class="sm:col-span-6">
                                 <label class="block text-xs font-semibold text-neutral-600 dark:text-neutral-300 mb-1">
-                                    Item Name (e.g. Basmati Rice, Milk, Almonds)
+                                    सामान चुनें या लिखें (Select Item / Custom)
                                 </label>
-                                <input type="text" id="grocery-name" required placeholder="Enter item name..." class="w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs focus:outline-none focus:border-primary-500">
+                                <select id="grocery-select" onchange="handleGrocerySelectChange(this)" class="w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs focus:outline-none focus:border-primary-500 font-medium">
+                                    <option value="" disabled selected>-- किराना / घरेलू सामान चुनें (Select Item) --</option>
+                                    <option value="__custom__">✍️ अन्य / खुद से लिखें (Custom Item...)</option>
+
+                                    <optgroup label="🌾 अनाज, आटा व चावल (Grains, Flours & Rice)">
+                                        <option value="आटा / Wheat Flour (Atta)" data-unit="Kg" data-qty="5">आटा / Wheat Flour (Atta)</option>
+                                        <option value="चावल / Rice (Basmati / Normal)" data-unit="Kg" data-qty="5">चावल / Rice (Basmati / Normal)</option>
+                                        <option value="मैदा / Refined Flour (Maida)" data-unit="Kg" data-qty="1">मैदा / Refined Flour (Maida)</option>
+                                        <option value="सूजी / Rava (Semolina)" data-unit="Kg" data-qty="1">सूजी / Rava (Semolina)</option>
+                                        <option value="बेसन / Gram Flour (Besan)" data-unit="Kg" data-qty="1">बेसन / Gram Flour (Besan)</option>
+                                        <option value="पोहा / Flattened Rice (Poha)" data-unit="Kg" data-qty="1">पोहा / Flattened Rice (Poha)</option>
+                                        <option value="दलिया / Broken Wheat (Daliya)" data-unit="Kg" data-qty="1">दलिया / Broken Wheat (Daliya)</option>
+                                        <option value="ओट्स / Oats" data-unit="Packets" data-qty="1">ओट्स / Oats</option>
+                                        <option value="मक्के का आटा / Maize Flour" data-unit="Kg" data-qty="1">मक्के का आटा / Maize Flour</option>
+                                        <option value="बाजरे का आटा / Millet Flour" data-unit="Kg" data-qty="1">बाजरे का आटा / Millet Flour</option>
+                                        <option value="रागी का आटा / Ragi Flour" data-unit="Kg" data-qty="1">रागी का आटा / Ragi Flour</option>
+                                    </optgroup>
+
+                                    <optgroup label="🥣 दालें, छोले व राजमा (Pulses & Legumes)">
+                                        <option value="अरहर / तूर दाल (Toor Dal)" data-unit="Kg" data-qty="1">अरहर / तूर दाल (Toor Dal)</option>
+                                        <option value="मूंग दाल धुली (Yellow Moong Dal)" data-unit="Kg" data-qty="1">मूंग दाल धुली (Yellow Moong Dal)</option>
+                                        <option value="मूंग दाल छिलका (Green Moong Dal)" data-unit="Kg" data-qty="1">मूंग दाल छिलका (Green Moong Dal)</option>
+                                        <option value="साबुत मूंग (Whole Green Moong)" data-unit="Kg" data-qty="1">साबुत मूंग (Whole Green Moong)</option>
+                                        <option value="चना दाल (Chana Dal)" data-unit="Kg" data-qty="1">चना दाल (Chana Dal)</option>
+                                        <option value="उड़द दाल धुली (Urad Dal White)" data-unit="Kg" data-qty="1">उड़द दाल धुली (Urad Dal White)</option>
+                                        <option value="उड़द दाल काली (Urad Dal Black)" data-unit="Kg" data-qty="1">उड़द दाल काली (Urad Dal Black)</option>
+                                        <option value="मसूर दाल (Red Masoor Dal)" data-unit="Kg" data-qty="1">मसूर दाल (Red Masoor Dal)</option>
+                                        <option value="साबुत मसूर (Whole Brown Masoor)" data-unit="Kg" data-qty="1">साबुत मसूर (Whole Brown Masoor)</option>
+                                        <option value="काबुली चना / छोले (White Chickpeas)" data-unit="Kg" data-qty="1">काबुली चना / छोले (White Chickpeas)</option>
+                                        <option value="काला चना (Black Chickpeas)" data-unit="Kg" data-qty="1">काला चना (Black Chickpeas)</option>
+                                        <option value="राजमा (Kidney Beans / Rajma)" data-unit="Kg" data-qty="1">राजमा (Kidney Beans / Rajma)</option>
+                                        <option value="सफेद मटर (White Peas / Matar)" data-unit="Kg" data-qty="1">सफेद मटर (White Peas / Matar)</option>
+                                        <option value="हरी मटर सूखी (Green Dried Peas)" data-unit="Kg" data-qty="1">हरी मटर सूखी (Green Dried Peas)</option>
+                                        <option value="सोयाबीन बड़ी (Soya Chunks)" data-unit="Packets" data-qty="1">सोयाबीन बड़ी (Soya Chunks)</option>
+                                        <option value="सोया मिंस / कीमा (Soya Granules)" data-unit="Packets" data-qty="1">सोया मिंस / कीमा (Soya Granules)</option>
+                                    </optgroup>
+
+                                    <optgroup label="🛢️ तेल, घी व मक्खन (Oils & Ghee)">
+                                        <option value="सरसों का तेल / Mustard Oil" data-unit="Litre (L)" data-qty="1">सरसों का तेल / Mustard Oil</option>
+                                        <option value="रिफाइंड तेल / Refined Cooking Oil" data-unit="Litre (L)" data-qty="1">रिफाइंड तेल / Refined Cooking Oil</option>
+                                        <option value="देसी घी / Desi Ghee" data-unit="Kg" data-qty="1">देसी घी / Desi Ghee</option>
+                                        <option value="सोयाबीन तेल / Soybean Oil" data-unit="Litre (L)" data-qty="1">सोयाबीन तेल / Soybean Oil</option>
+                                        <option value="सूरजमुखी तेल / Sunflower Oil" data-unit="Litre (L)" data-qty="1">सूरजमुखी तेल / Sunflower Oil</option>
+                                        <option value="जैतून का तेल / Olive Oil" data-unit="Litre (L)" data-qty="1">जैतून का तेल / Olive Oil</option>
+                                        <option value="नारियल तेल खाने वाला / Coconut Oil" data-unit="Litre (L)" data-qty="1">नारियल तेल खाने वाला / Coconut Oil</option>
+                                        <option value="तिल का तेल / Sesame Oil" data-unit="Litre (L)" data-qty="1">तिल का तेल / Sesame Oil</option>
+                                        <option value="मक्खन / Butter" data-unit="Grams (gm)" data-qty="500">मक्खन / Butter</option>
+                                    </optgroup>
+
+                                    <optgroup label="🌶️ मसाले व तड़का सामग्री (Spices & Seasoning)">
+                                        <option value="नमक / Salt (Tata Salt)" data-unit="Kg" data-qty="1">नमक / Salt (Tata Salt)</option>
+                                        <option value="सेंधा नमक / Rock Salt (Sendha Namak)" data-unit="Kg" data-qty="1">सेंधा नमक / Rock Salt (Sendha Namak)</option>
+                                        <option value="काला नमक / Black Salt (Kala Namak)" data-unit="Grams (gm)" data-qty="200">काला नमक / Black Salt (Kala Namak)</option>
+                                        <option value="हल्दी पाउडर / Turmeric Powder" data-unit="Grams (gm)" data-qty="250">हल्दी पाउडर / Turmeric Powder</option>
+                                        <option value="लाल मिर्च पाउडर / Red Chilli Powder" data-unit="Grams (gm)" data-qty="250">लाल मिर्च पाउडर / Red Chilli Powder</option>
+                                        <option value="धनिया पाउडर / Coriander Powder" data-unit="Grams (gm)" data-qty="250">धनिया पाउडर / Coriander Powder</option>
+                                        <option value="जीरा / Cumin Seeds (Jeera)" data-unit="Grams (gm)" data-qty="250">जीरा / Cumin Seeds (Jeera)</option>
+                                        <option value="राई / सरसों के बीज (Mustard Seeds)" data-unit="Grams (gm)" data-qty="200">राई / सरसों के बीज (Mustard Seeds)</option>
+                                        <option value="अजवाइन / Carom Seeds (Ajwain)" data-unit="Grams (gm)" data-qty="100">अजवाइन / Carom Seeds (Ajwain)</option>
+                                        <option value="सौंफ / Fennel Seeds (Saunf)" data-unit="Grams (gm)" data-qty="100">सौंफ / Fennel Seeds (Saunf)</option>
+                                        <option value="मेथी दाना / Fenugreek Seeds" data-unit="Grams (gm)" data-qty="100">मेथी दाना / Fenugreek Seeds</option>
+                                        <option value="हींग / Asafoetida (Hing)" data-unit="Pieces (pcs)" data-qty="1">हींग / Asafoetida (Hing)</option>
+                                        <option value="गरम मसाला / Garam Masala" data-unit="Grams (gm)" data-qty="100">गरम मसाला / Garam Masala</option>
+                                        <option value="काली मिर्च साबुत/पाउडर (Black Pepper)" data-unit="Grams (gm)" data-qty="100">काली मिर्च साबुत/पाउडर (Black Pepper)</option>
+                                        <option value="लौंग / Cloves (Laung)" data-unit="Grams (gm)" data-qty="50">लौंग / Cloves (Laung)</option>
+                                        <option value="छोटी इलायची / Green Cardamom" data-unit="Grams (gm)" data-qty="50">छोटी इलायची / Green Cardamom</option>
+                                        <option value="बड़ी इलायची / Black Cardamom" data-unit="Grams (gm)" data-qty="50">बड़ी इलायची / Black Cardamom</option>
+                                        <option value="दालचीनी / Cinnamon (Dalchini)" data-unit="Grams (gm)" data-qty="50">दालचीनी / Cinnamon (Dalchini)</option>
+                                        <option value="तेजपत्ता / Bay Leaves" data-unit="Packets" data-qty="1">तेजपत्ता / Bay Leaves</option>
+                                        <option value="कसूरी मेथी / Kasuri Methi" data-unit="Packets" data-qty="1">कसूरी मेथी / Kasuri Methi</option>
+                                        <option value="चाट मसाला / Chaat Masala" data-unit="Packets" data-qty="1">चाट मसाला / Chaat Masala</option>
+                                        <option value="अमचूर पाउडर / Dry Mango Powder" data-unit="Grams (gm)" data-qty="100">अमचूर पाउडर / Dry Mango Powder</option>
+                                        <option value="कश्मीरी लाल मिर्च / Degi Mirch" data-unit="Grams (gm)" data-qty="100">कश्मीरी लाल मिर्च / Degi Mirch</option>
+                                        <option value="सांभर मसाला / Sambar Masala" data-unit="Packets" data-qty="1">सांभर मसाला / Sambar Masala</option>
+                                        <option value="छोले मसाला / Chhole Masala" data-unit="Packets" data-qty="1">छोले मसाला / Chhole Masala</option>
+                                        <option value="पाव भाजी मसाला / Pav Bhaji Masala" data-unit="Packets" data-qty="1">पाव भाजी मसाला / Pav Bhaji Masala</option>
+                                        <option value="किचन किंग मसाला / Kitchen King" data-unit="Packets" data-qty="1">किचन किंग मसाला / Kitchen King</option>
+                                        <option value="बिरयानी मसाला / Biryani Masala" data-unit="Packets" data-qty="1">बिरयानी मसाला / Biryani Masala</option>
+                                        <option value="जीरा पाउडर / Cumin Powder" data-unit="Grams (gm)" data-qty="100">जीरा पाउडर / Cumin Powder</option>
+                                    </optgroup>
+
+                                    <optgroup label="☕ मीठा, चाय व पेय पदार्थ (Tea, Sugar & Drinks)">
+                                        <option value="चीनी / Sugar" data-unit="Kg" data-qty="2">चीनी / Sugar</option>
+                                        <option value="गुड़ / Jaggery (Gud)" data-unit="Kg" data-qty="1">गुड़ / Jaggery (Gud)</option>
+                                        <option value="चाय पत्ती / Tea Leaves (Chai Patti)" data-unit="Grams (gm)" data-qty="500">चाय पत्ती / Tea Leaves (Chai Patti)</option>
+                                        <option value="कॉफ़ी पाउडर / Coffee Powder" data-unit="Packets" data-qty="1">कॉफ़ी पाउडर / Coffee Powder</option>
+                                        <option value="ग्रीन टी / Green Tea" data-unit="Packets" data-qty="1">ग्रीन टी / Green Tea</option>
+                                        <option value="शहद / Honey" data-unit="Grams (gm)" data-qty="500">शहद / Honey</option>
+                                        <option value="बूरा / खांड / Raw Sugar" data-unit="Kg" data-qty="1">बूरा / खांड / Raw Sugar</option>
+                                        <option value="ग्लूकोज / Energy Drink" data-unit="Packets" data-qty="1">ग्लूकोज / Energy Drink</option>
+                                    </optgroup>
+
+                                    <optgroup label="🥛 डेयरी व नाश्ता (Dairy, Bakery & Breakfast)">
+                                        <option value="दूध / Milk (Packets)" data-unit="Packets" data-qty="2">दूध / Milk (Packets)</option>
+                                        <option value="दही / Curd (Dahi)" data-unit="Kg" data-qty="1">दही / Curd (Dahi)</option>
+                                        <option value="पनीर / Paneer (Cottage Cheese)" data-unit="Grams (gm)" data-qty="250">पनीर / Paneer (Cottage Cheese)</option>
+                                        <option value="ब्रेड / Bread" data-unit="Packets" data-qty="1">ब्रेड / Bread</option>
+                                        <option value="अंडे / Eggs" data-unit="Pieces (pcs)" data-qty="6">अंडे / Eggs</option>
+                                        <option value="टोस्ट / रस्क (Rusk)" data-unit="Packets" data-qty="1">टोस्ट / रस्क (Rusk)</option>
+                                        <option value="बिस्कुट / Biscuits" data-unit="Packets" data-qty="2">बिस्कुट / Biscuits</option>
+                                        <option value="नमकीन / भुजिया (Namkeen)" data-unit="Packets" data-qty="1">नमकीन / भुजिया (Namkeen)</option>
+                                        <option value="मैगी / नूडल्स (Maggi Noodles)" data-unit="Packets" data-qty="4">मैगी / नूडल्स (Maggi Noodles)</option>
+                                        <option value="पास्ता / Macaroni (Pasta)" data-unit="Packets" data-qty="1">पास्ता / Macaroni (Pasta)</option>
+                                        <option value="सेवई / Vermicelli (Sevai)" data-unit="Packets" data-qty="1">सेवई / Vermicelli (Sevai)</option>
+                                        <option value="टोमैटो केचप / Tomato Sauce" data-unit="Pieces (pcs)" data-qty="1">टोमैटो केचप / Tomato Sauce</option>
+                                        <option value="मेयोनीज / Mayonnaise" data-unit="Pieces (pcs)" data-qty="1">मेयोनीज / Mayonnaise</option>
+                                        <option value="अचार / Pickle (Aam/Nimbu)" data-unit="Pieces (pcs)" data-qty="1">अचार / Pickle (Aam/Nimbu)</option>
+                                        <option value="पापड़ / Papad" data-unit="Packets" data-qty="1">पापड़ / Papad</option>
+                                        <option value="सूप पैकेट / Instant Soup" data-unit="Packets" data-qty="2">सूप पैकेट / Instant Soup</option>
+                                        <option value="मुरमुरा / Puffed Rice (Murmura)" data-unit="Kg" data-qty="1">मुरमुरा / Puffed Rice (Murmura)</option>
+                                    </optgroup>
+
+                                    <optgroup label="🥜 ड्राई फ्रूट्स व मेवे (Dry Fruits & Nuts)">
+                                        <option value="बादाम / Almonds" data-unit="Grams (gm)" data-qty="250">बादाम / Almonds</option>
+                                        <option value="काजू / Cashew Nuts" data-unit="Grams (gm)" data-qty="250">काजू / Cashew Nuts</option>
+                                        <option value="किशमिश / Raisins (Kishmish)" data-unit="Grams (gm)" data-qty="250">किशमिश / Raisins (Kishmish)</option>
+                                        <option value="अखरोट / Walnuts" data-unit="Grams (gm)" data-qty="250">अखरोट / Walnuts</option>
+                                        <option value="पिस्ता / Pistachios" data-unit="Grams (gm)" data-qty="100">पिस्ता / Pistachios</option>
+                                        <option value="मखाना / Fox Nuts (Makhana)" data-unit="Grams (gm)" data-qty="250">मखाना / Fox Nuts (Makhana)</option>
+                                        <option value="नारियल सूखा / Dry Coconut (Gola)" data-unit="Pieces (pcs)" data-qty="1">नारियल सूखा / Dry Coconut (Gola)</option>
+                                        <option value="खजूर / Dates" data-unit="Packets" data-qty="1">खजूर / Dates</option>
+                                        <option value="मूंगफली दाना / Peanuts (Moongfali)" data-unit="Grams (gm)" data-qty="500">मूंगफली दाना / Peanuts (Moongfali)</option>
+                                        <option value="सफेद तिल / White Sesame" data-unit="Grams (gm)" data-qty="100">सफेद तिल / White Sesame</option>
+                                    </optgroup>
+
+                                    <optgroup label="🪔 पूजा सामग्री (Pooja Essentials)">
+                                        <option value="अगरबत्ती / Incense Sticks" data-unit="Packets" data-qty="1">अगरबत्ती / Incense Sticks</option>
+                                        <option value="माचिस / Matchbox" data-unit="Packets" data-qty="1">माचिस / Matchbox</option>
+                                        <option value="कपूर / Camphor (Kapoor)" data-unit="Pieces (pcs)" data-qty="1">कपूर / Camphor (Kapoor)</option>
+                                        <option value="दीये की बत्ती / Cotton Wicks" data-unit="Packets" data-qty="1">दीये की बत्ती / Cotton Wicks</option>
+                                        <option value="धूपबत्ती / Dhoop Batti" data-unit="Packets" data-qty="1">धूपबत्ती / Dhoop Batti</option>
+                                        <option value="पूजा का तेल / Pooja Oil" data-unit="Litre (L)" data-qty="1">पूजा का तेल / Pooja Oil</option>
+                                        <option value="रोली / कुमकुम (Roli / Kumkum)" data-unit="Pieces (pcs)" data-qty="1">रोली / कुमकुम (Roli / Kumkum)</option>
+                                    </optgroup>
+
+                                    <optgroup label="🧼 सफाई व घरेलू उत्पाद (Cleaning & Household Essentials)">
+                                        <option value="डिटर्जेंट पाउडर / Washing Powder (Surf)" data-unit="Kg" data-qty="1">डिटर्जेंट पाउडर / Washing Powder (Surf)</option>
+                                        <option value="कपड़े धोने का साबुन / Laundry Soap" data-unit="Pieces (pcs)" data-qty="2">कपड़े धोने का साबुन / Laundry Soap</option>
+                                        <option value="नहाने का साबुन / Bathing Soap" data-unit="Pieces (pcs)" data-qty="3">नहाने का साबुन / Bathing Soap</option>
+                                        <option value="बर्तन धोने का साबुन / Dishwash Bar" data-unit="Pieces (pcs)" data-qty="2">बर्तन धोने का साबुन / Dishwash Bar</option>
+                                        <option value="बर्तन धोने का लिक्विड / Dishwash Gel (Vim)" data-unit="Pieces (pcs)" data-qty="1">बर्तन धोने का लिक्विड / Dishwash Gel (Vim)</option>
+                                        <option value="टूथपेस्ट / Toothpaste" data-unit="Pieces (pcs)" data-qty="1">टूथपेस्ट / Toothpaste</option>
+                                        <option value="टूथब्रश / Toothbrush" data-unit="Pieces (pcs)" data-qty="2">टूथब्रश / Toothbrush</option>
+                                        <option value="शैम्पू / Shampoo" data-unit="Pieces (pcs)" data-qty="1">शैम्पू / Shampoo</option>
+                                        <option value="हेयर ऑयल / Hair Oil (सरसों/नारियल)" data-unit="Pieces (pcs)" data-qty="1">हेयर ऑयल / Hair Oil (सरसों/नारियल)</option>
+                                        <option value="हैंडवॉश / Hand Wash Liquid" data-unit="Pieces (pcs)" data-qty="1">हैंडवॉश / Hand Wash Liquid</option>
+                                        <option value="टॉयलेट क्लीनर / Toilet Cleaner (Harpic)" data-unit="Pieces (pcs)" data-qty="1">टॉयलेट क्लीनर / Toilet Cleaner (Harpic)</option>
+                                        <option value="फर्श साफ करने वाला / Floor Cleaner (Lizol)" data-unit="Pieces (pcs)" data-qty="1">फर्श साफ करने वाला / Floor Cleaner (Lizol)</option>
+                                        <option value="फिनाइल / Phenyl" data-unit="Pieces (pcs)" data-qty="1">फिनाइल / Phenyl</option>
+                                        <option value="मच्छर अगरबत्ती / All Out Refill" data-unit="Pieces (pcs)" data-qty="1">मच्छर अगरबत्ती / All Out Refill</option>
+                                        <option value="कूड़े की थैली / Garbage Bags" data-unit="Packets" data-qty="1">कूड़े की थैली / Garbage Bags</option>
+                                        <option value="एल्युमिनियम फॉयल / Foil Paper" data-unit="Pieces (pcs)" data-qty="1">एल्युमिनियम फॉयल / Foil Paper</option>
+                                        <option value="टिश्यू पेपर / Tissue Paper" data-unit="Packets" data-qty="1">टिश्यू पेपर / Tissue Paper</option>
+                                        <option value="स्क्रब पैड / Dish Scrubber" data-unit="Pieces (pcs)" data-qty="2">स्क्रब पैड / Dish Scrubber</option>
+                                    </optgroup>
+                                </select>
+
+                                <!-- Custom Item Input: Opens when "Custom / अन्य" is selected -->
+                                <input type="text" id="grocery-custom-input" placeholder="यहाँ सामान का नाम लिखें (Type custom product name)..." class="hidden mt-2 w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-primary-500 text-xs focus:outline-none focus:ring-1 focus:ring-primary-500 font-semibold">
                             </div>
 
                             <div class="sm:col-span-2">
@@ -488,10 +646,10 @@
 
                         <div class="flex items-center gap-2 flex-wrap pt-1 text-[11px] text-neutral-500">
                             <span class="font-semibold text-xs text-neutral-600 dark:text-neutral-300">Quick Fill:</span>
-                            <button type="button" onclick="quickFillGrocery('Aata', 5, 'Kg')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 transition text-[11px] font-medium">+ Aata 5kg</button>
-                            <button type="button" onclick="quickFillGrocery('Oil', 1, 'Litre (L)')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 transition text-[11px] font-medium">+ Oil 1L</button>
-                            <button type="button" onclick="quickFillGrocery('Sugar', 2, 'Kg')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 transition text-[11px] font-medium">+ Sugar 2kg</button>
-                            <button type="button" onclick="quickFillGrocery('Milk', 2, 'Packets')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 transition text-[11px] font-medium">+ Milk 2Pac</button>
+                            <button type="button" onclick="quickFillGrocery('आटा / Wheat Flour (Atta)', 5, 'Kg')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 transition text-[11px] font-medium">+ आटा 5kg</button>
+                            <button type="button" onclick="quickFillGrocery('सरसों का तेल / Mustard Oil', 1, 'Litre (L)')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 transition text-[11px] font-medium">+ तेल 1L</button>
+                            <button type="button" onclick="quickFillGrocery('चीनी / Sugar', 2, 'Kg')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 transition text-[11px] font-medium">+ चीनी 2kg</button>
+                            <button type="button" onclick="quickFillGrocery('दूध / Milk (Packets)', 2, 'Packets')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 transition text-[11px] font-medium">+ दूध 2Pac</button>
                         </div>
                     </form>
                 </div>
@@ -1103,28 +1261,91 @@
         }
 
         function quickFillGrocery(name, qty, unit) {
-            document.getElementById('grocery-name').value = name;
+            const selectEl = document.getElementById('grocery-select');
+            const customInput = document.getElementById('grocery-custom-input');
+            
+            if (selectEl) {
+                let found = false;
+                for (let i = 0; i < selectEl.options.length; i++) {
+                    if (selectEl.options[i].value === name) {
+                        selectEl.selectedIndex = i;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    selectEl.value = '__custom__';
+                    if (customInput) {
+                        customInput.classList.remove('hidden');
+                        customInput.value = name;
+                    }
+                } else if (customInput) {
+                    customInput.classList.add('hidden');
+                    customInput.value = '';
+                }
+            }
             document.getElementById('grocery-qty').value = qty;
             document.getElementById('grocery-unit').value = unit;
         }
 
+        function handleGrocerySelectChange(selectEl) {
+            const customInput = document.getElementById('grocery-custom-input');
+            const selectedVal = selectEl.value;
+
+            if (selectedVal === '__custom__') {
+                if (customInput) {
+                    customInput.classList.remove('hidden');
+                    customInput.value = '';
+                    customInput.focus();
+                }
+            } else {
+                if (customInput) {
+                    customInput.classList.add('hidden');
+                    customInput.value = '';
+                }
+                const selectedOption = selectEl.options[selectEl.selectedIndex];
+                const defUnit = selectedOption.getAttribute('data-unit');
+                const defQty = selectedOption.getAttribute('data-qty');
+                if (defUnit) document.getElementById('grocery-unit').value = defUnit;
+                if (defQty) document.getElementById('grocery-qty').value = defQty;
+            }
+        }
+
         function addGroceryItem(e) {
             e.preventDefault();
-            const name = document.getElementById('grocery-name').value.trim();
+            const selectEl = document.getElementById('grocery-select');
+            const customInput = document.getElementById('grocery-custom-input');
+            
+            let itemName = '';
+            if (selectEl.value === '__custom__') {
+                itemName = customInput ? customInput.value.trim() : '';
+            } else {
+                itemName = selectEl.value.trim();
+            }
+
             const qty = parseFloat(document.getElementById('grocery-qty').value);
             const unit = document.getElementById('grocery-unit').value;
 
-            if(!name || isNaN(qty) || qty <= 0) {
-                showToast("Please provide valid name and quantity", "error");
+            if (!itemName) {
+                showToast("कृपया सामान चुनें या नाम लिखें", "error");
+                return;
+            }
+            if (isNaN(qty) || qty <= 0) {
+                showToast("Please provide valid quantity", "error");
                 return;
             }
 
-            appState.groceryItems.push({ id: Date.now(), name, qty, unit, checked: false, price: 0 });
+            appState.groceryItems.push({ id: Date.now(), name: itemName, qty, unit, checked: false, price: 0 });
             saveState();
             renderGrocery();
-            document.getElementById('grocery-name').value = '';
+
+            selectEl.selectedIndex = 0;
+            if (customInput) {
+                customInput.classList.add('hidden');
+                customInput.value = '';
+            }
             document.getElementById('grocery-qty').value = '';
-            showToast(`Added ${name} to shopping list!`);
+            showToast(`Added ${itemName} to shopping list!`);
         }
 
         function toggleGroceryItem(id) {
