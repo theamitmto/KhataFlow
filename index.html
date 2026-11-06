@@ -589,13 +589,13 @@
                             <!-- Category Quick Filter Pills Slider -->
                             <div class="flex items-center justify-between">
                                 <span class="text-[11px] font-black uppercase tracking-wider text-neutral-500 dark:text-neutral-400 flex items-center gap-1.5">
-                                    <i class="fa-solid fa-sliders text-primary-600"></i> Explore 2,000+ Products
+                                    <i class="fa-solid fa-sliders text-primary-600"></i> Explore Products
                                 </span>
                                 <div class="flex items-center gap-1">
-                                    <button type="button" onclick="scrollProductSlider(-200)" class="w-6 h-6 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 text-neutral-600 dark:text-neutral-300 flex items-center justify-center text-[10px] transition active:scale-90" title="Scroll Left">
+                                    <button type="button" onclick="scrollProductSlider(-220)" class="w-6 h-6 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 text-neutral-600 dark:text-neutral-300 flex items-center justify-center text-[10px] transition active:scale-90" title="Scroll Left">
                                         <i class="fa-solid fa-chevron-left"></i>
                                     </button>
-                                    <button type="button" onclick="scrollProductSlider(200)" class="w-6 h-6 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 text-neutral-600 dark:text-neutral-300 flex items-center justify-center text-[10px] transition active:scale-90" title="Scroll Right">
+                                    <button type="button" onclick="scrollProductSlider(220)" class="w-6 h-6 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 text-neutral-600 dark:text-neutral-300 flex items-center justify-center text-[10px] transition active:scale-90" title="Scroll Right">
                                         <i class="fa-solid fa-chevron-right"></i>
                                     </button>
                                 </div>
@@ -604,7 +604,7 @@
                             <!-- Category Filter Chips -->
                             <div id="catalog-category-tabs" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
                                 <button type="button" onclick="filterSliderCategory('ALL')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-primary-600 text-white shadow-sm transition">
-                                    🔥 All (2,000+)
+                                    🔥 All
                                 </button>
                                 <button type="button" onclick="filterSliderCategory('अनाज व आटा')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition">
                                     🌾 आटा व अनाज
@@ -641,8 +641,8 @@
                                 </button>
                             </div>
 
-                            <!-- Product Cards Horizontal Scroll Slider -->
-                            <div id="product-cards-slider" class="flex gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth snap-x">
+                            <!-- Mobile-Optimized 2-Row Compact Grid Horizontal Scroll Showcase -->
+                            <div id="product-cards-slider" class="grid grid-rows-2 grid-flow-col gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth snap-x auto-cols-[minmax(148px,160px)] sm:auto-cols-[minmax(170px,180px)]">
                                 <!-- Cards dynamically populated by renderProductSlider() -->
                             </div>
                         </div>
@@ -2406,29 +2406,22 @@
         // High-performance algorithmic generator for 1,000+ daily grocery, vegetables, spices, personal care, and household items
         function buildFullKiranaCatalog() {
             const catalog = [];
-            const seen = new Set();
+            const seenKeys = new Set();
+            const seenEngWords = new Set();
 
-            // Strict normalizer: Removes brand prefixes, quantities (kg, g, l, ml, pack, etc.) and duplicates
-            function cleanGenericName(str) {
-                return str
-                    .replace(/\b(fortune|aashirvaad|pillsbury|rajdhani|nature fresh|shakti bhog|patanjali|india gate|daawat|kohinoor|lal qilla|tata sampann|24 mantra|dhara|emami|engine|amul|gowardhan|mother dairy|ananda|saffola|figaro|borges|bail kolhu|mdh|everest|catch|goldiee|badshah|rakesh|pushp|tata|brooke bond|red label|taj mahal|wagh bakri|lipton|tetley|nescafe|bru|dhampure|dabur|sugar free|glucon-d|horlicks|bournvita|boost|complan|nutraj|happilo|tulsi|parle-g|britannia|marie gold|good day|monaco|krackjack|oreo|bourbon|hide & seek|dark fantasy|haldiram|kurkure|lay's|lays|maggi|yippee|ching's|kissan|funfoods|kellogg's|lijjat|surf excel|ariel|tide|rin|ghadi|wheel|genteel|ezee|comfort|robin|ujala|vim|pril|exo|scotch-brite|harpic|lizol|colin|drainex|freshwrap|lifebuoy|dove|lux|pears|santoor|medimix|colgate|closeup|sensodyne|oral-b|head & shoulders|clinic plus|pantene|sunsilk|parachute|bajaj|nivea|vaseline|boroline|boroplus|pond's|ponds|glow & lovely|fair & lovely|himalaya|garnier|gillette|whisper|stayfree|pampers|johnson's|mangaldeep|cycle|all out|good knight|hit|odomos|odonil|savlon|hansaplast|moov|volini|iodex|zandu|vicks|eno|ors|digene)\b/gi, '')
-                    .replace(/\(.*?\)/g, '') // remove bracket contents
-                    .replace(/\[.*?\]/g, '') // remove square bracket contents
-                    .replace(/\b\d+(\.\d+)?\s*(kg|g|gm|grams|l|ltr|litre|ml|pcs|pack|packet|meter|m|tray|can|pouch|box|tabs|sachets|s|ply|bunch|bundle)\b/gi, '')
-                    .replace(/\s+/g, ' ')
-                    .trim();
-            }
-
-            function pushItem(rawHindi, rawEnglish, category, icon, defaultUnit) {
-                const cleanH = cleanGenericName(rawHindi);
-                const cleanE = cleanGenericName(rawEnglish);
-                if (!cleanH && !cleanE) return;
-
+            function pushItem(hindiName, englishName, category, icon, defaultUnit) {
+                if (!hindiName) return;
+                const cleanH = hindiName.trim();
+                const cleanE = englishName ? englishName.trim() : '';
                 const displayName = cleanE ? `${cleanH} (${cleanE})` : cleanH;
+                
+                // Strong normalization key: removes all spaces, punctuation, lowercase
                 const normKey = displayName.toLowerCase().replace(/[^a-z0-9\u0900-\u097F]/g, '');
+                const engKey = cleanE.toLowerCase().replace(/[^a-z0-9]/g, '');
 
-                if (normKey.length > 2 && !seen.has(normKey)) {
-                    seen.add(normKey);
+                if (normKey.length > 1 && !seenKeys.has(normKey) && (!engKey || !seenEngWords.has(engKey))) {
+                    seenKeys.add(normKey);
+                    if (engKey) seenEngWords.add(engKey);
                     catalog.push({
                         name: displayName,
                         category: category,
@@ -2439,428 +2432,551 @@
                 }
             }
 
-            // 1. अनाज, आटा व दलिया (Grains & Flours - Pure & Unbranded)
-            const flours = [
-                ["गेहूं का आटा", "Wheat Flour", "fa-wheat-awn"],
-                ["शरबती आटा", "Sharbati Wheat Flour", "fa-wheat-awn"],
-                ["मल्टीग्रेन आटा", "Multigrain Flour", "fa-wheat-awn"],
-                ["मैदा", "Refined Wheat Flour", "fa-wheat-awn"],
-                ["सूजी / रवा", "Semolina", "fa-wheat-awn"],
-                ["बेसन", "Gram Flour", "fa-wheat-awn"],
-                ["भुना चना सत्तू", "Roasted Gram Sattu", "fa-wheat-awn"],
-                ["चावल का आटा", "Rice Flour", "fa-wheat-awn"],
-                ["मक्के का आटा", "Corn / Maize Flour", "fa-wheat-awn"],
-                ["बाजरे का आटा", "Pearl Millet Flour", "fa-wheat-awn"],
-                ["ज्वार का आटा", "Sorghum / Jowar Flour", "fa-wheat-awn"],
-                ["रागी / मडुआ आटा", "Finger Millet / Ragi Flour", "fa-wheat-awn"],
-                ["कुट्टू का आटा", "Buckwheat Flour", "fa-wheat-awn"],
-                ["सिंघाड़े का आटा", "Water Chestnut Flour", "fa-wheat-awn"],
-                ["राजगिरा / चौलाई आटा", "Amaranth / Rajgira Flour", "fa-wheat-awn"],
-                ["जौ का आटा", "Barley Flour", "fa-wheat-awn"],
-                ["सोयाबीन आटा", "Soybean Flour", "fa-wheat-awn"],
-                ["गेहूं का दलिया", "Broken Wheat Porridge", "fa-bowl-rice"],
-                ["रोस्टेड दलिया", "Roasted Daliya", "fa-bowl-rice"],
-                ["पतला पोहा", "Thin Poha", "fa-bowl-rice"],
-                ["मोटा पोहा", "Thick Flattened Rice", "fa-bowl-rice"],
-                ["लाल पोहा", "Red Rice Poha", "fa-bowl-rice"],
-                ["मुरमुरा / लाई", "Puffed Rice", "fa-bowl-rice"],
-                ["बड़ा साबूदाना", "Tapioca Pearls", "fa-circle-dot"],
-                ["छोटा साबूदाना", "Nylon Sabudana", "fa-circle-dot"],
-                ["सादा ओट्स", "Rolled Oats", "fa-wheat-awn"],
-                ["मसाला ओट्स", "Savory Oats", "fa-bowl-food"],
-                ["कॉर्नफ्लोर / अरारोट", "Corn Starch / Arrowroot", "fa-wheat-awn"],
-                ["गेहूं का चोकर", "Wheat Bran", "fa-wheat-awn"]
+            // 1. अनाज, आटा, चावल व नाश्ता (Flours, Grains, Rice & Breakfast) - Strictly Unique
+            const uniqueGrains = [
+                ["गेहूं का आटा", "Wheat Flour", "Kg"],
+                ["शरबती गेहूं का आटा", "Sharbati Flour", "Kg"],
+                ["मल्टीग्रेन आटा", "Multigrain Flour", "Kg"],
+                ["मैदा", "Refined Flour Maida", "Kg"],
+                ["सूजी / रवा", "Semolina Sooji", "Kg"],
+                ["बेसन", "Gram Flour Besan", "Kg"],
+                ["चना सत्तू", "Roasted Chana Sattu", "Kg"],
+                ["मक्के का आटा", "Corn Flour", "Kg"],
+                ["बाजरे का आटा", "Pearl Millet Flour", "Kg"],
+                ["ज्वार का आटा", "Sorghum Flour", "Kg"],
+                ["रागी का आटा", "Finger Millet Ragi Flour", "Kg"],
+                ["जौ का आटा", "Barley Flour", "Kg"],
+                ["सिंघाड़े का आटा", "Water Chestnut Flour", "Kg"],
+                ["कुट्टू का आटा", "Buckwheat Flour", "Kg"],
+                ["राजगिरा आटा", "Amaranth Flour", "Kg"],
+                ["चावल का आटा", "Rice Flour", "Kg"],
+                ["गेहूं का दलिया", "Broken Wheat Dalia", "Kg"],
+                ["रोस्टेड दलिया", "Roasted Wheat Porridge", "Kg"],
+                ["बासमती चावल", "Basmati Rice", "Kg"],
+                ["सोना मसूरी चावल", "Sona Masoori Rice", "Kg"],
+                ["कोलम चावल", "Kolam Rice", "Kg"],
+                ["ब्राउन राइस", "Brown Whole Rice", "Kg"],
+                ["इडली डोसा चावल", "Idli Dosa Parboiled Rice", "Kg"],
+                ["खिचड़ी टुकड़ा चावल", "Broken Rice Tukda", "Kg"],
+                ["मोटा पोहा", "Thick Poha Flakes", "Kg"],
+                ["पतला पोहा", "Thin Nylon Poha", "Kg"],
+                ["मुरमुरा / लाई", "Puffed Rice Murmura", "Packets"],
+                ["साबूदाना बड़ा दाना", "Jumbo Tapioca Sago", "Kg"],
+                ["साबूदाना छोटा दाना", "Small Sago Pearls", "Kg"],
+                ["ओट्स दलिया", "Rolled Oats Porridge", "Packets"],
+                ["कॉर्नफ्लेक्स", "Corn Flakes", "Packets"],
+                ["गेहूं का चोकर", "Wheat Bran Fiber", "Kg"]
             ];
-            flours.forEach(f => pushItem(f[0], f[1], "अनाज व आटा", f[2], "Kg"));
+            uniqueGrains.forEach(g => pushItem(g[0], g[1], "अनाज व आटा", "fa-wheat-awn", g[2]));
 
-            // 2. चावल व धान (Rice - Pure & Zero Brand)
-            const rices = [
-                ["बासमती चावल", "Basmati Rice", "fa-bowl-rice"],
-                ["बासमती टुकड़ा", "Broken Basmati Rice", "fa-bowl-rice"],
-                ["बिरयानी चावल", "Biryani Rice", "fa-bowl-rice"],
-                ["सोना मसूरी चावल", "Sona Masoori Rice", "fa-bowl-rice"],
-                ["कोलम चावल", "Kolam Rice", "fa-bowl-rice"],
-                ["गोविंद भोग चावल", "Govind Bhog Rice", "fa-bowl-rice"],
-                ["ब्राउन राइस", "Brown Rice", "fa-bowl-rice"],
-                ["कतरनी चावल", "Katarni Rice", "fa-bowl-rice"],
-                ["परमल चावल", "Parmal Rice", "fa-bowl-rice"],
-                ["इडली / डोसा चावल", "Boiled Idli Rice", "fa-bowl-rice"],
-                ["खिचड़ी चावल", "Khichdi Rice", "fa-bowl-rice"],
-                ["जीरा सांभा चावल", "Jeera Samba Rice", "fa-bowl-rice"],
-                ["लाल चावल", "Red Rice", "fa-bowl-rice"],
-                ["काला चावल", "Black Rice", "fa-bowl-rice"],
-                ["बासमती सेला चावल", "Golden Sella Basmati", "fa-bowl-rice"]
+            // 2. दालें, दलहन, छोले व राजमा (Pulses, Lentils & Beans) - 100% Unique
+            const uniquePulses = [
+                ["अरहर / तूर दाल", "Toor Dal", "Kg"],
+                ["मूंग धुली दाल", "Moong Dal Washed", "Kg"],
+                ["मूंग छिलका दाल", "Moong Dal with Husk", "Kg"],
+                ["साबुत हरी मूंग", "Whole Green Moong", "Kg"],
+                ["उड़द धुली दाल", "White Urad Dal", "Kg"],
+                ["उड़द छिलका दाल", "Split Urad Dal with Husk", "Kg"],
+                ["साबुत काली उड़द दाल मखनी", "Whole Black Urad", "Kg"],
+                ["चना दाल", "Bengal Gram Chana Dal", "Kg"],
+                ["देसी काला चना", "Brown Kala Chana", "Kg"],
+                ["काबुली सफेद चना", "White Chickpeas Chhole", "Kg"],
+                ["लाल मसूर दाल", "Red Split Masoor", "Kg"],
+                ["साबुत मलका मसूर", "Whole Brown Masoor", "Kg"],
+                ["राजमा चित्रा", "Speckled Rajma", "Kg"],
+                ["लाल कश्मीरी राजमा", "Red Kashmiri Rajma", "Kg"],
+                ["सफेद लोबिया", "White Cowpea Lobia", "Kg"],
+                ["लाल लोबिया", "Red Chawli Beans", "Kg"],
+                ["सूखी हरी मटर", "Dry Green Peas", "Kg"],
+                ["सूखी सफेद मटर", "Dry White Peas", "Kg"],
+                ["साबुत मोठ", "Whole Moth Beans", "Kg"],
+                ["कुल्थी दाल", "Horse Gram Kulthi", "Kg"],
+                ["सोयाबीन दाल", "Whole Soyabean Dal", "Kg"],
+                ["सोया चंक्स बड़ी", "Soyabean Meal Nuggets", "Packets"],
+                ["सोया मिनी चंक्स", "Mini Soya Granules", "Packets"],
+                ["मूंग दाल मंगौड़ी", "Moong Dal Vadi", "Packets"]
             ];
-            rices.forEach(r => pushItem(r[0], r[1], "चावल व धान", r[2], "Kg"));
+            uniquePulses.forEach(p => pushItem(p[0], p[1], "दालें व दलहन", "fa-seedling", p[2]));
 
-            // 3. दालें व दलहन (Pulses & Legumes - Pure)
-            const pulses = [
-                ["अरहर / तूर दाल", "Pigeon Pea / Toor Dal", "fa-seedling"],
-                ["मूंग दाल धुली", "Yellow Moong Dal", "fa-seedling"],
-                ["मूंग दाल छिलका", "Split Green Moong", "fa-seedling"],
-                ["साबुत मूंग", "Whole Green Moong", "fa-seedling"],
-                ["चना दाल", "Split Bengal Gram", "fa-seedling"],
-                ["उड़द दाल धुली", "White Urad Dal", "fa-seedling"],
-                ["उड़द दाल छिलका", "Split Black Urad", "fa-seedling"],
-                ["साबुत काली उड़द", "Whole Black Gram", "fa-seedling"],
-                ["मसूर दाल लाल", "Red Lentil / Malka Masoor", "fa-seedling"],
-                ["साबुत मसूर काली", "Whole Brown Lentil", "fa-seedling"],
-                ["काबुली चना / सफेद छोले", "Chickpeas / Kabuli Chana", "fa-seedling"],
-                ["देसी काला चना", "Brown Chickpeas", "fa-seedling"],
-                ["राजमा चित्रा", "Speckled Kidney Beans", "fa-seedling"],
-                ["लाल राजमा", "Red Kidney Beans", "fa-seedling"],
-                ["सफेद मटर", "Dried White Peas", "fa-seedling"],
-                ["हरी सूखी मटर", "Dried Green Peas", "fa-seedling"],
-                ["सफेद लोबिया", "Black Eyed Peas / Lobia", "fa-seedling"],
-                ["लाल चौली", "Red Cowpeas", "fa-seedling"],
-                ["सोयाबीन दाल", "Soybean Seeds", "fa-seedling"],
-                ["सोया बड़ी", "Soya Chunks", "fa-seedling"],
-                ["मिनी सोया बड़ी", "Mini Soya Chunks", "fa-seedling"],
-                ["मोठ दाल", "Moth Beans", "fa-seedling"],
-                ["कुल्थी दाल", "Horse Gram", "fa-seedling"],
-                ["पंचमेल मिक्स दाल", "Mixed Lentils", "fa-seedling"]
+            // 3. कुकिंग तेल, शुद्ध घी व मक्खन (Cooking Oils & Pure Ghee) - Unique
+            const uniqueOils = [
+                ["कच्ची घानी सरसों का तेल", "Mustard Kachi Ghani Oil", "Litre (L)"],
+                ["रिफाइंड सोयाबीन तेल", "Refined Soybean Oil", "Litre (L)"],
+                ["रिफाइंड सूरजमुखी तेल", "Refined Sunflower Oil", "Litre (L)"],
+                ["मूंगफली का तेल", "Filtered Groundnut Oil", "Litre (L)"],
+                ["राइस ब्रान तेल", "Physically Refined Rice Bran Oil", "Litre (L)"],
+                ["सफेद तिल का तेल", "White Sesame Gingelly Oil", "Litre (L)"],
+                ["शुद्ध नारियल कुकिंग तेल", "Cold Pressed Coconut Oil", "Litre (L)"],
+                ["एक्स्ट्रा वर्जिन ऑलिव ऑयल", "Extra Virgin Olive Oil", "Litre (L)"],
+                ["पोमेस ऑलिव ऑयल", "Cooking Pomace Olive Oil", "Litre (L)"],
+                ["अलसी का तेल", "Flaxseed Linseed Oil", "Litre (L)"],
+                ["देसी गाय का घी", "Pure Desi Cow Ghee", "Kg"],
+                ["देसी भैंस का घी", "Pure Buffalo Ghee", "Kg"],
+                ["बिलोना ए2 देसी घी", "A2 Cultured Bilona Ghee", "Kg"],
+                ["दानदार घी", "Granular Cooking Ghee", "Kg"],
+                ["पीला नमकीन मक्खन", "Salted Table Butter", "Packets"],
+                ["सफेद अनसाल्टेड मक्खन", "White Unsalted Butter", "Packets"],
+                ["डालडा वनस्पति घी", "Vanaspati Vegetable Fat", "Kg"]
             ];
-            pulses.forEach(p => pushItem(p[0], p[1], "दालें व दलहन", p[2], "Kg"));
+            uniqueOils.forEach(o => pushItem(o[0], o[1], "तेल व घी", "fa-bottle-droplet", o[2]));
 
-            // 4. तेल, शुद्ध घी व कुकिंग फैट्स (Oils & Ghee - Pure)
-            const oils = [
-                ["कच्ची घानी सरसों तेल", "Cold Pressed Mustard Oil", "fa-bottle-droplet", "Litre (L)"],
-                ["रिफाइंड सोयाबीन तेल", "Refined Soybean Oil", "fa-bottle-droplet", "Litre (L)"],
-                ["रिफाइंड सूरजमुखी तेल", "Sunflower Cooking Oil", "fa-bottle-droplet", "Litre (L)"],
-                ["मूंगफली का तेल", "Groundnut Oil", "fa-bottle-droplet", "Litre (L)"],
-                ["राइस ब्रान तेल", "Rice Bran Oil", "fa-bottle-droplet", "Litre (L)"],
-                ["तिल का तेल", "Sesame Oil", "fa-bottle-droplet", "Litre (L)"],
-                ["खाने का नारियल तेल", "Edible Coconut Oil", "fa-bottle-droplet", "Litre (L)"],
-                ["जैतून का तेल", "Olive Oil", "fa-bottle-droplet", "Litre (L)"],
-                ["देसी गाय का घी", "Pure Cow Ghee", "fa-jar", "Kg"],
-                ["देसी भैंस का घी", "Buffalo Ghee", "fa-jar", "Kg"],
-                ["बिलोना देसी घी", "Traditional Bilona Ghee", "fa-jar", "Kg"],
-                ["वनस्पति घी", "Vanaspati Fat", "fa-jar", "Kg"],
-                ["मक्खन नमकीन", "Salted Table Butter", "fa-cube", "Packets"],
-                ["मक्खन बिना नमक", "Unsalted White Butter", "fa-cube", "Packets"],
-                ["टेबल स्प्रेड", "Table Spread", "fa-cube", "Packets"]
-            ];
-            oils.forEach(o => pushItem(o[0], o[1], "तेल व घी", o[2], o[3]));
-
-            // 5. मसाले व हर्ब्स (Spices - Pure)
-            const spices = [
-                ["आयोडीन नमक", "Iodized Salt", "Kg"],
-                ["सेंधा नमक", "Rock Salt / Pink Salt", "Kg"],
-                ["काला नमक पाउडर", "Black Salt Powder", "Grams (gm)"],
-                ["साबुत काला नमक", "Rock Black Salt", "Kg"],
-                ["हल्दी पाउडर", "Turmeric Powder", "Grams (gm)"],
-                ["साबुत गांठ हल्दी", "Whole Dry Turmeric", "Grams (gm)"],
-                ["तीखी लाल मिर्च पाउडर", "Red Chilli Powder", "Grams (gm)"],
-                ["कश्मीरी लाल मिर्च पाउडर", "Kashmiri Mirch Powder", "Grams (gm)"],
-                ["कुटी लाल मिर्च", "Red Chilli Flakes", "Grams (gm)"],
-                ["साबुत सूखी लाल मिर्च", "Whole Dry Red Chillies", "Grams (gm)"],
-                ["धनिया पाउडर", "Coriander Powder", "Grams (gm)"],
-                ["साबुत सूखा धनिया", "Whole Coriander Seeds", "Grams (gm)"],
-                ["साबुत जीरा", "Cumin Seeds", "Grams (gm)"],
+            // 4. मसाले, खड़े मसाले व ब्लेंड्स (Spices & Blends) - Unique Non-repeating
+            const uniqueSpices = [
+                ["साबुत जीरा", "Cumin Whole Jeera", "Grams (gm)"],
                 ["भुना जीरा पाउडर", "Roasted Cumin Powder", "Grams (gm)"],
-                ["शाही जीरा", "Caraway / Shahi Jeera", "Grams (gm)"],
-                ["काली राई", "Black Mustard Seeds", "Grams (gm)"],
-                ["पीली सरसों", "Yellow Mustard Seeds", "Grams (gm)"],
-                ["अजवाइन", "Carom Seeds", "Grams (gm)"],
-                ["मीठी सौंफ", "Fennel Seeds", "Grams (gm)"],
-                ["बारीक सौंफ", "Thin Fennel Seeds", "Grams (gm)"],
-                ["मेथी दाना", "Fenugreek Seeds", "Grams (gm)"],
-                ["कलौंजी", "Nigella Seeds", "Grams (gm)"],
-                ["हींग पाउडर", "Asafoetida / Hing", "Pieces (pcs)"],
-                ["साबुत दाना हींग", "Raw Crystal Hing", "Pieces (pcs)"],
-                ["गरम मसाला", "Garam Masala Powder", "Grams (gm)"],
+                ["शाही जीरा", "Caraway Shahi Jeera", "Grams (gm)"],
+                ["काली राई दाना", "Black Mustard Seeds", "Grams (gm)"],
+                ["पीली सरसों दाना", "Yellow Mustard Seeds", "Grams (gm)"],
+                ["मेथी दाना", "Fenugreek Seeds Methi", "Grams (gm)"],
+                ["कस्तूरी मेथी पत्ती", "Dried Fenugreek Kasuri Methi", "Packets"],
+                ["अजवाइन", "Carom Ajwain Seeds", "Grams (gm)"],
+                ["मीठी सौंफ", "Sweet Fennel Saunf", "Grams (gm)"],
+                ["बारीक लखनऊ सौंफ", "Thin Green Fennel", "Grams (gm)"],
+                ["कलौंजी / मंगरेल", "Nigella Kalonji Seeds", "Grams (gm)"],
+                ["साबुत धनिया", "Whole Coriander Seeds", "Grams (gm)"],
+                ["धनिया पाउडर", "Ground Coriander Powder", "Grams (gm)"],
+                ["साबुत हल्दी गांठ", "Whole Dry Turmeric", "Grams (gm)"],
+                ["हल्दी पाउडर", "Pure Turmeric Powder", "Grams (gm)"],
+                ["तीखी लाल मिर्च पाउडर", "Hot Red Chilli Powder", "Grams (gm)"],
+                ["कश्मीरी लाल मिर्च पाउडर", "Mild Kashmiri Mirch Powder", "Grams (gm)"],
+                ["साबुत सूखी लाल मिर्च", "Dried Whole Red Chillies", "Grams (gm)"],
+                ["कुटी हुई लाल मिर्च / चिली फ्लेक्स", "Crushed Chilli Flakes", "Grams (gm)"],
                 ["साबुत काली मिर्च", "Whole Black Peppercorns", "Grams (gm)"],
                 ["काली मिर्च पाउडर", "Black Pepper Powder", "Grams (gm)"],
-                ["सफेद मिर्च", "White Peppercorns", "Grams (gm)"],
-                ["साबुत लौंग", "Whole Cloves", "Grams (gm)"],
-                ["हरी इलायची", "Green Cardamom", "Grams (gm)"],
-                ["बड़ी काली इलायची", "Black Cardamom", "Grams (gm)"],
-                ["दालचीनी स्टिक्स", "Cinnamon Sticks", "Grams (gm)"],
-                ["चक्र फूल", "Star Anise", "Grams (gm)"],
-                ["जायफल", "Nutmeg", "Pieces (pcs)"],
-                ["जावित्री", "Mace", "Grams (gm)"],
-                ["तेजपत्ता", "Bay Leaves", "Packets"],
-                ["कसूरी मेथी", "Dried Fenugreek Leaves", "Packets"],
-                ["अमचूर पाउडर", "Dry Mango Powder", "Grams (gm)"],
-                ["अनारदाना", "Dried Pomegranate Seeds", "Grams (gm)"],
-                ["चाट मसाला", "Chaat Masala", "Packets"],
-                ["छोले मसाला", "Chhole Masala", "Packets"],
-                ["पाव भाजी मसाला", "Pav Bhaji Masala", "Packets"],
-                ["सांभर मसाला", "Sambar Powder", "Packets"],
-                ["रसम पाउडर", "Rasam Powder", "Packets"],
-                ["किचन किंग मसाला", "Kitchen King Masala", "Packets"],
+                ["सफेद दखनी मिर्च", "White Peppercorns", "Grams (gm)"],
+                ["हरी छोटी इलायची", "Green Cardamom Elaichi", "Grams (gm)"],
+                ["बड़ी काली इलायची", "Black Cardamom Badi Elaichi", "Grams (gm)"],
+                ["साबुत दालचीनी", "Cinnamon Sticks Dalchini", "Grams (gm)"],
+                ["साबुत लौंग", "Whole Cloves Laung", "Grams (gm)"],
+                ["साबुत जायफल", "Whole Nutmeg Jaiphal", "Pieces (pcs)"],
+                ["जावित्री फूल", "Mace Flower Javitri", "Grams (gm)"],
+                ["चक्र फूल / बादियान", "Star Anise Chakra Phool", "Grams (gm)"],
+                ["तेजपत्ता", "Bay Leaf Tejpatta", "Packets"],
+                ["दगड़ फूल / पत्थर फूल", "Stone Flower Lichen", "Grams (gm)"],
+                ["शुद्ध केसर", "Pure Saffron Kesar Threads", "Grams (gm)"],
+                ["शुद्ध हींग पाउडर", "Asafoetida Hing Powder", "Grams (gm)"],
+                ["सोंठ पाउडर", "Dry Ginger Powder", "Grams (gm)"],
+                ["अनारदाना पाउडर", "Dried Pomegranate Powder", "Grams (gm)"],
+                ["अमचूर खटाई पाउडर", "Dry Mango Amchur Powder", "Grams (gm)"],
+                ["इमली बिना बीज", "Seedless Tamarind Imli", "Packets"],
+                ["खसखस / पोस्ता दाना", "White Poppy Seeds Khus Khus", "Grams (gm)"],
+                ["सफेद तिल", "White Sesame Til Seeds", "Grams (gm)"],
+                ["काला तिल", "Black Sesame Til Seeds", "Grams (gm)"],
+                ["गरम मसाला पाउडर", "Garam Masala Blend", "Packets"],
+                ["चाट मसाला पाउडर", "Chaat Masala Blend", "Packets"],
+                ["छोले मसाला", "Chhole Masala Blend", "Packets"],
+                ["पाव भाजी मसाला", "Pav Bhaji Masala Blend", "Packets"],
+                ["सांभर मसाला", "Sambar Powder Blend", "Packets"],
+                ["रसम पाउडर", "Rasam Powder Blend", "Packets"],
+                ["किचन किंग मसाला", "Kitchen King Spice Blend", "Packets"],
                 ["शाही पनीर मसाला", "Shahi Paneer Masala", "Packets"],
-                ["बिरयानी मसाला", "Biryani Masala", "Packets"],
-                ["सब्जी मसाला", "Mixed Vegetable Spice", "Packets"],
-                ["खसखस / पोस्त दाना", "Poppy Seeds", "Grams (gm)"],
-                ["सफेद तिल", "White Sesame Seeds", "Grams (gm)"],
-                ["काला तिल", "Black Sesame Seeds", "Grams (gm)"],
-                ["टाटरी / सिट्रिक एसिड", "Citric Acid Crystals", "Grams (gm)"],
-                ["मीठा सोडा / बेकिंग सोडा", "Baking Soda", "Packets"],
-                ["बेकिंग पाउडर", "Baking Powder", "Packets"],
-                ["ड्राई एक्टिव यीस्ट", "Dry Active Yeast", "Packets"],
-                ["सोंठ पाउडर", "Dry Ginger Powder", "Grams (gm)"]
+                ["कड़ाही पनीर मसाला", "Kadhai Paneer Masala", "Packets"],
+                ["दाल तड़का मसाला", "Dal Tadka Seasoning", "Packets"],
+                ["सब्जी मसाला", "Mixed Sabji Seasoning", "Packets"],
+                ["बिरयानी मसाला", "Biryani Spice Blend", "Packets"],
+                ["जलजीरा मसाला", "Jaljeera Drink Powder", "Packets"],
+                ["पानी पूरी मसाला", "Pani Puri Spice Blend", "Packets"],
+                ["रायता मसाला", "Raita Seasoning Blend", "Packets"],
+                ["चाय मसाला पाउडर", "Tea Masala Powder", "Packets"],
+                ["पेरी पेरी मसाला", "Peri Peri Seasoning", "Packets"],
+                ["मैगी मसाला ए मैजिक", "Magic Noodle Seasoning", "Packets"],
+                ["ओरेगेनो सीज़निंग", "Dried Oregano Herbs", "Packets"],
+                ["लहसुन पाउडर", "Garlic Powder", "Packets"],
+                ["प्याज पाउडर", "Onion Powder", "Packets"]
             ];
-            spices.forEach(s => pushItem(s[0], s[1], "मसाले व हर्ब्स", "fa-pepper-hot", s[2]));
+            uniqueSpices.forEach(sp => pushItem(sp[0], sp[1], "मसाले व हर्ब्स", "fa-pepper-hot", sp[2]));
 
-            // 6. ताजी सब्जियां व मौसमी फल (Fresh Produce - Zero Duplicates, Zero Quantity in Name)
-            const vegetables = [
-                ["आलू", "Potato", "fa-carrot", "Kg"],
-                ["प्याज", "Onion", "fa-carrot", "Kg"],
-                ["टमाटर", "Tomato", "fa-apple-whole", "Kg"],
-                ["हरी मिर्च", "Green Chillies", "fa-pepper-hot", "Grams (gm)"],
-                ["अदरक", "Ginger", "fa-leaf", "Grams (gm)"],
-                ["लहसुन", "Garlic", "fa-clover", "Grams (gm)"],
-                ["हरा धनिया", "Fresh Coriander Leaves", "fa-leaf", "Packets"],
-                ["पुदीना", "Fresh Mint Leaves", "fa-leaf", "Packets"],
-                ["नींबू", "Lemon", "fa-lemon", "Pieces (pcs)"],
-                ["पालक", "Spinach", "fa-leaf", "Kg"],
-                ["मेथी पत्ता", "Fresh Fenugreek Leaves", "fa-leaf", "Kg"],
-                ["सरसों का साग", "Mustard Leaves", "fa-leaf", "Kg"],
-                ["बथुआ", "Bathua Greens", "fa-leaf", "Kg"],
-                ["फूलगोभी", "Cauliflower", "fa-seedling", "Pieces (pcs)"],
-                ["पत्तागोभी", "Cabbage", "fa-circle", "Pieces (pcs)"],
-                ["हरी मटर", "Fresh Green Peas", "fa-seedling", "Kg"],
-                ["भिंडी", "Ladyfinger / Okra", "fa-carrot", "Kg"],
-                ["गोल बैंगन", "Round Eggplant", "fa-egg", "Kg"],
-                ["लंबा बैंगन", "Long Brinjal", "fa-egg", "Kg"],
-                ["लौकी / घिया", "Bottle Gourd", "fa-carrot", "Pieces (pcs)"],
-                ["तोरई / तोरी", "Ridge Gourd", "fa-carrot", "Kg"],
-                ["करेला", "Bitter Gourd", "fa-carrot", "Kg"],
-                ["शिमला मिर्च", "Capsicum / Bell Pepper", "fa-pepper-hot", "Kg"],
-                ["लाल गाजर", "Red Carrot", "fa-carrot", "Kg"],
-                ["सफेद मूली", "White Radish", "fa-carrot", "Kg"],
-                ["खीरा", "Cucumber", "fa-carrot", "Kg"],
-                ["ककड़ी", "Armenian Cucumber", "fa-carrot", "Kg"],
-                ["चुकंदर", "Beetroot", "fa-circle", "Kg"],
-                ["अरबी / घुइयां", "Taro Root / Arbi", "fa-carrot", "Kg"],
-                ["कद्दू / सीताफल", "Pumpkin", "fa-circle", "Kg"],
-                ["शकरकंद", "Sweet Potato", "fa-carrot", "Kg"],
-                ["मशरूम", "Button Mushrooms", "fa-cloud", "Packets"],
-                ["कच्चा केला", "Raw Green Banana", "fa-lemon", "Pieces (pcs)"],
-                ["कच्चा पपीता", "Raw Papaya", "fa-lemon", "Pieces (pcs)"],
-                ["सेब", "Apples", "fa-apple-whole", "Kg"],
-                ["केला", "Bananas", "fa-lemon", "Pieces (pcs)"],
-                ["अनार", "Pomegranate", "fa-apple-whole", "Kg"],
-                ["संतरा / मौसमी", "Orange / Mosambi", "fa-lemon", "Kg"],
-                ["पपीता", "Ripe Papaya", "fa-lemon", "Kg"],
-                ["अंगूर", "Grapes", "fa-lemon", "Kg"],
-                ["तरबूज", "Watermelon", "fa-circle", "Pieces (pcs)"],
-                ["खरबूजा", "Melon", "fa-circle", "Pieces (pcs)"]
+            // 5. नमक, चीनी, गुड़ व मिठास (Salts, Sugars & Jaggery) - Unique
+            const uniqueSweetSalts = [
+                ["आयोडीन युक्त नमक", "Iodized Table Salt", "Kg"],
+                ["सेंधा नमक पिसा", "Pink Rock Salt Powder", "Kg"],
+                ["काला नमक पिसा", "Black Salt Kala Namak", "Grams (gm)"],
+                ["सफेद रिफाइंड चीनी", "Refined White Sugar", "Kg"],
+                ["सल्फर मुक्त चीनी", "Sulphur Free Crystal Sugar", "Kg"],
+                ["देसी खांड", "Traditional Desi Khand", "Kg"],
+                ["बुरा चीनी", "Boora Powder Sugar", "Kg"],
+                ["धागे वाली मिश्री", "Crystalline Thread Mishri", "Grams (gm)"],
+                ["देसी गुड़ भेली", "Natural Jaggery Block", "Kg"],
+                ["गुड़ शक्कर पाउडर", "Jaggery Shakkar Powder", "Kg"],
+                ["शुद्ध शहद", "Pure Forest Honey", "Pieces (pcs)"],
+                ["सुगर फ्री गोलियां", "Zero Calorie Sweetener Pellets", "Pieces (pcs)"]
             ];
-            vegetables.forEach(v => pushItem(v[0], v[1], "सब्जियां व फल", v[2], v[3]));
+            uniqueSweetSalts.forEach(ss => pushItem(ss[0], ss[1], "पेय व मिठास", "fa-jar", ss[2]));
 
-            // 7. डेयरी, दूध व बेकरी (Dairy & Bakery - Pure)
-            const dairy = [
+            // 6. ताजी मौसमी सब्जियां व कंद (Fresh Vegetables) - Unique
+            const uniqueVeggies = [
+                ["आलू", "Fresh Potatoes", "Kg"],
+                ["छोटा बेबी आलू", "Baby Potatoes", "Kg"],
+                ["शकरकंद", "Sweet Potatoes", "Kg"],
+                ["प्याज", "Fresh Red Onions", "Kg"],
+                ["हरा पत्ता प्याज", "Spring Onion Scallions", "Kg"],
+                ["टमाटर", "Ripe Red Tomatoes", "Kg"],
+                ["चेरी टमाटर", "Cherry Tomatoes", "Kg"],
+                ["लहसुन साबुत", "Whole Garlic Bulbs", "Kg"],
+                ["छीला हुआ लहसुन", "Peeled Garlic Cloves", "Kg"],
+                ["अदरक", "Fresh Ginger Root", "Kg"],
+                ["हरी तीखी मिर्च", "Hot Green Chillies", "Kg"],
+                ["नींबू", "Fresh Juicy Lemons", "Kg"],
+                ["हरा धनिया पत्ती", "Fresh Coriander Leaves", "Kg"],
+                ["पुदीना पत्ती", "Fresh Mint Leaves", "Kg"],
+                ["पालक भाजी", "Fresh Spinach Palak", "Kg"],
+                ["मेथी भाजी", "Fresh Fenugreek Leaves", "Kg"],
+                ["सरसों भाजी पत्ती", "Mustard Green Leaves", "Kg"],
+                ["बथुआ साग", "Bathua Greens", "Kg"],
+                ["फूलगोभी", "Fresh Cauliflower", "Kg"],
+                ["पत्तागोभी", "Green Cabbage Head", "Kg"],
+                ["ब्रोकोली", "Fresh Broccoli Floret", "Kg"],
+                ["हरी ताजी मटर", "Fresh Green Peas", "Kg"],
+                ["भिंडी", "Tender Ladyfinger Okra", "Kg"],
+                ["भरता बैंगन गोल", "Round Eggplant Brinjal", "Kg"],
+                ["लंबा बैंगन", "Long Purple Brinjal", "Kg"],
+                ["लौकी / घिया", "Bottle Gourd Lauki", "Kg"],
+                ["तोरई / तोरी", "Sponge Gourd Torai", "Kg"],
+                ["करेला", "Bitter Gourd Karela", "Kg"],
+                ["टिंडा", "Apple Gourd Tinda", "Kg"],
+                ["परवल", "Pointed Gourd Parwal", "Kg"],
+                ["कुंदरू", "Ivy Gourd Kundru", "Kg"],
+                ["हरी शिमला मिर्च", "Green Capsicum", "Kg"],
+                ["पीली शिमला मिर्च", "Yellow Capsicum", "Kg"],
+                ["लाल शिमला मिर्च", "Red Capsicum", "Kg"],
+                ["लाल गाजर", "Fresh Red Carrots", "Kg"],
+                ["सफेद मूली", "Long White Radish", "Kg"],
+                ["खीरा सलाद", "Fresh Salad Cucumber", "Kg"],
+                ["ककड़ी", "Snake Cucumber Kakdi", "Kg"],
+                ["चुकंदर", "Fresh Beetroots", "Kg"],
+                ["अरबी / घुइयां", "Taro Root Arbi", "Kg"],
+                ["जिमीकंद / सूरन", "Elephant Yam Suran", "Kg"],
+                ["पीला कद्दू", "Yellow Pumpkin Kaddu", "Kg"],
+                ["सफेद पेठा कद्दू", "Ash Gourd Petha", "Kg"],
+                ["बटन मशरूम", "Fresh Button Mushrooms", "Packets"],
+                ["कच्चा कटहल", "Raw Jackfruit Kathal", "Kg"],
+                ["कच्चा केला", "Raw Cooking Plantains", "Kg"],
+                ["कच्चा पपीता", "Raw Green Papaya", "Kg"],
+                ["कच्ची अमिया / कैरी", "Raw Sour Mango Kairi", "Kg"],
+                ["कमल ककड़ी", "Lotus Stem Kamal Kakdi", "Kg"],
+                ["ग्वार फली", "Cluster Beans Gwar", "Kg"],
+                ["फ्रेंच बीन्स", "Fresh French Beans", "Kg"],
+                ["सहजन फली / मुनगा", "Drumsticks Moringa", "Kg"],
+                ["ताजा आंवला", "Fresh Indian Gooseberry Amla", "Kg"]
+            ];
+            uniqueVeggies.forEach(v => pushItem(v[0], v[1], "सब्जियां व फल", "fa-carrot", v[2]));
+
+            // 7. ताजे फल (Fresh Fruits) - Unique
+            const uniqueFruits = [
+                ["सेब", "Fresh Sweet Apples", "Kg"],
+                ["केला", "Ripe Sweet Bananas", "Kg"],
+                ["अनार", "Ruby Red Pomegranate", "Kg"],
+                ["संतरा", "Nagpur Oranges", "Kg"],
+                ["मौसमी", "Sweet Lime Mosambi", "Kg"],
+                ["पपीता", "Sweet Ripe Papaya", "Kg"],
+                ["अनानास", "Whole Pineapple", "Pieces (pcs)"],
+                ["तरबूज", "Red Watermelon", "Kg"],
+                ["खरबूजा", "Sweet Muskmelon", "Kg"],
+                ["हरा अंगूर", "Green Seedless Grapes", "Kg"],
+                ["काला अंगूर", "Black Grapes", "Kg"],
+                ["अमरूद", "Fresh Sweet Guavas", "Kg"],
+                ["चीकू", "Ripe Sapota Chiku", "Kg"],
+                ["नाशपाती", "Crisp Pears", "Kg"],
+                ["कीवी", "Fresh Kiwi Fruits", "Pieces (pcs)"],
+                ["ड्रैगन फ्रूट", "Dragon Fruit Pitaya", "Pieces (pcs)"],
+                ["स्ट्रॉबेरी", "Fresh Strawberries", "Packets"],
+                ["आम लंगड़ा / चौसा / दशहरी", "Fresh Mangoes", "Kg"],
+                ["लीची", "Fresh Sweet Lychees", "Kg"],
+                ["जामुन", "Black Plum Jamun", "Kg"],
+                ["शरीफा / सीताफल", "Custard Apple Sitaphal", "Kg"]
+            ];
+            uniqueFruits.forEach(fr => pushItem(fr[0], fr[1], "सब्जियां व फल", "fa-apple-whole", fr[2]));
+
+            // 8. डेयरी, पनीर, दूध व बेकरी (Dairy, Cheese, Bread & Bakery) - Unique
+            const uniqueDairy = [
                 ["फुल क्रीम दूध", "Full Cream Milk", "Packets"],
                 ["टोंड दूध", "Toned Milk", "Packets"],
-                ["गाय का दूध", "Cow Milk", "Litre (L)"],
-                ["भैंस का दूध", "Buffalo Milk", "Litre (L)"],
-                ["ताजा दही", "Plain Curd / Dahi", "Packets"],
-                ["मसाला छाछ", "Spiced Buttermilk", "Packets"],
-                ["मीठी लस्सी", "Sweet Lassi", "Pieces (pcs)"],
-                ["मलाई पनीर", "Cottage Cheese / Paneer", "Grams (gm)"],
-                ["प्रोसेस्ड चीज स्लाइस", "Processed Cheese Slices", "Packets"],
-                ["चीज क्यूब्स", "Cheese Cubes", "Packets"],
-                ["मोज़ेरेला चीज", "Mozzarella Cheese", "Packets"],
-                ["ताजा क्रीम", "Fresh Dairy Cream", "Packets"],
-                ["कंडेंस्ड मिल्क", "Condensed Milk", "Pieces (pcs)"],
-                ["सफेद ब्रेड", "White Bread", "Packets"],
-                ["ब्राउन आटा ब्रेड", "Whole Wheat Bread", "Packets"],
-                ["मल्टीग्रेन ब्रेड", "Multigrain Bread", "Packets"],
-                ["पाव बन", "Pav Buns", "Packets"],
-                ["बर्गर बन", "Burger Buns", "Packets"],
-                ["कुलचा ब्रेड", "Kulcha Bread", "Packets"],
-                ["सफेद अंडे", "White Eggs", "Pieces (pcs)"],
-                ["देसी भूरे अंडे", "Brown Farm Eggs", "Pieces (pcs)"]
+                ["गाय का दूध", "Pure Cow Milk", "Litre (L)"],
+                ["भैंस का दूध", "Fresh Buffalo Milk", "Litre (L)"],
+                ["मिल्क पाउडर", "Dairy Milk Powder", "Packets"],
+                ["कंडेंस्ड मिल्क", "Sweet Condensed Milk", "Pieces (pcs)"],
+                ["ताजा दही", "Plain Fresh Curd Dahi", "Packets"],
+                ["मसाला छाछ", "Spiced Buttermilk Chaach", "Packets"],
+                ["मीठी लस्सी", "Sweet Creamy Lassi", "Pieces (pcs)"],
+                ["मलाई पनीर", "Fresh Malai Paneer", "Grams (gm)"],
+                ["टोफू सोया पनीर", "Soy Tofu Blocks", "Packets"],
+                ["मोज़ेरेला चीज़", "Mozzarella Pizza Cheese", "Packets"],
+                ["प्रोसेस्ड चीज़ क्यूब", "Processed Cheese Cubes", "Packets"],
+                ["चीज़ स्लाइस", "Sandwich Cheese Slices", "Packets"],
+                ["चीज़ स्प्रेड", "Plain Cheese Spread", "Pieces (pcs)"],
+                ["ताजी डेयरी क्रीम", "Fresh Cooking Cream", "Packets"],
+                ["खोया / मावा", "Fresh Khoya Mawa", "Kg"],
+                ["सफेद अंडे क्रेट", "White Farm Eggs", "Pieces (pcs)"],
+                ["देसी भूरे अंडे", "Brown Free Range Eggs", "Pieces (pcs)"],
+                ["सफेद ब्रेड", "Classic White Sliced Bread", "Packets"],
+                ["ब्राउन आटा ब्रेड", "Whole Wheat Brown Bread", "Packets"],
+                ["मल्टीग्रेन ब्रेड", "Seeded Multigrain Bread", "Packets"],
+                ["पाव भाजी बन", "Soft Pav Bread Rolls", "Packets"],
+                ["बर्गर बन", "Sesame Burger Buns", "Packets"],
+                ["पिज्जा बेस", "Pre Baked Pizza Base", "Packets"],
+                ["इलायची सूजी रस्क", "Cardamom Semolina Rusk Toast", "Packets"],
+                ["दूध रस्क टोस्ट", "Crisp Milk Rusks", "Packets"]
             ];
-            dairy.forEach(d => pushItem(d[0], d[1], "डेयरी व ब्रेड", "fa-wine-bottle", d[2]));
+            uniqueDairy.forEach(d => pushItem(d[0], d[1], "डेयरी व ब्रेड", "fa-wine-bottle", d[2]));
 
-            // 8. चाय, कॉफ़ी, चीनी व मिठास (Tea, Coffee & Sweeteners)
-            const beverages = [
-                ["सीटीसी चाय पत्ती", "CTC Tea Leaves", "Grams (gm)"],
-                ["प्रीमियम दानेदार चाय", "Premium Granulated Tea", "Grams (gm)"],
-                ["ग्रीन टी बैग्स", "Green Tea Bags", "Packets"],
-                ["हर्बल तुलसी चाय", "Herbal Tulsi Tea", "Packets"],
+            // 9. चाय, कॉफ़ी व पेय (Tea, Coffee & Beverages) - Unique
+            const uniqueBeverages = [
+                ["सीटीसी दानेदार चाय पत्ती", "Granular CTC Tea Leaves", "Kg"],
+                ["असम पत्ती चाय", "Assam Leaf Black Tea", "Kg"],
+                ["दार्जिलिंग चाय पत्ती", "Darjeeling Tea Leaves", "Grams (gm)"],
+                ["इलायची स्वाद चाय", "Cardamom Tea Blend", "Packets"],
+                ["ग्रीन टी बैग्स", "Pure Green Tea Bags", "Packets"],
+                ["लेमन हनी ग्रीन टी", "Lemon Honey Green Tea", "Packets"],
                 ["इंस्टेंट कॉफ़ी पाउडर", "Instant Coffee Powder", "Pieces (pcs)"],
-                ["फिल्टर कॉफ़ी पाउडर", "Filter Coffee Blend", "Packets"],
-                ["रिफाइंड सफेद चीनी", "Refined White Sugar", "Kg"],
-                ["सल्फर मुक्त चीनी", "Sulphur Free Sugar", "Kg"],
-                ["देसी खांड / बूरा", "Unrefined Desi Khand", "Kg"],
-                ["गुड़ की भेली", "Solid Jaggery", "Kg"],
-                ["गुड़ का पाउडर", "Jaggery Powder", "Kg"],
-                ["धागे वाली मिश्री", "Rock Sugar / Mishri", "Grams (gm)"],
-                ["शुद्ध शहद", "Pure Honey", "Pieces (pcs)"],
-                ["सुगर फ्री गोलियां", "Sugar Free Sweetener", "Pieces (pcs)"],
-                ["ग्लूकोज पाउडर", "Instant Glucose Energy", "Packets"],
-                ["चॉकलेट माल्ट ड्रिंक", "Chocolate Malt Drink", "Packets"]
+                ["फ़िल्टर कॉफ़ी पाउडर", "Filter Coffee Chicory Blend", "Packets"],
+                ["कोको पाउडर", "Baking Cocoa Powder", "Packets"],
+                ["हॉट चॉकलेट पाउडर", "Hot Chocolate Drink Mix", "Packets"],
+                ["चॉकलेट माल्ट ड्रिंक पाउडर", "Chocolate Health Drink Powder", "Packets"],
+                ["ग्लूकोज पाउडर", "Instant Energy Glucose", "Packets"],
+                ["गुलाब का शरबत सिरप", "Rose Floral Sharbat Syrup", "Pieces (pcs)"],
+                ["खस का शरबत सिरप", "Khus Cooling Syrup", "Pieces (pcs)"],
+                ["ठंडाई सिरप", "Dry Fruit Thandai Syrup", "Pieces (pcs)"]
             ];
-            beverages.forEach(b => pushItem(b[0], b[1], "पेय व मिठास", "fa-mug-hot", b[2]));
+            uniqueBeverages.forEach(b => pushItem(b[0], b[1], "पेय व मिठास", "fa-mug-hot", b[2]));
 
-            // 9. ड्राई फ्रूट्स व मेवे (Dry Fruits & Nuts)
-            const nuts = [
-                ["कैलिफोर्निया बादाम", "Almonds", "Grams (gm)"],
-                ["मामरा बादाम", "Mamra Almonds", "Grams (gm)"],
-                ["काजू साबुत", "Whole Cashews", "Grams (gm)"],
-                ["काजू टुकड़ा", "Broken Cashews", "Grams (gm)"],
-                ["मीठी किशमिश", "Raisins", "Grams (gm)"],
-                ["हरी लंबी किशमिश", "Long Green Raisins", "Grams (gm)"],
-                ["अखरोट गिरी", "Walnut Kernels", "Grams (gm)"],
-                ["साबुत अखरोट", "Whole Walnuts", "Grams (gm)"],
-                ["नमकीन भुना पिस्ता", "Salted Pistachios", "Grams (gm)"],
-                ["सादा पिस्ता", "Plain Pistachios", "Grams (gm)"],
-                ["फूल मखाना", "Fox Nuts / Makhana", "Grams (gm)"],
-                ["सूखा नारियल गोला", "Dry Coconut Copra", "Pieces (pcs)"],
-                ["सूखा अंजीर", "Dried Figs", "Grams (gm)"],
-                ["नरम खजूर", "Soft Dates", "Packets"],
-                ["सूखा छुहारा", "Dry Dates", "Grams (gm)"],
-                ["चिरौंजी", "Chironji Seeds", "Grams (gm)"],
-                ["कद्दू के बीज", "Pumpkin Seeds", "Grams (gm)"],
-                ["सूरजमुखी के बीज", "Sunflower Seeds", "Grams (gm)"],
-                ["चिया सीड्स", "Chia Seeds", "Grams (gm)"],
-                ["अलसी के बीज", "Flax Seeds", "Grams (gm)"],
-                ["तरबूज के बीज / मगज", "Watermelon Seeds", "Grams (gm)"]
+            // 10. ड्राई फ्रूट्स, मेवे व बीज (Dry Fruits & Seeds) - Unique
+            const uniqueDryFruits = [
+                ["साबुत बादाम गिरी", "Whole Almond Kernels", "Grams (gm)"],
+                ["मामरा बादाम", "Mamra Premium Almonds", "Grams (gm)"],
+                ["साबुत काजू", "Whole Cashew Nuts", "Grams (gm)"],
+                ["काजू टुकड़ा", "Split Cashew Tukda", "Grams (gm)"],
+                ["हरी किशमिश", "Green Sweet Raisins", "Grams (gm)"],
+                ["काली किशमिश / मुनक्का", "Black Seeded Munakka Raisins", "Grams (gm)"],
+                ["अखरोट गिरी", "Shelled Walnut Halves", "Grams (gm)"],
+                ["नमकीन रोस्टेड पिस्ता", "Roasted Salted Pistachios", "Grams (gm)"],
+                ["सादा हरा पिस्ता", "Raw Green Pistachios", "Grams (gm)"],
+                ["फूल मखाना", "Popped Lotus Foxnuts Makhana", "Grams (gm)"],
+                ["सूखा नारियल गोला", "Dried Whole Coconut Gola", "Pieces (pcs)"],
+                ["कद्दूकस नारियल बुरादा", "Desiccated Coconut Powder", "Grams (gm)"],
+                ["सूखा अंजीर", "Dried Pressed Figs Anjeer", "Grams (gm)"],
+                ["नरम खजूर", "Soft Wet Kimia Dates", "Packets"],
+                ["सूखा पीला छुहारा", "Dry Hard Dates Chhuhara", "Grams (gm)"],
+                ["चिरौंजी दाना", "Chironji Charoli Nuts", "Grams (gm)"],
+                ["कद्दू के बीज छिले", "Peeled Pumpkin Seeds", "Grams (gm)"],
+                ["सूरजमुखी के बीज", "Peeled Sunflower Seeds", "Grams (gm)"],
+                ["तरबूज मगज बीज", "Watermelon Magaj Seeds", "Grams (gm)"],
+                ["खरबूजा मगज बीज", "Muskmelon Magaj Seeds", "Grams (gm)"],
+                ["चिया सीड्स", "Organic Chia Seeds", "Grams (gm)"],
+                ["साबुत अलसी के बीज", "Whole Raw Flaxseeds", "Grams (gm)"],
+                ["सब्जा के बीज", "Sweet Basil Sabja Seeds", "Grams (gm)"],
+                ["सूखी क्रैनबेरी", "Dried Whole Cranberries", "Grams (gm)"],
+                ["मिक्स पंचमेवा", "Assorted Five Nut Mix", "Grams (gm)"]
             ];
-            nuts.forEach(n => pushItem(n[0], n[1], "ड्राई फ्रूट्स व मेवे", "fa-seedling", n[2]));
+            uniqueDryFruits.forEach(df => pushItem(df[0], df[1], "ड्राई फ्रूट्स व मेवे", "fa-seedling", df[2]));
 
-            // 10. बिस्कुट, नमकीन व स्नैक्स (Biscuits & Snacks)
-            const snacks = [
-                ["ग्लूकोज बिस्कुट", "Glucose Biscuits", "Packets"],
-                ["मैरी बिस्कुट", "Marie Biscuits", "Packets"],
-                ["बटर कुकीज़", "Butter Cookies", "Packets"],
-                ["काजू कुकीज़", "Cashew Cookies", "Packets"],
-                ["नमकीन बिस्कुट", "Salted Crackers", "Packets"],
-                ["चॉकलेट क्रीम बिस्कुट", "Chocolate Cream Biscuits", "Packets"],
-                ["चोको चिप कुकीज़", "Choco Chip Cookies", "Packets"],
-                ["आलू भुजिया नमकीन", "Aloo Bhujia", "Packets"],
-                ["बेसन सेव भुजिया", "Sev Bhujia", "Packets"],
-                ["खट्टा मीठा नमकीन", "Sweet & Sour Snack Mix", "Packets"],
-                ["नवरत्न मिक्स नमकीन", "Spicy Mixture", "Packets"],
-                ["तली मूंग दाल नमकीन", "Fried Moong Dal", "Packets"],
-                ["चना जोर गरम", "Spiced Roasted Gram", "Packets"],
-                ["मसाला पफ स्नैक्स", "Spiced Puffs", "Packets"],
-                ["साल्टेड आलू चिप्स", "Salted Potato Chips", "Packets"],
-                ["मसाला आलू चिप्स", "Masala Potato Chips", "Packets"],
-                ["इंस्टेंट नूडल्स", "Instant Noodles", "Packets"],
-                ["आटा नूडल्स", "Wheat Noodles", "Packets"],
-                ["हक्का नूडल्स", "Hakka Plain Noodles", "Packets"],
-                ["पास्ता मैक्रोनी", "Macaroni Pasta", "Packets"],
-                ["पेने पास्ता", "Penne Pasta", "Packets"],
-                ["टोमैटो केचप", "Tomato Ketchup", "Pieces (pcs)"],
-                ["टोमैटो सॉस", "Tomato Sauce", "Pieces (pcs)"],
-                ["मिक्स्ड फ्रूट जैम", "Mixed Fruit Jam", "Pieces (pcs)"],
-                ["वेज मेयोनीज", "Eggless Mayonnaise", "Pieces (pcs)"],
-                ["पीनट बटर", "Peanut Butter", "Pieces (pcs)"],
-                ["कॉर्नफ्लेक्स", "Corn Flakes", "Packets"],
-                ["उड़द दाल पापड़", "Urad Dal Papad", "Packets"],
-                ["मूंग दाल पापड़", "Moong Dal Papad", "Packets"],
-                ["आम का अचार", "Mango Pickle", "Pieces (pcs)"],
-                ["मिक्स्ड वेज अचार", "Mixed Pickle", "Pieces (pcs)"],
-                ["हरी मिर्च का अचार", "Green Chilli Pickle", "Pieces (pcs)"],
-                ["च्यवनप्राश", "Ayurvedic Health Paste", "Pieces (pcs)"]
+            // 11. बिस्कुट, नमकीन, स्नैक्स व सॉस (Biscuits, Snacks, Sauces & Pickles) - Unique
+            const uniqueSnacks = [
+                ["ग्लूकोज बिस्कुट", "Glucose Energy Biscuits", "Packets"],
+                ["मैरी बिस्कुट", "Plain Marie Tea Biscuits", "Packets"],
+                ["मक्खन कुकीज", "Butter Bakery Cookies", "Packets"],
+                ["काजू कुकीज", "Cashew Nut Cookies", "Packets"],
+                ["जीरा नमकीन बिस्कुट", "Salted Cumin Jeera Biscuits", "Packets"],
+                ["नमकीन क्रैकर बिस्कुट", "Crisp Salted Crackers", "Packets"],
+                ["चॉकलेट क्रीम बिस्कुट", "Chocolate Cream Sandwich Biscuits", "Packets"],
+                ["डार्क बॉर्बन बिस्कुट", "Bourbon Chocolate Cream Biscuits", "Packets"],
+                ["डाइजेस्टिव बिस्कुट", "Whole Wheat Digestive Biscuits", "Packets"],
+                ["आलू भुजिया नमकीन", "Crispy Potato Aloo Bhujia", "Packets"],
+                ["बेसन भुजिया सेव", "Gram Flour Besan Sev", "Packets"],
+                ["नायलॉन बारीक सेव", "Fine Thin Nylon Sev", "Packets"],
+                ["खट्टा मीठा मिक्स नमकीन", "Sweet Tangy Mixture Snack", "Packets"],
+                ["तली मूंग दाल नमकीन", "Fried Salted Moong Dal Snack", "Packets"],
+                ["चना जोर गरम नमकीन", "Spiced Pressed Chickpea Chana Jor", "Packets"],
+                ["भुना नमकीन चना", "Roasted Salted Chana", "Kg"],
+                ["मसाला मूंगफली दाना", "Spiced Coated Peanuts", "Packets"],
+                ["आलू चिप्स साल्टेड", "Salted Potato Wafers", "Packets"],
+                ["आलू चिप्स मसाला", "Spiced Hot Potato Chips", "Packets"],
+                ["केले के नमकीन चिप्स", "Salted Raw Banana Chips", "Packets"],
+                ["चावल की चकली / मुरुक्कू", "Crispy Rice Flour Chakli", "Packets"],
+                ["मैदा खस्ता नमकपारे", "Savory Crispy Namakpare", "Kg"],
+                ["मैदा मीठे शकरपारे", "Sweet Crunchy Shakarpara", "Kg"],
+                ["मेथी मठरी", "Fenugreek Savory Mathri", "Kg"],
+                ["उड़द दाल पापड़", "Plain Urad Dal Papad", "Packets"],
+                ["काली मिर्च उड़द पापड़", "Pepper Spiced Urad Papad", "Packets"],
+                ["मूंग दाल पापड़", "Crisp Moong Dal Papad", "Packets"],
+                ["चावल के पापड़ / खीचिया", "Steamed Rice Khichiya Papad", "Packets"],
+                ["साबूदाना पापड़", "Tapioca Sago Fryum Wafers", "Packets"],
+                ["इंस्टेंट मसाला नूडल्स", "Instant Masala Noodle Soup", "Packets"],
+                ["हक्का प्लेन नूडल्स", "Chinese Hakka Wheat Noodles", "Packets"],
+                ["मैक्रोनी पास्ता", "Durum Wheat Macaroni Pasta", "Packets"],
+                ["पेने पास्ता", "Durum Wheat Penne Pasta", "Packets"],
+                ["टोमैटो केचप सॉस", "Tomato Table Ketchup", "Pieces (pcs)"],
+                ["हरी मिर्च सॉस", "Spicy Green Chilli Sauce", "Pieces (pcs)"],
+                ["लाल मिर्च सॉस", "Red Hot Chilli Sauce", "Pieces (pcs)"],
+                ["डार्क सोया सॉस", "Dark Fermented Soy Sauce", "Pieces (pcs)"],
+                ["सफेद सिरका", "Distilled White Vinegar", "Pieces (pcs)"],
+                ["सेब का सिरका", "Apple Cider Vinegar", "Pieces (pcs)"],
+                ["मिक्स्ड फ्रूट जैम", "Mixed Fruit Sweet Jam", "Pieces (pcs)"],
+                ["वेज मेयोनीज", "Eggless Salad Mayonnaise", "Pieces (pcs)"],
+                ["पीनट बटर", "Roasted Peanut Butter Spread", "Pieces (pcs)"],
+                ["आम का अचार", "Traditional Mango Pickle Achaar", "Pieces (pcs)"],
+                ["नींबू का अचार", "Whole Sweet Sour Lemon Pickle", "Pieces (pcs)"],
+                ["हरी मिर्च का अचार", "Mustard Green Chilli Pickle", "Pieces (pcs)"],
+                ["लाल भरवा मिर्च का अचार", "Banarasi Stuffed Red Chilli Pickle", "Pieces (pcs)"],
+                ["लहसुन का अचार", "Spicy Garlic Clove Pickle", "Pieces (pcs)"],
+                ["आंवला मुरब्बा", "Gooseberry Sweet Whole Murabba", "Kg"],
+                ["सेब का मुरब्बा", "Apple Sweet Preserve Murabba", "Kg"],
+                ["गुलकंद गुलाब पत्ती", "Damask Rose Petal Gulkand", "Kg"],
+                ["आयुर्वेदिक च्यवनप्राश", "Herbal Ayurvedic Chyawanprash", "Pieces (pcs)"]
             ];
-            snacks.forEach(s => pushItem(s[0], s[1], "स्नैक्स व बिस्कुट", "fa-cookie-bite", s[2]));
+            uniqueSnacks.forEach(sn => pushItem(sn[0], sn[1], "स्नैक्स व बिस्कुट", "fa-cookie-bite", sn[2]));
 
-            // 11. घरेलू सफाई, कपड़े व बर्तन (Household Cleaning)
-            const cleanings = [
-                ["मैटिक वाशिंग पाउडर", "Matic Detergent Powder", "Kg"],
-                ["रेगुलर वाशिंग पाउडर", "Regular Detergent Powder", "Kg"],
-                ["डिटर्जेंट लिक्विड", "Liquid Laundry Detergent", "Litre (L)"],
-                ["ऊनी कपड़ों का लिक्विड", "Woolen Liquid Wash", "Litre (L)"],
-                ["फैब्रिक कंडीशनर", "Fabric Softener", "Pieces (pcs)"],
-                ["कपड़े धोने का साबुन", "Laundry Soap Bar", "Pieces (pcs)"],
-                ["लिक्विड नील", "Fabric Whitener Blue", "Pieces (pcs)"],
-                ["बर्तन धोने का साबुन", "Dishwash Bar", "Pieces (pcs)"],
-                ["बर्तन धोने का लिक्विड जेल", "Dishwash Liquid Gel", "Pieces (pcs)"],
-                ["स्क्रब पैड", "Green Scrubbing Pad", "Pieces (pcs)"],
-                ["स्पंज वाइप", "Kitchen Sponge Wipe", "Packets"],
-                ["स्टील जूना", "Steel Scrubber", "Pieces (pcs)"],
-                ["टॉयलेट क्लीनर लिक्विड", "Toilet Cleaner Liquid", "Litre (L)"],
-                ["बाथरूम क्लीनर", "Bathroom Tile Cleaner", "Litre (L)"],
-                ["फ्लोर क्लीनर लिक्विड", "Floor Disinfectant Cleaner", "Litre (L)"],
-                ["सफेद फिनाइल", "White Phenyl Concentrate", "Litre (L)"],
-                ["काली फिनाइल", "Black Disinfectant Phenyl", "Litre (L)"],
-                ["नेफ़थलीन कपूर गोलियां", "Naphthalene Moth Balls", "Packets"],
-                ["ग्लास क्लीनर स्प्रे", "Glass & Surface Cleaner", "Pieces (pcs)"],
-                ["डिसइंफेक्टेंट स्प्रे", "Disinfectant Spray", "Pieces (pcs)"],
-                ["सिंक ड्रेन क्लीनर", "Sink Drain Unblocker", "Packets"],
-                ["फूल झाड़ू", "Soft Grass Broom", "Pieces (pcs)"],
-                ["सींक झाड़ू", "Hard Stick Broom", "Pieces (pcs)"],
-                ["कॉटन पोछा कपड़ा", "Cotton Floor Mop Cloth", "Pieces (pcs)"],
-                ["माइक्रोफाइबर मॉप रीफिल", "Microfiber Mop Refill", "Pieces (pcs)"],
-                ["डस्टबिन कचरा बैग", "Garbage Trash Bags", "Packets"],
-                ["एल्युमिनियम फॉयल", "Aluminium Food Foil", "Pieces (pcs)"],
-                ["क्लिंग रैप फिल्म", "Plastic Cling Wrap", "Pieces (pcs)"],
-                ["किचन टिश्यू पेपर", "Kitchen Paper Towel", "Packets"]
+            // 12. घरेलू सफाई, कपड़े, बर्तन व कीटनाशक (Cleaning & Household Utility) - Unique
+            const uniqueCleaning = [
+                ["वॉशिंग पाउडर सर्फ", "Laundry Detergent Washing Powder", "Kg"],
+                ["मैटिक लिक्विड डिटर्जेंट", "Front Top Load Liquid Detergent", "Litre (L)"],
+                ["ऊनी कपड़ों का लिक्विड", "Delicate Woolen Care Liquid Wash", "Litre (L)"],
+                ["फैब्रिक कंडीशनर", "Fragrant Fabric Softener Conditioner", "Pieces (pcs)"],
+                ["कपड़े धोने का साबुन", "Heavy Laundry Soap Bar", "Pieces (pcs)"],
+                ["लिक्विड नील", "Liquid Fabric Whitener Neel", "Pieces (pcs)"],
+                ["सफेद कपड़ों का ब्लीच", "Chlorine Fabric Bleach Liquid", "Litre (L)"],
+                ["बर्तन धोने का साबुन", "Dishwash Bar Cake", "Pieces (pcs)"],
+                ["बर्तन धोने का लिक्विड जेल", "Lemon Dishwash Liquid Gel", "Pieces (pcs)"],
+                ["हरा स्क्रबिंग पैड", "Heavy Duty Green Scrub Sponge", "Pieces (pcs)"],
+                ["स्टील जूना", "Stainless Steel Spiral Scrubber", "Pieces (pcs)"],
+                ["टॉयलेट क्लीनर नीला", "Thick Disinfectant Toilet Cleaner", "Litre (L)"],
+                ["बाथरूम टाइल्स क्लीनर लाल", "Bathroom Tiles Surface Cleaner", "Litre (L)"],
+                ["फ्लोर क्लीनर लिक्विड", "Citrus Pine Floor Disinfectant", "Litre (L)"],
+                ["सफेद फिनाइल", "Concentrated White Phenyl", "Litre (L)"],
+                ["काली फिनाइल", "Black Coal Tar Heavy Phenyl", "Litre (L)"],
+                ["कांच क्लीनर स्प्रे", "Glass & Mirror Shine Spray", "Pieces (pcs)"],
+                ["किचन डीग्रीजर स्प्रे", "Kitchen Chimney Oil Degreaser Spray", "Pieces (pcs)"],
+                ["ड्रेन क्लीनर पाउडर", "Sink Drain Clog Cleaner Powder", "Packets"],
+                ["नेफ़थलीन सफेद गोली", "Pure White Naphthalene Balls", "Packets"],
+                ["बाथरूम फ्रेशनर पॉकेट", "Scented Bathroom Pocket Fragrance", "Pieces (pcs)"],
+                ["कमरे का रूम फ्रेशनर", "Aerosol Room Spray Freshener", "Pieces (pcs)"],
+                ["फूल झाड़ू", "Soft Natural Grass Broom", "Pieces (pcs)"],
+                ["सींक झाड़ू", "Hard Coconut Stick Outdoor Broom", "Pieces (pcs)"],
+                ["फ्लोर वाइपर", "Rubber Edge Floor Squeegee Wiper", "Pieces (pcs)"],
+                ["माइक्रोफाइबर मॉप पोछा", "Microfiber Twist Mop Rod", "Pieces (pcs)"],
+                ["कॉटन पोछा कपड़ा", "Heavy Checked Cotton Floor Cloth", "Pieces (pcs)"],
+                ["डस्टपैन कूड़ा उठाने वाला", "Handled Plastic Dustpan", "Pieces (pcs)"],
+                ["टॉयलेट ब्रश", "Curved Toilet Cleaning Brush", "Pieces (pcs)"],
+                ["डस्टबिन कचरा बैग रोल", "Biodegradable Garbage Trash Bags", "Packets"],
+                ["एल्युमिनियम फॉयल रोल", "Food Grade Aluminium Foil", "Pieces (pcs)"],
+                ["बटर पेपर बेकिंग रोल", "Non Stick Baking Butter Paper", "Pieces (pcs)"],
+                ["क्लिंग फिल्म रैप", "Transparent Food Cling Film Wrap", "Pieces (pcs)"],
+                ["किचन टिश्यू पेपर रोल", "Absorbent Kitchen Paper Towel", "Packets"],
+                ["टेबल नैपकिन टिश्यू", "Dinner Facial Table Napkins", "Packets"],
+                ["टॉयलेट पेपर रोल", "Flushable Soft Toilet Tissue Rolls", "Packets"],
+                ["मच्छर मारने का स्प्रे", "Mosquito Fly Killer Aerosol Spray", "Pieces (pcs)"],
+                ["मच्छर रिफिल लिक्विड", "Vaporizer Mosquito Liquid Refill", "Pieces (pcs)"],
+                ["मच्छर अगरबत्ती", "Low Smoke Mosquito Incense Sticks", "Packets"],
+                ["मच्छर कॉइल", "Green Mosquito Coil Rings", "Packets"],
+                ["मच्छर क्रीम", "Herbal Mosquito Repellent Skin Cream", "Pieces (pcs)"],
+                ["कॉकरोच जेल ट्यूब", "Syringe Cockroach Bait Gel", "Pieces (pcs)"],
+                ["चींटी पाउडर", "Anti Ant Termite Dust Powder", "Packets"],
+                ["चूहा पकड़ने का गोंद पैड", "Rat Glue Trap Pad", "Pieces (pcs)"]
             ];
-            cleanings.forEach(c => pushItem(c[0], c[1], "घरेलू सफाई", "fa-soap", c[2]));
+            uniqueCleaning.forEach(cu => pushItem(cu[0], cu[1], "घरेलू सफाई", "fa-soap", cu[2]));
 
-            // 12. पर्सनल केयर व हाइजीन (Personal Care)
-            const personal = [
+            // 13. पर्सनल केयर, स्नान, ओरल, बेबी व दैनिक वेलनेस (Personal Care & Daily Wellness) - Unique
+            const uniquePersonal = [
                 ["नहाने का साबुन", "Bathing Soap Bar", "Pieces (pcs)"],
-                ["एंटीसेप्टिक साबुन", "Antiseptic Bathing Soap", "Pieces (pcs)"],
-                ["ग्लिसरीन साबुन", "Glycerin Transparent Soap", "Pieces (pcs)"],
-                ["लिक्विड हैंडवॉश", "Liquid Handwash Pump", "Pieces (pcs)"],
-                ["हैंडवॉश रीफिल", "Handwash Refill Pouch", "Packets"],
-                ["टूथपेस्ट जेल", "Fresh Gel Toothpaste", "Pieces (pcs)"],
-                ["एंटी-कैविटी टूथपेस्ट", "Daily Care Toothpaste", "Pieces (pcs)"],
-                ["सेंसिटिव टूथपेस्ट", "Sensitivity Relief Paste", "Pieces (pcs)"],
-                ["टूथब्रश", "Soft Toothbrush", "Pieces (pcs)"],
-                ["एंटी-डैंड्रफ शैम्पू", "Anti-Dandruff Shampoo", "Pieces (pcs)"],
-                ["स्मूथ हेयर शैम्पू", "Nourishing Hair Shampoo", "Pieces (pcs)"],
-                ["हेयर कंडीशनर", "Hair Conditioner", "Pieces (pcs)"],
-                ["शुद्ध नारियल हेयर ऑयल", "Coconut Hair Oil", "Pieces (pcs)"],
-                ["बादाम हेयर ऑयल", "Almond Hair Oil", "Pieces (pcs)"],
-                ["आंवला हेयर ऑयल", "Amla Hair Oil", "Pieces (pcs)"],
-                ["ठंडा आयुर्वेदिक तेल", "Cool Ayurvedic Oil", "Pieces (pcs)"],
-                ["बॉडी लोशन", "Daily Body Lotion", "Pieces (pcs)"],
-                ["पेट्रोलियम जेली", "Pure Petroleum Jelly", "Pieces (pcs)"],
-                ["एंटीसेप्टिक विंटर क्रीम", "Antiseptic Skin Cream", "Pieces (pcs)"],
-                ["फेस वॉश", "Purifying Face Wash", "Pieces (pcs)"],
-                ["शेविंग फोम", "Shaving Foam Can", "Pieces (pcs)"],
-                ["शेविंग क्रीम", "Shaving Cream Tube", "Pieces (pcs)"],
-                ["डिस्पोजेबल रेजर", "Disposable Shaving Razors", "Packets"],
-                ["सैनिटरी पैड्स", "Sanitary Napkin Pads", "Packets"],
-                ["ईयर बड्स कॉटन", "Cotton Swabs / Earbuds", "Packets"],
-                ["बेबी डायपर पैंट्स", "Baby Diaper Pants", "Packets"],
-                ["बेबी सोप", "Gentle Baby Soap", "Pieces (pcs)"]
+                ["नीम एंटीसेप्टिक साबुन", "Neem Antibacterial Bath Soap", "Pieces (pcs)"],
+                ["ग्लिसरीन साबुन", "Pure Transparent Glycerin Soap", "Pieces (pcs)"],
+                ["बॉडी वॉश शॉवर जेल", "Moisturizing Shower Gel Bodywash", "Pieces (pcs)"],
+                ["नहाने का लूफा", "Bath Exfoliating Loofah Mesh", "Pieces (pcs)"],
+                ["लिक्विड हैंडवॉश बोतल", "Antibacterial Hand Wash Pump", "Pieces (pcs)"],
+                ["हैंडवॉश रीफिल पाउच", "Hand Wash Refill Pouch", "Packets"],
+                ["हैंड सैनिटाइज़र", "Alcohol Hand Sanitizer Gel", "Pieces (pcs)"],
+                ["सफेद टूथपेस्ट", "Anti Cavity White Toothpaste", "Pieces (pcs)"],
+                ["रेड आयुर्वेदिक टूथपेस्ट", "Herbal Red Ayurvedic Paste", "Pieces (pcs)"],
+                ["जेल मिंट टूथपेस्ट", "Fresh Cooling Gel Mint Toothpaste", "Pieces (pcs)"],
+                ["सेंसिटिव टूथपेस्ट", "Teeth Sensitivity Relief Paste", "Pieces (pcs)"],
+                ["मुलायम टूथब्रश", "Soft Head Dental Toothbrush", "Pieces (pcs)"],
+                ["जीभी जीभ साफ करने वाला", "Stainless Steel Tongue Cleaner", "Pieces (pcs)"],
+                ["माउथवॉश लिक्विड", "Mint Mouthwash Oral Rinse", "Pieces (pcs)"],
+                ["डेंटल फ्लॉस धागा", "Dental Floss Waxed Thread", "Pieces (pcs)"],
+                ["एंटी-डैंड्रफ शैम्पू", "Anti Dandruff Hair Scalp Shampoo", "Pieces (pcs)"],
+                ["मुलायम चमकदार शैम्पू", "Keratin Smooth Shine Shampoo", "Pieces (pcs)"],
+                ["हेयर कंडीशनर", "Nourishing Hair Conditioner", "Pieces (pcs)"],
+                ["शुद्ध नारियल हेयर ऑयल", "Pure Coconut Hair Oil", "Pieces (pcs)"],
+                ["मीठा बादाम तेल बालों का", "Non Sticky Sweet Almond Oil", "Pieces (pcs)"],
+                ["आंवला शिकाकाई तेल", "Amla Shikakai Herbal Hair Oil", "Pieces (pcs)"],
+                ["ठंडा आयुर्वेदिक तेल", "Cool Herbal Stress Relief Head Oil", "Pieces (pcs)"],
+                ["हेयर सीरम", "Silicone Anti Frizz Hair Serum", "Pieces (pcs)"],
+                ["काली मेहंदी पाउडर", "Pure Sojat Herbal Heena Powder", "Packets"],
+                ["बॉडी लोशन मॉइस्चराइजर", "Moisturizing Body Lotion", "Pieces (pcs)"],
+                ["शुद्ध पेट्रोलियम जेली", "Pure Petroleum Jelly", "Pieces (pcs)"],
+                ["एंटीसेप्टिक त्वचा क्रीम", "Antiseptic Skin Healing Cream", "Pieces (pcs)"],
+                ["फटी एड़ियों की क्रीम", "Cracked Heel Foot Cream", "Pieces (pcs)"],
+                ["कोल्ड क्रीम चेहरे की", "Winter Cold Face Cream", "Pieces (pcs)"],
+                ["एलोवेरा जेल", "Pure Soothing Aloe Vera Leaf Gel", "Pieces (pcs)"],
+                ["गुलाब जल टोनर", "Pure Distilled Rose Water Spray", "Pieces (pcs)"],
+                ["नीम फेस वॉश", "Purifying Neem Face Wash", "Pieces (pcs)"],
+                ["सनस्क्रीन लोशन", "Matte Sunscreen Lotion SPF 50", "Pieces (pcs)"],
+                ["होठों का लिप बाम", "Nourishing Lip Balm", "Pieces (pcs)"],
+                ["टेलकम पाउडर", "Cooling Scented Talcum Powder", "Pieces (pcs)"],
+                ["शेविंग फोम कैन", "Rich Menthol Shaving Foam", "Pieces (pcs)"],
+                ["शेविंग क्रीम ट्यूब", "Lathering Shaving Cream", "Pieces (pcs)"],
+                ["शेविंग ब्रश", "Soft Shaving Applicator Brush", "Pieces (pcs)"],
+                ["डिस्पोजेबल शेविंग रेजर", "Twin Blade Disposable Razor", "Packets"],
+                ["शेविंग ब्लेड पैकेट", "Stainless Steel Shaving Blades", "Packets"],
+                ["आफ्टर शेव लोशन", "Cooling After Shave Lotion", "Pieces (pcs)"],
+                ["सैनिटरी पैड्स एक्सएल", "Ultra Thin XL Sanitary Napkins", "Packets"],
+                ["सैनिटरी पैड्स रेगुलर", "Cotton Soft Regular Sanitary Pads", "Packets"],
+                ["इंटिमेट वॉश", "Gentle Intimate Hygiene Wash", "Pieces (pcs)"],
+                ["बेबी डायपर पैंट", "Soft Absorbent Baby Diaper Pants", "Packets"],
+                ["बच्चों के गीले वाइप्स", "Alcohol Free Gentle Baby Wipes", "Packets"],
+                ["शिशु मालिश तेल", "Gentle Almond Baby Massage Oil", "Pieces (pcs)"],
+                ["बच्चों का शैम्पू", "Tear Free Gentle Baby Shampoo", "Pieces (pcs)"],
+                ["रुई बड्स कान साफ करने की", "Cotton Ear Swabs Buds", "Packets"],
+                ["एंटीसेप्टिक डेटॉल लिक्विड", "First Aid Antiseptic Liquid", "Pieces (pcs)"],
+                ["वाटरप्रूफ बैंडेज हंसप्लास्ट", "Medicated Waterproof Bandages", "Packets"],
+                ["दर्द निवारक स्प्रे मूव", "Fast Pain Relief Body Spray", "Pieces (pcs)"],
+                ["दर्द निवारक ऑइंटमेंट", "Analgesic Pain Relief Balm Gel", "Pieces (pcs)"],
+                ["सिरदर्द बाम", "Ayurvedic Headache Herbal Balm", "Pieces (pcs)"],
+                ["सर्दी जुकाम भाप बाम", "Menthol Vaporizing Rub Balm", "Pieces (pcs)"],
+                ["नेजल इनहेलर", "Menthol Decongestant Nasal Inhaler", "Pieces (pcs)"],
+                ["एसिडिटी फ्रूट साल्ट ईनो", "Effervescent Fruit Salt Powder", "Packets"],
+                ["पुदीना मोती पर्ल्स", "Cooling Spearmint Digestion Pearls", "Packets"],
+                ["हाजमोला पाचक गोली", "Ayurvedic Digestive Chewable Tablets", "Pieces (pcs)"],
+                ["इलेक्ट्रोलाइट ओआरएस पाउडर", "WHO Electrolyte Hydration Sachet", "Packets"],
+                ["एंटासिड सिरप", "Antacid Acidity Relief Suspension", "Pieces (pcs)"],
+                ["गर्म पट्टी क्रैप बैंडेज", "Elastic Muscle Crepe Bandage", "Pieces (pcs)"],
+                ["सर्जिकल रुई कॉटन रोल", "Sterile Absorbent Surgical Cotton", "Packets"],
+                ["माइक्रोकोर मेडिकल टेप", "Breathable Surgical Paper Tape", "Pieces (pcs)"]
             ];
-            personal.forEach(p => pushItem(p[0], p[1], "पर्सनल केयर", "fa-pump-soap", p[2]));
+            uniquePersonal.forEach(ph => pushItem(ph[0], ph[1], "पर्सनल केयर", "fa-pump-soap", ph[2]));
 
-            // 13. पूजा व घरेलू वेलनेस (Pooja & First Aid)
-            const pooja = [
-                ["सुगंधित अगरबत्ती", "Fragrant Incense Sticks", "Packets"],
-                ["चंदन धूप बत्ती", "Sandalwood Dhoop Batti", "Packets"],
-                ["शुद्ध भीमसेनी कपूर", "Pure Camphor Tablets", "Packets"],
-                ["गोल रुई बाती", "Round Cotton Wicks", "Packets"],
-                ["लंबी रुई बाती", "Long Cotton Wicks", "Packets"],
-                ["पूजा तिल तेल", "Sesame Oil for Pooja", "Litre (L)"],
-                ["माचिस बॉक्स", "Safety Matchboxes", "Packets"],
-                ["हवन सामग्री", "Havan Samagri Herbs", "Packets"],
-                ["रोली कुमकुम", "Pooja Roli Kumkum", "Packets"],
-                ["चंदन टीका", "Sandal Paste", "Pieces (pcs)"],
-                ["गंगाजल", "Sacred Ganga Water", "Pieces (pcs)"],
-                ["मच्छर भगाने की लिक्विड रीफिल", "Mosquito Liquid Refill", "Pieces (pcs)"],
-                ["मच्छर अगरबत्ती", "Mosquito Repellent Sticks", "Packets"],
-                ["मच्छर स्प्रे", "Mosquito Insect Killer Spray", "Pieces (pcs)"],
-                ["कॉकरोच स्प्रे", "Cockroach Control Spray", "Pieces (pcs)"],
-                ["मच्छर निवारक क्रीम", "Mosquito Repellent Skin Cream", "Pieces (pcs)"],
-                ["रूम फ्रेशनेर पॉकेट", "Air Freshener Block", "Pieces (pcs)"],
-                ["एंटीसेप्टिक लिक्विड", "Antiseptic Liquid", "Pieces (pcs)"],
-                ["फर्स्ट-एड बैंडेज स्ट्रिप्स", "Adhesive Bandages", "Packets"],
-                ["दर्द निवारक स्प्रे", "Pain Relief Spray", "Pieces (pcs)"],
-                ["दर्द निवारक जेल", "Pain Relief Gel / Ointment", "Pieces (pcs)"],
-                ["सिरदर्द बाम", "Pain Relief Balm", "Pieces (pcs)"],
-                ["सर्दी जुकाम बाम", "Vapour Rub Cold Balm", "Pieces (pcs)"],
-                ["नेजल इनहेलर", "Nasal Decongestant Inhaler", "Pieces (pcs)"],
-                ["एसिडिटी फ्रूट साल्ट", "Antacid Fruit Salt Sachets", "Packets"],
-                ["पुदीना कैप्सूल", "Digestive Mint Pearls", "Packets"],
-                ["ओआरएस इलेक्ट्रोलाइट पाउडर", "Oral Rehydration Salts", "Packets"],
-                ["एंटासिड सिरप / टैबलेट", "Antacid Tablets", "Packets"],
-                ["मेडिकल कॉटन", "Absorbent Cotton Wool", "Packets"],
-                ["क्रेप बैंडेज पट्टी", "Elastic Crepe Bandage", "Pieces (pcs)"]
+            // 14. पूजा सामग्री, दीया, अगरबत्ती व अनुष्ठान (Pooja & Ritual Essentials) - Unique
+            const uniquePooja = [
+                ["चंदन धूप बत्ती", "Sandalwood Natural Dhoop Sticks", "Packets"],
+                ["गूगल धूप", "Pure Natural Guggul Resin Dhoop", "Packets"],
+                ["लोबान धूप कप", "Sambrani Loban Dhoop Cups", "Packets"],
+                ["सुगंधित अगरबत्ती", "Scented Fragrant Agarbatti Sticks", "Packets"],
+                ["भीमसेनी शुद्ध कपूर", "Pure Bhimseni Camphor Lumps", "Grams (gm)"],
+                ["सफेद कपूर टिकिया", "White Aarti Camphor Tablets", "Packets"],
+                ["फूल गोल रुई बत्ती", "Round Cotton Diya Wicks Phool Batti", "Packets"],
+                ["लंबी रुई बत्ती", "Long Cotton Diya Wicks", "Packets"],
+                ["घी की बनी तैयार बत्ती", "Ready Cow Ghee Wax Wicks", "Packets"],
+                ["पूजा का तिल तेल", "Sesame Oil for Temple Lamps", "Litre (L)"],
+                ["माचिस बॉक्स बंडल", "Safety Matchboxes Bundle", "Packets"],
+                ["हवन सामग्री शुद्ध", "Sacred Herbal Havan Samagri", "Kg"],
+                ["हवन की आम लकड़ी समिधा", "Dry Mango Wood for Havan", "Kg"],
+                ["सूखे गाय के उपले / कंडे", "Dried Cow Dung Cakes Upale", "Pieces (pcs)"],
+                ["रोली कुमकुम शुद्ध", "Pure Sacred Roli Kumkum", "Packets"],
+                ["अष्टगंध चंदन टीका", "Eight Herb Sandal Paste Ashtagandha", "Pieces (pcs)"],
+                ["पीला हनुमान सिंदूर", "Orange Sindoor for Hanuman Pooja", "Packets"],
+                ["मौली / कलावा रक्षासूत्र", "Sacred Cotton Kalawa Thread", "Pieces (pcs)"],
+                ["जनेऊ सूती धागा", "Pure White Cotton Sacred Janeu", "Pieces (pcs)"],
+                ["गंगाजल तीर्थ बोतल", "Holy Ganga River Water Canister", "Pieces (pcs)"],
+                ["सुपारी अखंड पूजा वाली", "Whole Hard Pooja Betel Nuts", "Packets"],
+                ["पीली कौड़ी सिद्ध", "Yellow Laxmi Prosperity Cowrie", "Pieces (pcs)"],
+                ["कमलगट्टा बीज", "Dried Lotus Seeds Kamalgatta", "Packets"],
+                ["मिट्टी के दीये", "Handmade Clay Terracotta Diyas", "Pieces (pcs)"],
+                ["पीतल का आरती दीया", "Brass Handled Aarti Deepam Lamp", "Pieces (pcs)"],
+                ["सुगंधित इत्र गुलाब पूजा का", "Pure Rose Attar Perfume", "Pieces (pcs)"],
+                ["पूजा की मिश्री दाना प्रसाद", "Crystal Sugar Prashad Drops", "Packets"],
+                ["खस्ता बताशा", "Crispy Puffed Sugar Batasha", "Kg"],
+                ["पान का पत्ता पूजा वाला", "Fresh Green Pooja Betel Leaves", "Pieces (pcs)"]
             ];
-            pooja.forEach(pj => pushItem(pj[0], pj[1], "पूजा व घरेलू सुरक्षा", "fa-shield-halved", pj[2]));
+            uniquePooja.forEach(pj => pushItem(pj[0], pj[1], "पूजा व घरेलू सुरक्षा", "fa-shield-halved", pj[2]));
 
             return catalog;
         }
@@ -2869,6 +2985,9 @@
 
         let activeKiranaHighlight = -1;
         let currentSliderCategory = 'ALL';
+        let currentFilteredMatches = [];
+        let currentlyRenderedDropdownCount = 0;
+        const DROPDOWN_BATCH_SIZE = 50;
 
         function scrollProductSlider(delta) {
             const slider = document.getElementById('product-cards-slider');
@@ -2904,32 +3023,31 @@
                 list = KIRANA_CATALOG.filter(item => item.category === currentSliderCategory);
             }
 
-            // Display a diverse set of pure, unbranded items with zero duplication
-            const displayItems = list.slice(0, 45);
+            // Display a rich multi-row selection
+            const displayItems = list.slice(0, 60);
 
             displayItems.forEach((item) => {
                 const card = document.createElement('div');
-                card.className = "flex-shrink-0 w-36 sm:w-40 p-2.5 rounded-2xl bg-white dark:bg-neutral-800/80 border border-neutral-200/90 dark:border-neutral-700/80 shadow-sm hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-md transition snap-start flex flex-col justify-between group cursor-pointer";
+                card.className = "p-2 rounded-2xl bg-white dark:bg-neutral-800/90 border border-neutral-200/90 dark:border-neutral-700/80 shadow-sm hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-md transition snap-start flex flex-col justify-between group cursor-pointer h-[86px] sm:h-[92px]";
                 card.onclick = () => selectKiranaItem(item);
 
                 card.innerHTML = `
-                    <div>
-                        <div class="flex items-center justify-between mb-1.5">
-                            <span class="w-7 h-7 rounded-xl bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center text-xs group-hover:scale-110 transition">
-                                <i class="fa-solid ${item.icon || 'fa-basket-shopping'}"></i>
-                            </span>
-                            <span class="text-[9px] font-extrabold text-neutral-400 uppercase tracking-wider truncate max-w-[70px]">${item.category}</span>
+                    <div class="flex items-start gap-2 min-w-0">
+                        <span class="w-6 h-6 rounded-lg bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center text-[10px] flex-shrink-0 group-hover:scale-105 transition mt-0.5">
+                            <i class="fa-solid ${item.icon || 'fa-basket-shopping'}"></i>
+                        </span>
+                        <div class="min-w-0 flex-1">
+                            <h5 class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100 line-clamp-2 leading-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition" title="${item.name}">
+                                ${item.name}
+                            </h5>
                         </div>
-                        <h5 class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100 line-clamp-2 leading-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition" title="${item.name}">
-                            ${item.name}
-                        </h5>
                     </div>
-                    <div class="mt-2 pt-2 border-t border-neutral-100 dark:border-neutral-700/60 flex items-center justify-between">
-                        <span class="text-[10px] font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/70 px-1.5 py-0.5 rounded">
+                    <div class="pt-1.5 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-700/60 mt-auto">
+                        <span class="text-[9px] font-bold text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700/70 px-1.5 py-0.5 rounded truncate max-w-[70px]">
                             ${item.defaultUnit}
                         </span>
-                        <button type="button" onclick="event.stopPropagation(); selectKiranaItem(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="px-2 py-1 rounded-lg bg-neutral-900 hover:bg-primary-600 text-white dark:bg-neutral-100 dark:hover:bg-primary-600 dark:text-neutral-900 dark:hover:text-white text-[10px] font-bold transition active:scale-95 flex items-center gap-1 shadow-sm">
-                            <i class="fa-solid fa-plus text-[8px]"></i> Add
+                        <button type="button" onclick="event.stopPropagation(); selectKiranaItem(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="px-2 py-0.5 rounded-lg bg-primary-600 hover:bg-primary-700 text-white text-[10px] font-bold transition active:scale-90 flex items-center gap-1 shadow-sm">
+                            <i class="fa-solid fa-plus text-[8px]"></i> <span>Add</span>
                         </button>
                     </div>
                 `;
@@ -2943,6 +3061,7 @@
             filterKiranaDropdown(inputVal);
             if (dropdown) {
                 dropdown.classList.remove('hidden');
+                dropdown.scrollTop = 0;
             }
         }
 
@@ -2965,41 +3084,19 @@
             if(clearBtn) clearBtn.classList.add('hidden');
         }
 
-        function filterKiranaDropdown(query = '') {
-            const q = query.trim().toLowerCase();
+        function renderNextDropdownBatch() {
             const container = document.getElementById('kirana-dropdown-items');
-            const countEl = document.getElementById('dropdown-match-count');
-            const clearBtn = document.getElementById('grocery-clear-btn');
+            if (!container || !currentFilteredMatches) return;
 
-            if (clearBtn) {
-                if (q.length > 0) clearBtn.classList.remove('hidden');
-                else clearBtn.classList.add('hidden');
-            }
+            const nextBatch = currentFilteredMatches.slice(
+                currentlyRenderedDropdownCount,
+                currentlyRenderedDropdownCount + DROPDOWN_BATCH_SIZE
+            );
 
-            if (!container) return;
-            container.innerHTML = '';
-
-            const matches = KIRANA_CATALOG.filter(item => {
-                if (!q) return true;
-                return item.name.toLowerCase().includes(q) || item.category.toLowerCase().includes(q);
-            });
-
-            if (countEl) countEl.textContent = `${matches.length} item${matches.length === 1 ? '' : 's'}`;
-
-            if (matches.length === 0) {
-                container.innerHTML = `
-                    <div class="p-3 text-center text-xs text-neutral-400">
-                        <i class="fa-solid fa-basket-shopping text-xl mb-1 opacity-50 block"></i>
-                        <span>"${query}" सूची में नहीं मिला। आप इसे टाइप करके नया जोड़ सकते हैं!</span>
-                    </div>
-                `;
-                return;
-            }
-
-            // Render matched items with category chips and visual styling without hardcoded quantities or brands
-            matches.slice(0, 30).forEach((item, idx) => {
+            nextBatch.forEach((item, batchIdx) => {
+                const actualIdx = currentlyRenderedDropdownCount + batchIdx;
                 const div = document.createElement('div');
-                div.className = `kirana-item-row p-2 sm:p-2.5 rounded-xl flex items-center justify-between cursor-pointer transition text-xs hover:bg-primary-50 dark:hover:bg-primary-950/40 border border-transparent hover:border-primary-200 dark:hover:border-primary-800 ${idx === activeKiranaHighlight ? 'bg-primary-50 dark:bg-primary-950/60 border-primary-300' : ''}`;
+                div.className = `kirana-item-row p-2 sm:p-2.5 rounded-xl flex items-center justify-between cursor-pointer transition text-xs hover:bg-primary-50 dark:hover:bg-primary-950/40 border border-transparent hover:border-primary-200 dark:hover:border-primary-800 ${actualIdx === activeKiranaHighlight ? 'bg-primary-50 dark:bg-primary-950/60 border-primary-300' : ''}`;
                 div.onclick = () => selectKiranaItem(item);
                 
                 div.innerHTML = `
@@ -3018,6 +3115,57 @@
                 `;
                 container.appendChild(div);
             });
+
+            currentlyRenderedDropdownCount += nextBatch.length;
+        }
+
+        function filterKiranaDropdown(query = '') {
+            const q = query.trim().toLowerCase();
+            const container = document.getElementById('kirana-dropdown-items');
+            const countEl = document.getElementById('dropdown-match-count');
+            const clearBtn = document.getElementById('grocery-clear-btn');
+            const dropdown = document.getElementById('custom-kirana-dropdown');
+
+            if (clearBtn) {
+                if (q.length > 0) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
+
+            if (!container) return;
+            container.innerHTML = '';
+            currentlyRenderedDropdownCount = 0;
+            activeKiranaHighlight = -1;
+
+            currentFilteredMatches = KIRANA_CATALOG.filter(item => {
+                if (!q) return true;
+                return item.name.toLowerCase().includes(q) || item.category.toLowerCase().includes(q);
+            });
+
+            if (countEl) countEl.textContent = `${currentFilteredMatches.length} items`;
+
+            if (currentFilteredMatches.length === 0) {
+                container.innerHTML = `
+                    <div class="p-3 text-center text-xs text-neutral-400">
+                        <i class="fa-solid fa-basket-shopping text-xl mb-1 opacity-50 block"></i>
+                        <span>"${query}" सूची में नहीं मिला। आप इसे टाइप करके नया जोड़ सकते हैं!</span>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render initial batch
+            renderNextDropdownBatch();
+
+            // Set up infinite scroll so as user scrolls down, all products load effortlessly
+            if (dropdown) {
+                dropdown.onscroll = function() {
+                    if (dropdown.scrollTop + dropdown.clientHeight >= dropdown.scrollHeight - 60) {
+                        if (currentlyRenderedDropdownCount < currentFilteredMatches.length) {
+                            renderNextDropdownBatch();
+                        }
+                    }
+                };
+            }
         }
 
         function selectKiranaItem(item) {
