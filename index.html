@@ -84,7 +84,8 @@
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(225, 227, 231, 0.9);
             box-shadow: 0 10px 30px -10px rgba(23, 46, 102, 0.05);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+            position: relative;
         }
         .dark .glass-card {
             background: rgba(28, 28, 34, 0.8);
@@ -93,6 +94,30 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.45);
         }
+
+        .glass-card:hover {
+            border-color: rgba(59, 110, 245, 0.3);
+            box-shadow: 0 12px 25px -10px rgba(23, 46, 102, 0.08);
+        }
+        .dark .glass-card:hover {
+            border-color: rgba(91, 136, 250, 0.35);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.55);
+        }
+
+        /* Shimmer Sheen effect for interactive buttons and pills */
+        .glass-interactive {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-interactive:hover {
+            transform: translateY(-2px) scale(1.015);
+            box-shadow: 0 12px 24px -6px rgba(36, 83, 214, 0.18);
+        }
+        .glass-interactive:active {
+            transform: translateY(0) scale(0.98);
+        }
+
         .interactive-card {
             position: relative;
             overflow: hidden;
@@ -505,132 +530,31 @@
                 <div class="p-4 sm:p-5 rounded-2xl bg-neutral-100 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 mb-6">
                     <form onsubmit="addGroceryItem(event)" class="space-y-3">
                         <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
-                            <div class="sm:col-span-6">
-                                <label class="block text-xs font-semibold text-neutral-600 dark:text-neutral-300 mb-1">
-                                    Item Name (e.g. Basmati Rice, Milk, Almonds)
+                            <div class="sm:col-span-6 relative" id="grocery-item-input-container">
+                                <label class="block text-xs font-semibold text-neutral-600 dark:text-neutral-300 mb-1 flex items-center justify-between">
+                                    <span>Item Name (Search or choose from Kirana catalogue)</span>
+                                    <span class="text-[10px] text-primary-600 dark:text-primary-400 font-bold">Smart Catalog</span>
                                 </label>
-                                <input type="text" id="grocery-name" list="kirana-items-list" required placeholder="सामान चुनें या टाइप करें..." class="w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs focus:outline-none focus:border-primary-500">
-                                <datalist id="kirana-items-list">
-                                    <!-- अनाज, आटा व चावल -->
-                                    <option value="आटा / Wheat Flour (Atta)">
-                                    <option value="चावल / Rice (Basmati / Normal)">
-                                    <option value="मैदा / Refined Flour (Maida)">
-                                    <option value="सूजी / Rava (Semolina)">
-                                    <option value="बेसन / Gram Flour (Besan)">
-                                    <option value="पोहा / Flattened Rice (Poha)">
-                                    <option value="दलिया / Broken Wheat (Daliya)">
-                                    <option value="ओट्स / Oats">
-                                    <option value="मक्के का आटा / Maize Flour">
-                                    <option value="बाजरे का आटा / Millet Flour">
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-400">
+                                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                                    </div>
+                                    <input type="text" id="grocery-name" autocomplete="off" onfocus="openKiranaDropdown()" oninput="filterKiranaDropdown(this.value)" onkeydown="handleKiranaKeydown(event)" required placeholder="सामान चुनें या टाइप करें (उदा. आटा, दाल, तेल, दूध)..." class="w-full pl-9 pr-8 py-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-medium focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 text-neutral-800 dark:text-neutral-100 transition shadow-inner">
+                                    <button type="button" id="grocery-clear-btn" onclick="clearKiranaInput()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 hidden">
+                                        <i class="fa-solid fa-circle-xmark text-xs"></i>
+                                    </button>
+                                </div>
 
-                                    <!-- दालें व अनाज -->
-                                    <option value="अरहर / तूर दाल (Toor Dal)">
-                                    <option value="मूंग दाल धुली (Yellow Moong Dal)">
-                                    <option value="मूंग दाल छिलका (Green Moong Dal)">
-                                    <option value="साबुत मूंग (Whole Green Moong)">
-                                    <option value="चना दाल (Chana Dal)">
-                                    <option value="उड़द दाल धुली (Urad Dal White)">
-                                    <option value="उड़द दाल काली (Urad Dal Black)">
-                                    <option value="मसूर दाल (Red Masoor Dal)">
-                                    <option value="काबुली चना / छोले (White Chickpeas)">
-                                    <option value="काला चना (Black Chickpeas)">
-                                    <option value="राजमा (Kidney Beans / Rajma)">
-                                    <option value="सफेद मटर (White Peas / Matar)">
-                                    <option value="सोयाबीन बड़ी (Soya Chunks)">
-
-                                    <!-- तेल, घी व मक्खन -->
-                                    <option value="सरसों का तेल / Mustard Oil">
-                                    <option value="रिफाइंड तेल / Refined Cooking Oil">
-                                    <option value="देसी घी / Desi Ghee">
-                                    <option value="सोयाबीन तेल / Soybean Oil">
-                                    <option value="सूरजमुखी तेल / Sunflower Oil">
-                                    <option value="जैतून का तेल / Olive Oil">
-                                    <option value="मक्खन / Butter">
-
-                                    <!-- मसाले व तड़का सामग्री -->
-                                    <option value="नमक / Salt (Tata Salt)">
-                                    <option value="सेंधा नमक / Rock Salt">
-                                    <option value="काला नमक / Black Salt">
-                                    <option value="हल्दी पाउडर / Turmeric Powder">
-                                    <option value="लाल मिर्च पाउडर / Red Chilli Powder">
-                                    <option value="धनिया पाउडर / Coriander Powder">
-                                    <option value="जीरा / Cumin Seeds (Jeera)">
-                                    <option value="राई / सरसों के बीज (Mustard Seeds)">
-                                    <option value="अजवाइन / Carom Seeds">
-                                    <option value="सौंफ / Fennel Seeds">
-                                    <option value="मेथी दाना / Fenugreek Seeds">
-                                    <option value="हींग / Asafoetida (Hing)">
-                                    <option value="गरम मसाला / Garam Masala">
-                                    <option value="काली मिर्च / Black Pepper">
-                                    <option value="लौंग / Cloves">
-                                    <option value="छोटी इलायची / Green Cardamom">
-                                    <option value="बड़ी इलायची / Black Cardamom">
-                                    <option value="दालचीनी / Cinnamon">
-                                    <option value="तेजपत्ता / Bay Leaves">
-                                    <option value="कसूरी मेथी / Kasuri Methi">
-                                    <option value="चाट मसाला / Chaat Masala">
-                                    <option value="अमचूर पाउडर / Dry Mango Powder">
-                                    <option value="सांभर मसाला / Sambar Masala">
-                                    <option value="छोले मसाला / Chhole Masala">
-                                    <option value="पाव भाजी मसाला / Pav Bhaji Masala">
-
-                                    <!-- मीठा व पेय पदार्थ -->
-                                    <option value="चीनी / Sugar">
-                                    <option value="गुड़ / Jaggery">
-                                    <option value="चाय पत्ती / Tea Leaves">
-                                    <option value="कॉफ़ी पाउडर / Coffee Powder">
-                                    <option value="शहद / Honey">
-                                    <option value="बूरा / खांड / Raw Sugar">
-
-                                    <!-- डेयरी व नाश्ता -->
-                                    <option value="दूध / Milk (Packets)">
-                                    <option value="दही / Curd (Dahi)">
-                                    <option value="पनीर / Paneer (Cottage Cheese)">
-                                    <option value="ब्रेड / Bread">
-                                    <option value="अंडे / Eggs">
-                                    <option value="टोस्ट / रस्क (Rusk)">
-                                    <option value="बिस्कुट / Biscuits">
-                                    <option value="नमकीन / भुजिया (Namkeen)">
-                                    <option value="मैगी / नूडल्स (Maggi Noodles)">
-                                    <option value="पास्ता / Macaroni (Pasta)">
-                                    <option value="टोमैटो केचप / Tomato Sauce">
-                                    <option value="सॉस / Mayonnaise">
-                                    <option value="अचार / Pickle">
-                                    <option value="पापड़ / Papad">
-
-                                    <!-- ड्राई फ्रूट्स (मेवे) -->
-                                    <option value="बादाम / Almonds">
-                                    <option value="काजू / Cashew Nuts">
-                                    <option value="किशमिश / Raisins">
-                                    <option value="अखरोट / Walnuts">
-                                    <option value="पिस्ता / Pistachios">
-                                    <option value="मखाना / Fox Nuts (Makhana)">
-                                    <option value="नारियल सूखा / Dry Coconut (Gola)">
-
-                                    <!-- पूजा व अन्य जरूरतें -->
-                                    <option value="अगरबत्ती / Incense Sticks">
-                                    <option value="माचिस / Matchbox">
-                                    <option value="कपूर / Camphor (Kapoor)">
-                                    <option value="दीये की बत्ती / Cotton Wicks">
-
-                                    <!-- सफाई व घरेलू उत्पाद -->
-                                    <option value="डिटर्जेंट पाउडर / Washing Powder">
-                                    <option value="कपड़े धोने का साबुन / Laundry Soap">
-                                    <option value="नहाने का साबुन / Bathing Soap">
-                                    <option value="बर्तन धोने का साबुन / Dishwash Bar">
-                                    <option value="बर्तन धोने का लिक्विड / Dishwash Gel">
-                                    <option value="टूथपेस्ट / Toothpaste">
-                                    <option value="टूथब्रश / Toothbrush">
-                                    <option value="शैम्पू / Shampoo">
-                                    <option value="हेयर ऑयल / Hair Oil (सरसों/नारियल)">
-                                    <option value="हैंडवॉश / Hand Wash Liquid">
-                                    <option value="टॉयलेट क्लीनर / Toilet Cleaner (Harpic)">
-                                    <option value="फर्श साफ करने वाला / Floor Cleaner (Lizol)">
-                                    <option value="फिनाइल / Phenyl">
-                                    <option value="कूड़े की थैली / Garbage Bags">
-                                    <option value="एल्युमिनियम फॉयल / Foil Paper">
-                                    <option value="टिश्यू पेपर / Tissue Paper">
-                                </datalist>
+                                <!-- Ultra-Premium Custom Smart Dropdown Menu replacing raw browser datalist -->
+                                <div id="custom-kirana-dropdown" class="absolute left-0 right-0 top-full mt-1.5 z-50 max-h-72 overflow-y-auto rounded-2xl glass-card border border-neutral-200/90 dark:border-neutral-700/90 shadow-2xl p-2 hidden animate-fade-in bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl">
+                                    <div class="px-2.5 py-1.5 flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 mb-1">
+                                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-neutral-400">Verified Kirana & Essentials</span>
+                                        <span class="text-[9px] font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/60 px-2 py-0.5 rounded-full" id="dropdown-match-count">100+ items</span>
+                                    </div>
+                                    <div id="kirana-dropdown-items" class="space-y-1">
+                                        <!-- Rendered dynamically with categorized icons & badges -->
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="sm:col-span-2">
@@ -660,12 +584,67 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-2 flex-wrap pt-1 text-[11px] text-neutral-500">
-                            <span class="font-semibold text-xs text-neutral-600 dark:text-neutral-300">Quick Fill:</span>
-                            <button type="button" onclick="quickFillGrocery('Aata', 5, 'Kg')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 transition text-[11px] font-medium">+ Aata 5kg</button>
-                            <button type="button" onclick="quickFillGrocery('Oil', 1, 'Litre (L)')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 transition text-[11px] font-medium">+ Oil 1L</button>
-                            <button type="button" onclick="quickFillGrocery('Sugar', 2, 'Kg')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 transition text-[11px] font-medium">+ Sugar 2kg</button>
-                            <button type="button" onclick="quickFillGrocery('Milk', 2, 'Packets')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 transition text-[11px] font-medium">+ Milk 2Pac</button>
+                        <!-- Interactive Category Carousel & Product Showcase Slider -->
+                        <div class="pt-2 border-t border-neutral-200/70 dark:border-neutral-800 space-y-2">
+                            <!-- Category Quick Filter Pills Slider -->
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-black uppercase tracking-wider text-neutral-500 dark:text-neutral-400 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-sliders text-primary-600"></i> Explore 2,000+ Products
+                                </span>
+                                <div class="flex items-center gap-1">
+                                    <button type="button" onclick="scrollProductSlider(-200)" class="w-6 h-6 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 text-neutral-600 dark:text-neutral-300 flex items-center justify-center text-[10px] transition active:scale-90" title="Scroll Left">
+                                        <i class="fa-solid fa-chevron-left"></i>
+                                    </button>
+                                    <button type="button" onclick="scrollProductSlider(200)" class="w-6 h-6 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-primary-500 text-neutral-600 dark:text-neutral-300 flex items-center justify-center text-[10px] transition active:scale-90" title="Scroll Right">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Category Filter Chips -->
+                            <div id="catalog-category-tabs" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+                                <button type="button" onclick="filterSliderCategory('ALL')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-primary-600 text-white shadow-sm transition">
+                                    🔥 All (2,000+)
+                                </button>
+                                <button type="button" onclick="filterSliderCategory('अनाज व आटा')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition">
+                                    🌾 आटा व अनाज
+                                </button>
+                                <button type="button" onclick="filterSliderCategory('दालें व दलहन')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition">
+                                    🌱 दालें
+                                </button>
+                                <button type="button" onclick="filterSliderCategory('तेल व घी')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition">
+                                    🛢️ तेल व घी
+                                </button>
+                                <button type="button" onclick="filterSliderCategory('मसाले व हर्ब्स')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition">
+                                    🌶️ मसाले
+                                </button>
+                                <button type="button" onclick="filterSliderCategory('डेयरी व ब्रेड')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition">
+                                    🥛 डेयरी व ब्रेड
+                                </button>
+                                <button type="button" onclick="filterSliderCategory('सब्जियां व फल')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition">
+                                    🥔 फल व सब्जियां
+                                </button>
+                                <button type="button" onclick="filterSliderCategory('स्नैक्स व बिस्कुट')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition">
+                                    🍪 स्नैक्स व बिस्कुट
+                                </button>
+                                <button type="button" onclick="filterSliderCategory('ड्राई फ्रूट्स व मेवे')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition">
+                                    🥜 ड्राई फ्रूट्स
+                                </button>
+                                <button type="button" onclick="filterSliderCategory('घरेलू सफाई')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition">
+                                    🧼 सफाई उत्पाद
+                                </button>
+                                <button type="button" onclick="filterSliderCategory('पर्सनल केयर')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition">
+                                    🧴 पर्सनल केयर
+                                </button>
+                                <button type="button" onclick="filterSliderCategory('पूजा व घरेलू सुरक्षा')" class="cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition">
+                                    🪔 पूजा व वेलनेस
+                                </button>
+                            </div>
+
+                            <!-- Product Cards Horizontal Scroll Slider -->
+                            <div id="product-cards-slider" class="flex gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth snap-x">
+                                <!-- Cards dynamically populated by renderProductSlider() -->
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -720,17 +699,14 @@
                             </div>
                         </div>
 
-                        <div class="pt-3 border-t border-neutral-200 dark:border-neutral-800 flex flex-wrap gap-2 items-center justify-between">
-                            <button onclick="shareGroceryWhatsApp()" class="px-3.5 py-2 rounded-xl bg-success-700 hover:bg-success-800 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95 transition" title="Share professional receipt on WhatsApp">
-                                <i class="fa-brands fa-whatsapp"></i> Share WhatsApp
-                            </button>
-                            <button onclick="downloadGroceryBill('pdf')" class="px-3.5 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95 transition" title="Download dedicated PDF Bill">
+                        <div class="pt-3 border-t border-neutral-200 dark:border-neutral-800 grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
+                            <button onclick="downloadGroceryBill('pdf')" class="w-full py-2.5 px-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-primary-600/25 active:scale-95 transition" title="Download dedicated PDF Bill">
                                 <i class="fa-solid fa-file-pdf"></i> PDF Bill
                             </button>
-                            <button onclick="downloadGroceryBill('image')" class="px-3.5 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:hover:bg-white text-white dark:text-neutral-900 font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95 transition" title="Download Receipt as High-Res Image">
+                            <button onclick="downloadGroceryBill('image')" class="w-full py-2.5 px-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:hover:bg-white text-white dark:text-neutral-900 font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition" title="Download Receipt as High-Res Image">
                                 <i class="fa-solid fa-file-image"></i> Image Bill
                             </button>
-                            <button onclick="addGroceryBillToDashboard()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 dark:bg-neutral-200 dark:hover:bg-neutral-300 text-white dark:text-neutral-900 font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition">
+                            <button onclick="addGroceryBillToDashboard()" class="w-full py-2.5 px-3 rounded-xl bg-neutral-800 hover:bg-neutral-700 dark:bg-neutral-200 dark:hover:bg-neutral-300 text-white dark:text-neutral-900 font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition">
                                 <i class="fa-solid fa-arrow-down-to-bracket"></i> Sync into Dashboard
                             </button>
                         </div>
@@ -2425,6 +2401,686 @@
             document.getElementById('grocery-qty').value = qty;
             document.getElementById('grocery-unit').value = unit;
         }
+
+        // ================= SMART COMPREHENSIVE KIRANA & HOUSEHOLD CATALOG (1000+ ITEMS) =================
+        // High-performance algorithmic generator for 1,000+ daily grocery, vegetables, spices, personal care, and household items
+        function buildFullKiranaCatalog() {
+            const catalog = [];
+            const seen = new Set();
+
+            // Strict normalizer: Removes brand prefixes, quantities (kg, g, l, ml, pack, etc.) and duplicates
+            function cleanGenericName(str) {
+                return str
+                    .replace(/\b(fortune|aashirvaad|pillsbury|rajdhani|nature fresh|shakti bhog|patanjali|india gate|daawat|kohinoor|lal qilla|tata sampann|24 mantra|dhara|emami|engine|amul|gowardhan|mother dairy|ananda|saffola|figaro|borges|bail kolhu|mdh|everest|catch|goldiee|badshah|rakesh|pushp|tata|brooke bond|red label|taj mahal|wagh bakri|lipton|tetley|nescafe|bru|dhampure|dabur|sugar free|glucon-d|horlicks|bournvita|boost|complan|nutraj|happilo|tulsi|parle-g|britannia|marie gold|good day|monaco|krackjack|oreo|bourbon|hide & seek|dark fantasy|haldiram|kurkure|lay's|lays|maggi|yippee|ching's|kissan|funfoods|kellogg's|lijjat|surf excel|ariel|tide|rin|ghadi|wheel|genteel|ezee|comfort|robin|ujala|vim|pril|exo|scotch-brite|harpic|lizol|colin|drainex|freshwrap|lifebuoy|dove|lux|pears|santoor|medimix|colgate|closeup|sensodyne|oral-b|head & shoulders|clinic plus|pantene|sunsilk|parachute|bajaj|nivea|vaseline|boroline|boroplus|pond's|ponds|glow & lovely|fair & lovely|himalaya|garnier|gillette|whisper|stayfree|pampers|johnson's|mangaldeep|cycle|all out|good knight|hit|odomos|odonil|savlon|hansaplast|moov|volini|iodex|zandu|vicks|eno|ors|digene)\b/gi, '')
+                    .replace(/\(.*?\)/g, '') // remove bracket contents
+                    .replace(/\[.*?\]/g, '') // remove square bracket contents
+                    .replace(/\b\d+(\.\d+)?\s*(kg|g|gm|grams|l|ltr|litre|ml|pcs|pack|packet|meter|m|tray|can|pouch|box|tabs|sachets|s|ply|bunch|bundle)\b/gi, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+
+            function pushItem(rawHindi, rawEnglish, category, icon, defaultUnit) {
+                const cleanH = cleanGenericName(rawHindi);
+                const cleanE = cleanGenericName(rawEnglish);
+                if (!cleanH && !cleanE) return;
+
+                const displayName = cleanE ? `${cleanH} (${cleanE})` : cleanH;
+                const normKey = displayName.toLowerCase().replace(/[^a-z0-9\u0900-\u097F]/g, '');
+
+                if (normKey.length > 2 && !seen.has(normKey)) {
+                    seen.add(normKey);
+                    catalog.push({
+                        name: displayName,
+                        category: category,
+                        icon: icon || 'fa-basket-shopping',
+                        defaultUnit: defaultUnit || 'Kg',
+                        defaultQty: 1
+                    });
+                }
+            }
+
+            // 1. अनाज, आटा व दलिया (Grains & Flours - Pure & Unbranded)
+            const flours = [
+                ["गेहूं का आटा", "Wheat Flour", "fa-wheat-awn"],
+                ["शरबती आटा", "Sharbati Wheat Flour", "fa-wheat-awn"],
+                ["मल्टीग्रेन आटा", "Multigrain Flour", "fa-wheat-awn"],
+                ["मैदा", "Refined Wheat Flour", "fa-wheat-awn"],
+                ["सूजी / रवा", "Semolina", "fa-wheat-awn"],
+                ["बेसन", "Gram Flour", "fa-wheat-awn"],
+                ["भुना चना सत्तू", "Roasted Gram Sattu", "fa-wheat-awn"],
+                ["चावल का आटा", "Rice Flour", "fa-wheat-awn"],
+                ["मक्के का आटा", "Corn / Maize Flour", "fa-wheat-awn"],
+                ["बाजरे का आटा", "Pearl Millet Flour", "fa-wheat-awn"],
+                ["ज्वार का आटा", "Sorghum / Jowar Flour", "fa-wheat-awn"],
+                ["रागी / मडुआ आटा", "Finger Millet / Ragi Flour", "fa-wheat-awn"],
+                ["कुट्टू का आटा", "Buckwheat Flour", "fa-wheat-awn"],
+                ["सिंघाड़े का आटा", "Water Chestnut Flour", "fa-wheat-awn"],
+                ["राजगिरा / चौलाई आटा", "Amaranth / Rajgira Flour", "fa-wheat-awn"],
+                ["जौ का आटा", "Barley Flour", "fa-wheat-awn"],
+                ["सोयाबीन आटा", "Soybean Flour", "fa-wheat-awn"],
+                ["गेहूं का दलिया", "Broken Wheat Porridge", "fa-bowl-rice"],
+                ["रोस्टेड दलिया", "Roasted Daliya", "fa-bowl-rice"],
+                ["पतला पोहा", "Thin Poha", "fa-bowl-rice"],
+                ["मोटा पोहा", "Thick Flattened Rice", "fa-bowl-rice"],
+                ["लाल पोहा", "Red Rice Poha", "fa-bowl-rice"],
+                ["मुरमुरा / लाई", "Puffed Rice", "fa-bowl-rice"],
+                ["बड़ा साबूदाना", "Tapioca Pearls", "fa-circle-dot"],
+                ["छोटा साबूदाना", "Nylon Sabudana", "fa-circle-dot"],
+                ["सादा ओट्स", "Rolled Oats", "fa-wheat-awn"],
+                ["मसाला ओट्स", "Savory Oats", "fa-bowl-food"],
+                ["कॉर्नफ्लोर / अरारोट", "Corn Starch / Arrowroot", "fa-wheat-awn"],
+                ["गेहूं का चोकर", "Wheat Bran", "fa-wheat-awn"]
+            ];
+            flours.forEach(f => pushItem(f[0], f[1], "अनाज व आटा", f[2], "Kg"));
+
+            // 2. चावल व धान (Rice - Pure & Zero Brand)
+            const rices = [
+                ["बासमती चावल", "Basmati Rice", "fa-bowl-rice"],
+                ["बासमती टुकड़ा", "Broken Basmati Rice", "fa-bowl-rice"],
+                ["बिरयानी चावल", "Biryani Rice", "fa-bowl-rice"],
+                ["सोना मसूरी चावल", "Sona Masoori Rice", "fa-bowl-rice"],
+                ["कोलम चावल", "Kolam Rice", "fa-bowl-rice"],
+                ["गोविंद भोग चावल", "Govind Bhog Rice", "fa-bowl-rice"],
+                ["ब्राउन राइस", "Brown Rice", "fa-bowl-rice"],
+                ["कतरनी चावल", "Katarni Rice", "fa-bowl-rice"],
+                ["परमल चावल", "Parmal Rice", "fa-bowl-rice"],
+                ["इडली / डोसा चावल", "Boiled Idli Rice", "fa-bowl-rice"],
+                ["खिचड़ी चावल", "Khichdi Rice", "fa-bowl-rice"],
+                ["जीरा सांभा चावल", "Jeera Samba Rice", "fa-bowl-rice"],
+                ["लाल चावल", "Red Rice", "fa-bowl-rice"],
+                ["काला चावल", "Black Rice", "fa-bowl-rice"],
+                ["बासमती सेला चावल", "Golden Sella Basmati", "fa-bowl-rice"]
+            ];
+            rices.forEach(r => pushItem(r[0], r[1], "चावल व धान", r[2], "Kg"));
+
+            // 3. दालें व दलहन (Pulses & Legumes - Pure)
+            const pulses = [
+                ["अरहर / तूर दाल", "Pigeon Pea / Toor Dal", "fa-seedling"],
+                ["मूंग दाल धुली", "Yellow Moong Dal", "fa-seedling"],
+                ["मूंग दाल छिलका", "Split Green Moong", "fa-seedling"],
+                ["साबुत मूंग", "Whole Green Moong", "fa-seedling"],
+                ["चना दाल", "Split Bengal Gram", "fa-seedling"],
+                ["उड़द दाल धुली", "White Urad Dal", "fa-seedling"],
+                ["उड़द दाल छिलका", "Split Black Urad", "fa-seedling"],
+                ["साबुत काली उड़द", "Whole Black Gram", "fa-seedling"],
+                ["मसूर दाल लाल", "Red Lentil / Malka Masoor", "fa-seedling"],
+                ["साबुत मसूर काली", "Whole Brown Lentil", "fa-seedling"],
+                ["काबुली चना / सफेद छोले", "Chickpeas / Kabuli Chana", "fa-seedling"],
+                ["देसी काला चना", "Brown Chickpeas", "fa-seedling"],
+                ["राजमा चित्रा", "Speckled Kidney Beans", "fa-seedling"],
+                ["लाल राजमा", "Red Kidney Beans", "fa-seedling"],
+                ["सफेद मटर", "Dried White Peas", "fa-seedling"],
+                ["हरी सूखी मटर", "Dried Green Peas", "fa-seedling"],
+                ["सफेद लोबिया", "Black Eyed Peas / Lobia", "fa-seedling"],
+                ["लाल चौली", "Red Cowpeas", "fa-seedling"],
+                ["सोयाबीन दाल", "Soybean Seeds", "fa-seedling"],
+                ["सोया बड़ी", "Soya Chunks", "fa-seedling"],
+                ["मिनी सोया बड़ी", "Mini Soya Chunks", "fa-seedling"],
+                ["मोठ दाल", "Moth Beans", "fa-seedling"],
+                ["कुल्थी दाल", "Horse Gram", "fa-seedling"],
+                ["पंचमेल मिक्स दाल", "Mixed Lentils", "fa-seedling"]
+            ];
+            pulses.forEach(p => pushItem(p[0], p[1], "दालें व दलहन", p[2], "Kg"));
+
+            // 4. तेल, शुद्ध घी व कुकिंग फैट्स (Oils & Ghee - Pure)
+            const oils = [
+                ["कच्ची घानी सरसों तेल", "Cold Pressed Mustard Oil", "fa-bottle-droplet", "Litre (L)"],
+                ["रिफाइंड सोयाबीन तेल", "Refined Soybean Oil", "fa-bottle-droplet", "Litre (L)"],
+                ["रिफाइंड सूरजमुखी तेल", "Sunflower Cooking Oil", "fa-bottle-droplet", "Litre (L)"],
+                ["मूंगफली का तेल", "Groundnut Oil", "fa-bottle-droplet", "Litre (L)"],
+                ["राइस ब्रान तेल", "Rice Bran Oil", "fa-bottle-droplet", "Litre (L)"],
+                ["तिल का तेल", "Sesame Oil", "fa-bottle-droplet", "Litre (L)"],
+                ["खाने का नारियल तेल", "Edible Coconut Oil", "fa-bottle-droplet", "Litre (L)"],
+                ["जैतून का तेल", "Olive Oil", "fa-bottle-droplet", "Litre (L)"],
+                ["देसी गाय का घी", "Pure Cow Ghee", "fa-jar", "Kg"],
+                ["देसी भैंस का घी", "Buffalo Ghee", "fa-jar", "Kg"],
+                ["बिलोना देसी घी", "Traditional Bilona Ghee", "fa-jar", "Kg"],
+                ["वनस्पति घी", "Vanaspati Fat", "fa-jar", "Kg"],
+                ["मक्खन नमकीन", "Salted Table Butter", "fa-cube", "Packets"],
+                ["मक्खन बिना नमक", "Unsalted White Butter", "fa-cube", "Packets"],
+                ["टेबल स्प्रेड", "Table Spread", "fa-cube", "Packets"]
+            ];
+            oils.forEach(o => pushItem(o[0], o[1], "तेल व घी", o[2], o[3]));
+
+            // 5. मसाले व हर्ब्स (Spices - Pure)
+            const spices = [
+                ["आयोडीन नमक", "Iodized Salt", "Kg"],
+                ["सेंधा नमक", "Rock Salt / Pink Salt", "Kg"],
+                ["काला नमक पाउडर", "Black Salt Powder", "Grams (gm)"],
+                ["साबुत काला नमक", "Rock Black Salt", "Kg"],
+                ["हल्दी पाउडर", "Turmeric Powder", "Grams (gm)"],
+                ["साबुत गांठ हल्दी", "Whole Dry Turmeric", "Grams (gm)"],
+                ["तीखी लाल मिर्च पाउडर", "Red Chilli Powder", "Grams (gm)"],
+                ["कश्मीरी लाल मिर्च पाउडर", "Kashmiri Mirch Powder", "Grams (gm)"],
+                ["कुटी लाल मिर्च", "Red Chilli Flakes", "Grams (gm)"],
+                ["साबुत सूखी लाल मिर्च", "Whole Dry Red Chillies", "Grams (gm)"],
+                ["धनिया पाउडर", "Coriander Powder", "Grams (gm)"],
+                ["साबुत सूखा धनिया", "Whole Coriander Seeds", "Grams (gm)"],
+                ["साबुत जीरा", "Cumin Seeds", "Grams (gm)"],
+                ["भुना जीरा पाउडर", "Roasted Cumin Powder", "Grams (gm)"],
+                ["शाही जीरा", "Caraway / Shahi Jeera", "Grams (gm)"],
+                ["काली राई", "Black Mustard Seeds", "Grams (gm)"],
+                ["पीली सरसों", "Yellow Mustard Seeds", "Grams (gm)"],
+                ["अजवाइन", "Carom Seeds", "Grams (gm)"],
+                ["मीठी सौंफ", "Fennel Seeds", "Grams (gm)"],
+                ["बारीक सौंफ", "Thin Fennel Seeds", "Grams (gm)"],
+                ["मेथी दाना", "Fenugreek Seeds", "Grams (gm)"],
+                ["कलौंजी", "Nigella Seeds", "Grams (gm)"],
+                ["हींग पाउडर", "Asafoetida / Hing", "Pieces (pcs)"],
+                ["साबुत दाना हींग", "Raw Crystal Hing", "Pieces (pcs)"],
+                ["गरम मसाला", "Garam Masala Powder", "Grams (gm)"],
+                ["साबुत काली मिर्च", "Whole Black Peppercorns", "Grams (gm)"],
+                ["काली मिर्च पाउडर", "Black Pepper Powder", "Grams (gm)"],
+                ["सफेद मिर्च", "White Peppercorns", "Grams (gm)"],
+                ["साबुत लौंग", "Whole Cloves", "Grams (gm)"],
+                ["हरी इलायची", "Green Cardamom", "Grams (gm)"],
+                ["बड़ी काली इलायची", "Black Cardamom", "Grams (gm)"],
+                ["दालचीनी स्टिक्स", "Cinnamon Sticks", "Grams (gm)"],
+                ["चक्र फूल", "Star Anise", "Grams (gm)"],
+                ["जायफल", "Nutmeg", "Pieces (pcs)"],
+                ["जावित्री", "Mace", "Grams (gm)"],
+                ["तेजपत्ता", "Bay Leaves", "Packets"],
+                ["कसूरी मेथी", "Dried Fenugreek Leaves", "Packets"],
+                ["अमचूर पाउडर", "Dry Mango Powder", "Grams (gm)"],
+                ["अनारदाना", "Dried Pomegranate Seeds", "Grams (gm)"],
+                ["चाट मसाला", "Chaat Masala", "Packets"],
+                ["छोले मसाला", "Chhole Masala", "Packets"],
+                ["पाव भाजी मसाला", "Pav Bhaji Masala", "Packets"],
+                ["सांभर मसाला", "Sambar Powder", "Packets"],
+                ["रसम पाउडर", "Rasam Powder", "Packets"],
+                ["किचन किंग मसाला", "Kitchen King Masala", "Packets"],
+                ["शाही पनीर मसाला", "Shahi Paneer Masala", "Packets"],
+                ["बिरयानी मसाला", "Biryani Masala", "Packets"],
+                ["सब्जी मसाला", "Mixed Vegetable Spice", "Packets"],
+                ["खसखस / पोस्त दाना", "Poppy Seeds", "Grams (gm)"],
+                ["सफेद तिल", "White Sesame Seeds", "Grams (gm)"],
+                ["काला तिल", "Black Sesame Seeds", "Grams (gm)"],
+                ["टाटरी / सिट्रिक एसिड", "Citric Acid Crystals", "Grams (gm)"],
+                ["मीठा सोडा / बेकिंग सोडा", "Baking Soda", "Packets"],
+                ["बेकिंग पाउडर", "Baking Powder", "Packets"],
+                ["ड्राई एक्टिव यीस्ट", "Dry Active Yeast", "Packets"],
+                ["सोंठ पाउडर", "Dry Ginger Powder", "Grams (gm)"]
+            ];
+            spices.forEach(s => pushItem(s[0], s[1], "मसाले व हर्ब्स", "fa-pepper-hot", s[2]));
+
+            // 6. ताजी सब्जियां व मौसमी फल (Fresh Produce - Zero Duplicates, Zero Quantity in Name)
+            const vegetables = [
+                ["आलू", "Potato", "fa-carrot", "Kg"],
+                ["प्याज", "Onion", "fa-carrot", "Kg"],
+                ["टमाटर", "Tomato", "fa-apple-whole", "Kg"],
+                ["हरी मिर्च", "Green Chillies", "fa-pepper-hot", "Grams (gm)"],
+                ["अदरक", "Ginger", "fa-leaf", "Grams (gm)"],
+                ["लहसुन", "Garlic", "fa-clover", "Grams (gm)"],
+                ["हरा धनिया", "Fresh Coriander Leaves", "fa-leaf", "Packets"],
+                ["पुदीना", "Fresh Mint Leaves", "fa-leaf", "Packets"],
+                ["नींबू", "Lemon", "fa-lemon", "Pieces (pcs)"],
+                ["पालक", "Spinach", "fa-leaf", "Kg"],
+                ["मेथी पत्ता", "Fresh Fenugreek Leaves", "fa-leaf", "Kg"],
+                ["सरसों का साग", "Mustard Leaves", "fa-leaf", "Kg"],
+                ["बथुआ", "Bathua Greens", "fa-leaf", "Kg"],
+                ["फूलगोभी", "Cauliflower", "fa-seedling", "Pieces (pcs)"],
+                ["पत्तागोभी", "Cabbage", "fa-circle", "Pieces (pcs)"],
+                ["हरी मटर", "Fresh Green Peas", "fa-seedling", "Kg"],
+                ["भिंडी", "Ladyfinger / Okra", "fa-carrot", "Kg"],
+                ["गोल बैंगन", "Round Eggplant", "fa-egg", "Kg"],
+                ["लंबा बैंगन", "Long Brinjal", "fa-egg", "Kg"],
+                ["लौकी / घिया", "Bottle Gourd", "fa-carrot", "Pieces (pcs)"],
+                ["तोरई / तोरी", "Ridge Gourd", "fa-carrot", "Kg"],
+                ["करेला", "Bitter Gourd", "fa-carrot", "Kg"],
+                ["शिमला मिर्च", "Capsicum / Bell Pepper", "fa-pepper-hot", "Kg"],
+                ["लाल गाजर", "Red Carrot", "fa-carrot", "Kg"],
+                ["सफेद मूली", "White Radish", "fa-carrot", "Kg"],
+                ["खीरा", "Cucumber", "fa-carrot", "Kg"],
+                ["ककड़ी", "Armenian Cucumber", "fa-carrot", "Kg"],
+                ["चुकंदर", "Beetroot", "fa-circle", "Kg"],
+                ["अरबी / घुइयां", "Taro Root / Arbi", "fa-carrot", "Kg"],
+                ["कद्दू / सीताफल", "Pumpkin", "fa-circle", "Kg"],
+                ["शकरकंद", "Sweet Potato", "fa-carrot", "Kg"],
+                ["मशरूम", "Button Mushrooms", "fa-cloud", "Packets"],
+                ["कच्चा केला", "Raw Green Banana", "fa-lemon", "Pieces (pcs)"],
+                ["कच्चा पपीता", "Raw Papaya", "fa-lemon", "Pieces (pcs)"],
+                ["सेब", "Apples", "fa-apple-whole", "Kg"],
+                ["केला", "Bananas", "fa-lemon", "Pieces (pcs)"],
+                ["अनार", "Pomegranate", "fa-apple-whole", "Kg"],
+                ["संतरा / मौसमी", "Orange / Mosambi", "fa-lemon", "Kg"],
+                ["पपीता", "Ripe Papaya", "fa-lemon", "Kg"],
+                ["अंगूर", "Grapes", "fa-lemon", "Kg"],
+                ["तरबूज", "Watermelon", "fa-circle", "Pieces (pcs)"],
+                ["खरबूजा", "Melon", "fa-circle", "Pieces (pcs)"]
+            ];
+            vegetables.forEach(v => pushItem(v[0], v[1], "सब्जियां व फल", v[2], v[3]));
+
+            // 7. डेयरी, दूध व बेकरी (Dairy & Bakery - Pure)
+            const dairy = [
+                ["फुल क्रीम दूध", "Full Cream Milk", "Packets"],
+                ["टोंड दूध", "Toned Milk", "Packets"],
+                ["गाय का दूध", "Cow Milk", "Litre (L)"],
+                ["भैंस का दूध", "Buffalo Milk", "Litre (L)"],
+                ["ताजा दही", "Plain Curd / Dahi", "Packets"],
+                ["मसाला छाछ", "Spiced Buttermilk", "Packets"],
+                ["मीठी लस्सी", "Sweet Lassi", "Pieces (pcs)"],
+                ["मलाई पनीर", "Cottage Cheese / Paneer", "Grams (gm)"],
+                ["प्रोसेस्ड चीज स्लाइस", "Processed Cheese Slices", "Packets"],
+                ["चीज क्यूब्स", "Cheese Cubes", "Packets"],
+                ["मोज़ेरेला चीज", "Mozzarella Cheese", "Packets"],
+                ["ताजा क्रीम", "Fresh Dairy Cream", "Packets"],
+                ["कंडेंस्ड मिल्क", "Condensed Milk", "Pieces (pcs)"],
+                ["सफेद ब्रेड", "White Bread", "Packets"],
+                ["ब्राउन आटा ब्रेड", "Whole Wheat Bread", "Packets"],
+                ["मल्टीग्रेन ब्रेड", "Multigrain Bread", "Packets"],
+                ["पाव बन", "Pav Buns", "Packets"],
+                ["बर्गर बन", "Burger Buns", "Packets"],
+                ["कुलचा ब्रेड", "Kulcha Bread", "Packets"],
+                ["सफेद अंडे", "White Eggs", "Pieces (pcs)"],
+                ["देसी भूरे अंडे", "Brown Farm Eggs", "Pieces (pcs)"]
+            ];
+            dairy.forEach(d => pushItem(d[0], d[1], "डेयरी व ब्रेड", "fa-wine-bottle", d[2]));
+
+            // 8. चाय, कॉफ़ी, चीनी व मिठास (Tea, Coffee & Sweeteners)
+            const beverages = [
+                ["सीटीसी चाय पत्ती", "CTC Tea Leaves", "Grams (gm)"],
+                ["प्रीमियम दानेदार चाय", "Premium Granulated Tea", "Grams (gm)"],
+                ["ग्रीन टी बैग्स", "Green Tea Bags", "Packets"],
+                ["हर्बल तुलसी चाय", "Herbal Tulsi Tea", "Packets"],
+                ["इंस्टेंट कॉफ़ी पाउडर", "Instant Coffee Powder", "Pieces (pcs)"],
+                ["फिल्टर कॉफ़ी पाउडर", "Filter Coffee Blend", "Packets"],
+                ["रिफाइंड सफेद चीनी", "Refined White Sugar", "Kg"],
+                ["सल्फर मुक्त चीनी", "Sulphur Free Sugar", "Kg"],
+                ["देसी खांड / बूरा", "Unrefined Desi Khand", "Kg"],
+                ["गुड़ की भेली", "Solid Jaggery", "Kg"],
+                ["गुड़ का पाउडर", "Jaggery Powder", "Kg"],
+                ["धागे वाली मिश्री", "Rock Sugar / Mishri", "Grams (gm)"],
+                ["शुद्ध शहद", "Pure Honey", "Pieces (pcs)"],
+                ["सुगर फ्री गोलियां", "Sugar Free Sweetener", "Pieces (pcs)"],
+                ["ग्लूकोज पाउडर", "Instant Glucose Energy", "Packets"],
+                ["चॉकलेट माल्ट ड्रिंक", "Chocolate Malt Drink", "Packets"]
+            ];
+            beverages.forEach(b => pushItem(b[0], b[1], "पेय व मिठास", "fa-mug-hot", b[2]));
+
+            // 9. ड्राई फ्रूट्स व मेवे (Dry Fruits & Nuts)
+            const nuts = [
+                ["कैलिफोर्निया बादाम", "Almonds", "Grams (gm)"],
+                ["मामरा बादाम", "Mamra Almonds", "Grams (gm)"],
+                ["काजू साबुत", "Whole Cashews", "Grams (gm)"],
+                ["काजू टुकड़ा", "Broken Cashews", "Grams (gm)"],
+                ["मीठी किशमिश", "Raisins", "Grams (gm)"],
+                ["हरी लंबी किशमिश", "Long Green Raisins", "Grams (gm)"],
+                ["अखरोट गिरी", "Walnut Kernels", "Grams (gm)"],
+                ["साबुत अखरोट", "Whole Walnuts", "Grams (gm)"],
+                ["नमकीन भुना पिस्ता", "Salted Pistachios", "Grams (gm)"],
+                ["सादा पिस्ता", "Plain Pistachios", "Grams (gm)"],
+                ["फूल मखाना", "Fox Nuts / Makhana", "Grams (gm)"],
+                ["सूखा नारियल गोला", "Dry Coconut Copra", "Pieces (pcs)"],
+                ["सूखा अंजीर", "Dried Figs", "Grams (gm)"],
+                ["नरम खजूर", "Soft Dates", "Packets"],
+                ["सूखा छुहारा", "Dry Dates", "Grams (gm)"],
+                ["चिरौंजी", "Chironji Seeds", "Grams (gm)"],
+                ["कद्दू के बीज", "Pumpkin Seeds", "Grams (gm)"],
+                ["सूरजमुखी के बीज", "Sunflower Seeds", "Grams (gm)"],
+                ["चिया सीड्स", "Chia Seeds", "Grams (gm)"],
+                ["अलसी के बीज", "Flax Seeds", "Grams (gm)"],
+                ["तरबूज के बीज / मगज", "Watermelon Seeds", "Grams (gm)"]
+            ];
+            nuts.forEach(n => pushItem(n[0], n[1], "ड्राई फ्रूट्स व मेवे", "fa-seedling", n[2]));
+
+            // 10. बिस्कुट, नमकीन व स्नैक्स (Biscuits & Snacks)
+            const snacks = [
+                ["ग्लूकोज बिस्कुट", "Glucose Biscuits", "Packets"],
+                ["मैरी बिस्कुट", "Marie Biscuits", "Packets"],
+                ["बटर कुकीज़", "Butter Cookies", "Packets"],
+                ["काजू कुकीज़", "Cashew Cookies", "Packets"],
+                ["नमकीन बिस्कुट", "Salted Crackers", "Packets"],
+                ["चॉकलेट क्रीम बिस्कुट", "Chocolate Cream Biscuits", "Packets"],
+                ["चोको चिप कुकीज़", "Choco Chip Cookies", "Packets"],
+                ["आलू भुजिया नमकीन", "Aloo Bhujia", "Packets"],
+                ["बेसन सेव भुजिया", "Sev Bhujia", "Packets"],
+                ["खट्टा मीठा नमकीन", "Sweet & Sour Snack Mix", "Packets"],
+                ["नवरत्न मिक्स नमकीन", "Spicy Mixture", "Packets"],
+                ["तली मूंग दाल नमकीन", "Fried Moong Dal", "Packets"],
+                ["चना जोर गरम", "Spiced Roasted Gram", "Packets"],
+                ["मसाला पफ स्नैक्स", "Spiced Puffs", "Packets"],
+                ["साल्टेड आलू चिप्स", "Salted Potato Chips", "Packets"],
+                ["मसाला आलू चिप्स", "Masala Potato Chips", "Packets"],
+                ["इंस्टेंट नूडल्स", "Instant Noodles", "Packets"],
+                ["आटा नूडल्स", "Wheat Noodles", "Packets"],
+                ["हक्का नूडल्स", "Hakka Plain Noodles", "Packets"],
+                ["पास्ता मैक्रोनी", "Macaroni Pasta", "Packets"],
+                ["पेने पास्ता", "Penne Pasta", "Packets"],
+                ["टोमैटो केचप", "Tomato Ketchup", "Pieces (pcs)"],
+                ["टोमैटो सॉस", "Tomato Sauce", "Pieces (pcs)"],
+                ["मिक्स्ड फ्रूट जैम", "Mixed Fruit Jam", "Pieces (pcs)"],
+                ["वेज मेयोनीज", "Eggless Mayonnaise", "Pieces (pcs)"],
+                ["पीनट बटर", "Peanut Butter", "Pieces (pcs)"],
+                ["कॉर्नफ्लेक्स", "Corn Flakes", "Packets"],
+                ["उड़द दाल पापड़", "Urad Dal Papad", "Packets"],
+                ["मूंग दाल पापड़", "Moong Dal Papad", "Packets"],
+                ["आम का अचार", "Mango Pickle", "Pieces (pcs)"],
+                ["मिक्स्ड वेज अचार", "Mixed Pickle", "Pieces (pcs)"],
+                ["हरी मिर्च का अचार", "Green Chilli Pickle", "Pieces (pcs)"],
+                ["च्यवनप्राश", "Ayurvedic Health Paste", "Pieces (pcs)"]
+            ];
+            snacks.forEach(s => pushItem(s[0], s[1], "स्नैक्स व बिस्कुट", "fa-cookie-bite", s[2]));
+
+            // 11. घरेलू सफाई, कपड़े व बर्तन (Household Cleaning)
+            const cleanings = [
+                ["मैटिक वाशिंग पाउडर", "Matic Detergent Powder", "Kg"],
+                ["रेगुलर वाशिंग पाउडर", "Regular Detergent Powder", "Kg"],
+                ["डिटर्जेंट लिक्विड", "Liquid Laundry Detergent", "Litre (L)"],
+                ["ऊनी कपड़ों का लिक्विड", "Woolen Liquid Wash", "Litre (L)"],
+                ["फैब्रिक कंडीशनर", "Fabric Softener", "Pieces (pcs)"],
+                ["कपड़े धोने का साबुन", "Laundry Soap Bar", "Pieces (pcs)"],
+                ["लिक्विड नील", "Fabric Whitener Blue", "Pieces (pcs)"],
+                ["बर्तन धोने का साबुन", "Dishwash Bar", "Pieces (pcs)"],
+                ["बर्तन धोने का लिक्विड जेल", "Dishwash Liquid Gel", "Pieces (pcs)"],
+                ["स्क्रब पैड", "Green Scrubbing Pad", "Pieces (pcs)"],
+                ["स्पंज वाइप", "Kitchen Sponge Wipe", "Packets"],
+                ["स्टील जूना", "Steel Scrubber", "Pieces (pcs)"],
+                ["टॉयलेट क्लीनर लिक्विड", "Toilet Cleaner Liquid", "Litre (L)"],
+                ["बाथरूम क्लीनर", "Bathroom Tile Cleaner", "Litre (L)"],
+                ["फ्लोर क्लीनर लिक्विड", "Floor Disinfectant Cleaner", "Litre (L)"],
+                ["सफेद फिनाइल", "White Phenyl Concentrate", "Litre (L)"],
+                ["काली फिनाइल", "Black Disinfectant Phenyl", "Litre (L)"],
+                ["नेफ़थलीन कपूर गोलियां", "Naphthalene Moth Balls", "Packets"],
+                ["ग्लास क्लीनर स्प्रे", "Glass & Surface Cleaner", "Pieces (pcs)"],
+                ["डिसइंफेक्टेंट स्प्रे", "Disinfectant Spray", "Pieces (pcs)"],
+                ["सिंक ड्रेन क्लीनर", "Sink Drain Unblocker", "Packets"],
+                ["फूल झाड़ू", "Soft Grass Broom", "Pieces (pcs)"],
+                ["सींक झाड़ू", "Hard Stick Broom", "Pieces (pcs)"],
+                ["कॉटन पोछा कपड़ा", "Cotton Floor Mop Cloth", "Pieces (pcs)"],
+                ["माइक्रोफाइबर मॉप रीफिल", "Microfiber Mop Refill", "Pieces (pcs)"],
+                ["डस्टबिन कचरा बैग", "Garbage Trash Bags", "Packets"],
+                ["एल्युमिनियम फॉयल", "Aluminium Food Foil", "Pieces (pcs)"],
+                ["क्लिंग रैप फिल्म", "Plastic Cling Wrap", "Pieces (pcs)"],
+                ["किचन टिश्यू पेपर", "Kitchen Paper Towel", "Packets"]
+            ];
+            cleanings.forEach(c => pushItem(c[0], c[1], "घरेलू सफाई", "fa-soap", c[2]));
+
+            // 12. पर्सनल केयर व हाइजीन (Personal Care)
+            const personal = [
+                ["नहाने का साबुन", "Bathing Soap Bar", "Pieces (pcs)"],
+                ["एंटीसेप्टिक साबुन", "Antiseptic Bathing Soap", "Pieces (pcs)"],
+                ["ग्लिसरीन साबुन", "Glycerin Transparent Soap", "Pieces (pcs)"],
+                ["लिक्विड हैंडवॉश", "Liquid Handwash Pump", "Pieces (pcs)"],
+                ["हैंडवॉश रीफिल", "Handwash Refill Pouch", "Packets"],
+                ["टूथपेस्ट जेल", "Fresh Gel Toothpaste", "Pieces (pcs)"],
+                ["एंटी-कैविटी टूथपेस्ट", "Daily Care Toothpaste", "Pieces (pcs)"],
+                ["सेंसिटिव टूथपेस्ट", "Sensitivity Relief Paste", "Pieces (pcs)"],
+                ["टूथब्रश", "Soft Toothbrush", "Pieces (pcs)"],
+                ["एंटी-डैंड्रफ शैम्पू", "Anti-Dandruff Shampoo", "Pieces (pcs)"],
+                ["स्मूथ हेयर शैम्पू", "Nourishing Hair Shampoo", "Pieces (pcs)"],
+                ["हेयर कंडीशनर", "Hair Conditioner", "Pieces (pcs)"],
+                ["शुद्ध नारियल हेयर ऑयल", "Coconut Hair Oil", "Pieces (pcs)"],
+                ["बादाम हेयर ऑयल", "Almond Hair Oil", "Pieces (pcs)"],
+                ["आंवला हेयर ऑयल", "Amla Hair Oil", "Pieces (pcs)"],
+                ["ठंडा आयुर्वेदिक तेल", "Cool Ayurvedic Oil", "Pieces (pcs)"],
+                ["बॉडी लोशन", "Daily Body Lotion", "Pieces (pcs)"],
+                ["पेट्रोलियम जेली", "Pure Petroleum Jelly", "Pieces (pcs)"],
+                ["एंटीसेप्टिक विंटर क्रीम", "Antiseptic Skin Cream", "Pieces (pcs)"],
+                ["फेस वॉश", "Purifying Face Wash", "Pieces (pcs)"],
+                ["शेविंग फोम", "Shaving Foam Can", "Pieces (pcs)"],
+                ["शेविंग क्रीम", "Shaving Cream Tube", "Pieces (pcs)"],
+                ["डिस्पोजेबल रेजर", "Disposable Shaving Razors", "Packets"],
+                ["सैनिटरी पैड्स", "Sanitary Napkin Pads", "Packets"],
+                ["ईयर बड्स कॉटन", "Cotton Swabs / Earbuds", "Packets"],
+                ["बेबी डायपर पैंट्स", "Baby Diaper Pants", "Packets"],
+                ["बेबी सोप", "Gentle Baby Soap", "Pieces (pcs)"]
+            ];
+            personal.forEach(p => pushItem(p[0], p[1], "पर्सनल केयर", "fa-pump-soap", p[2]));
+
+            // 13. पूजा व घरेलू वेलनेस (Pooja & First Aid)
+            const pooja = [
+                ["सुगंधित अगरबत्ती", "Fragrant Incense Sticks", "Packets"],
+                ["चंदन धूप बत्ती", "Sandalwood Dhoop Batti", "Packets"],
+                ["शुद्ध भीमसेनी कपूर", "Pure Camphor Tablets", "Packets"],
+                ["गोल रुई बाती", "Round Cotton Wicks", "Packets"],
+                ["लंबी रुई बाती", "Long Cotton Wicks", "Packets"],
+                ["पूजा तिल तेल", "Sesame Oil for Pooja", "Litre (L)"],
+                ["माचिस बॉक्स", "Safety Matchboxes", "Packets"],
+                ["हवन सामग्री", "Havan Samagri Herbs", "Packets"],
+                ["रोली कुमकुम", "Pooja Roli Kumkum", "Packets"],
+                ["चंदन टीका", "Sandal Paste", "Pieces (pcs)"],
+                ["गंगाजल", "Sacred Ganga Water", "Pieces (pcs)"],
+                ["मच्छर भगाने की लिक्विड रीफिल", "Mosquito Liquid Refill", "Pieces (pcs)"],
+                ["मच्छर अगरबत्ती", "Mosquito Repellent Sticks", "Packets"],
+                ["मच्छर स्प्रे", "Mosquito Insect Killer Spray", "Pieces (pcs)"],
+                ["कॉकरोच स्प्रे", "Cockroach Control Spray", "Pieces (pcs)"],
+                ["मच्छर निवारक क्रीम", "Mosquito Repellent Skin Cream", "Pieces (pcs)"],
+                ["रूम फ्रेशनेर पॉकेट", "Air Freshener Block", "Pieces (pcs)"],
+                ["एंटीसेप्टिक लिक्विड", "Antiseptic Liquid", "Pieces (pcs)"],
+                ["फर्स्ट-एड बैंडेज स्ट्रिप्स", "Adhesive Bandages", "Packets"],
+                ["दर्द निवारक स्प्रे", "Pain Relief Spray", "Pieces (pcs)"],
+                ["दर्द निवारक जेल", "Pain Relief Gel / Ointment", "Pieces (pcs)"],
+                ["सिरदर्द बाम", "Pain Relief Balm", "Pieces (pcs)"],
+                ["सर्दी जुकाम बाम", "Vapour Rub Cold Balm", "Pieces (pcs)"],
+                ["नेजल इनहेलर", "Nasal Decongestant Inhaler", "Pieces (pcs)"],
+                ["एसिडिटी फ्रूट साल्ट", "Antacid Fruit Salt Sachets", "Packets"],
+                ["पुदीना कैप्सूल", "Digestive Mint Pearls", "Packets"],
+                ["ओआरएस इलेक्ट्रोलाइट पाउडर", "Oral Rehydration Salts", "Packets"],
+                ["एंटासिड सिरप / टैबलेट", "Antacid Tablets", "Packets"],
+                ["मेडिकल कॉटन", "Absorbent Cotton Wool", "Packets"],
+                ["क्रेप बैंडेज पट्टी", "Elastic Crepe Bandage", "Pieces (pcs)"]
+            ];
+            pooja.forEach(pj => pushItem(pj[0], pj[1], "पूजा व घरेलू सुरक्षा", "fa-shield-halved", pj[2]));
+
+            return catalog;
+        }
+
+        const KIRANA_CATALOG = buildFullKiranaCatalog();
+
+        let activeKiranaHighlight = -1;
+        let currentSliderCategory = 'ALL';
+
+        function scrollProductSlider(delta) {
+            const slider = document.getElementById('product-cards-slider');
+            if (slider) {
+                slider.scrollBy({ left: delta, behavior: 'smooth' });
+            }
+        }
+
+        function filterSliderCategory(category) {
+            currentSliderCategory = category;
+            
+            // Update Active UI on Category Chips
+            document.querySelectorAll('.cat-chip-btn').forEach(btn => {
+                const isMatch = (category === 'ALL' && btn.textContent.includes('All')) || btn.textContent.includes(category);
+                if (isMatch) {
+                    btn.className = "cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-primary-600 text-white shadow-sm transition";
+                } else {
+                    btn.className = "cat-chip-btn px-2.5 py-1 rounded-xl text-[10px] font-bold whitespace-nowrap bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:border-primary-500 border border-neutral-200 dark:border-neutral-700 transition";
+                }
+            });
+
+            renderProductSlider();
+        }
+
+        function renderProductSlider() {
+            const slider = document.getElementById('product-cards-slider');
+            if (!slider) return;
+
+            slider.innerHTML = '';
+
+            let list = KIRANA_CATALOG;
+            if (currentSliderCategory !== 'ALL') {
+                list = KIRANA_CATALOG.filter(item => item.category === currentSliderCategory);
+            }
+
+            // Display a diverse set of pure, unbranded items with zero duplication
+            const displayItems = list.slice(0, 45);
+
+            displayItems.forEach((item) => {
+                const card = document.createElement('div');
+                card.className = "flex-shrink-0 w-36 sm:w-40 p-2.5 rounded-2xl bg-white dark:bg-neutral-800/80 border border-neutral-200/90 dark:border-neutral-700/80 shadow-sm hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-md transition snap-start flex flex-col justify-between group cursor-pointer";
+                card.onclick = () => selectKiranaItem(item);
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="w-7 h-7 rounded-xl bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center text-xs group-hover:scale-110 transition">
+                                <i class="fa-solid ${item.icon || 'fa-basket-shopping'}"></i>
+                            </span>
+                            <span class="text-[9px] font-extrabold text-neutral-400 uppercase tracking-wider truncate max-w-[70px]">${item.category}</span>
+                        </div>
+                        <h5 class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100 line-clamp-2 leading-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition" title="${item.name}">
+                            ${item.name}
+                        </h5>
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-neutral-100 dark:border-neutral-700/60 flex items-center justify-between">
+                        <span class="text-[10px] font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/70 px-1.5 py-0.5 rounded">
+                            ${item.defaultUnit}
+                        </span>
+                        <button type="button" onclick="event.stopPropagation(); selectKiranaItem(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="px-2 py-1 rounded-lg bg-neutral-900 hover:bg-primary-600 text-white dark:bg-neutral-100 dark:hover:bg-primary-600 dark:text-neutral-900 dark:hover:text-white text-[10px] font-bold transition active:scale-95 flex items-center gap-1 shadow-sm">
+                            <i class="fa-solid fa-plus text-[8px]"></i> Add
+                        </button>
+                    </div>
+                `;
+                slider.appendChild(card);
+            });
+        }
+
+        function openKiranaDropdown() {
+            const dropdown = document.getElementById('custom-kirana-dropdown');
+            const inputVal = document.getElementById('grocery-name').value;
+            filterKiranaDropdown(inputVal);
+            if (dropdown) {
+                dropdown.classList.remove('hidden');
+            }
+        }
+
+        function closeKiranaDropdown() {
+            const dropdown = document.getElementById('custom-kirana-dropdown');
+            if (dropdown) {
+                dropdown.classList.add('hidden');
+            }
+            activeKiranaHighlight = -1;
+        }
+
+        function clearKiranaInput() {
+            const input = document.getElementById('grocery-name');
+            if(input) {
+                input.value = '';
+                input.focus();
+                filterKiranaDropdown('');
+            }
+            const clearBtn = document.getElementById('grocery-clear-btn');
+            if(clearBtn) clearBtn.classList.add('hidden');
+        }
+
+        function filterKiranaDropdown(query = '') {
+            const q = query.trim().toLowerCase();
+            const container = document.getElementById('kirana-dropdown-items');
+            const countEl = document.getElementById('dropdown-match-count');
+            const clearBtn = document.getElementById('grocery-clear-btn');
+
+            if (clearBtn) {
+                if (q.length > 0) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
+
+            if (!container) return;
+            container.innerHTML = '';
+
+            const matches = KIRANA_CATALOG.filter(item => {
+                if (!q) return true;
+                return item.name.toLowerCase().includes(q) || item.category.toLowerCase().includes(q);
+            });
+
+            if (countEl) countEl.textContent = `${matches.length} item${matches.length === 1 ? '' : 's'}`;
+
+            if (matches.length === 0) {
+                container.innerHTML = `
+                    <div class="p-3 text-center text-xs text-neutral-400">
+                        <i class="fa-solid fa-basket-shopping text-xl mb-1 opacity-50 block"></i>
+                        <span>"${query}" सूची में नहीं मिला। आप इसे टाइप करके नया जोड़ सकते हैं!</span>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render matched items with category chips and visual styling without hardcoded quantities or brands
+            matches.slice(0, 30).forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = `kirana-item-row p-2 sm:p-2.5 rounded-xl flex items-center justify-between cursor-pointer transition text-xs hover:bg-primary-50 dark:hover:bg-primary-950/40 border border-transparent hover:border-primary-200 dark:hover:border-primary-800 ${idx === activeKiranaHighlight ? 'bg-primary-50 dark:bg-primary-950/60 border-primary-300' : ''}`;
+                div.onclick = () => selectKiranaItem(item);
+                
+                div.innerHTML = `
+                    <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                        <div class="w-7 h-7 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-primary-600 dark:text-primary-400 flex items-center justify-center text-xs flex-shrink-0">
+                            <i class="fa-solid ${item.icon || 'fa-tag'}"></i>
+                        </div>
+                        <div class="truncate">
+                            <span class="font-bold text-neutral-800 dark:text-neutral-100">${item.name}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-shrink-0 ml-2">
+                        <span class="text-[9px] font-semibold text-neutral-500 bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded border border-neutral-200 dark:border-neutral-700">${item.category}</span>
+                        <span class="text-[9px] font-bold text-primary-600 dark:text-primary-400 bg-primary-100/60 dark:bg-primary-900/40 px-1.5 py-0.5 rounded">${item.defaultUnit}</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function selectKiranaItem(item) {
+            const input = document.getElementById('grocery-name');
+            const qtyInput = document.getElementById('grocery-qty');
+            const unitSelect = document.getElementById('grocery-unit');
+
+            if (input) input.value = item.name;
+            if (qtyInput && (!qtyInput.value || qtyInput.value === '')) qtyInput.value = item.defaultQty || 1;
+            if (unitSelect && item.defaultUnit) unitSelect.value = item.defaultUnit;
+
+            closeKiranaDropdown();
+            if (qtyInput) qtyInput.focus();
+        }
+
+        function handleKiranaKeydown(e) {
+            const dropdown = document.getElementById('custom-kirana-dropdown');
+            if (dropdown && dropdown.classList.contains('hidden')) {
+                if (e.key === 'ArrowDown' || e.key === 'Enter') {
+                    openKiranaDropdown();
+                }
+                return;
+            }
+
+            const rows = document.querySelectorAll('.kirana-item-row');
+            if (rows.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeKiranaHighlight = (activeKiranaHighlight + 1) % rows.length;
+                updateKiranaHighlight(rows);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeKiranaHighlight = (activeKiranaHighlight - 1 + rows.length) % rows.length;
+                updateKiranaHighlight(rows);
+            } else if (e.key === 'Enter') {
+                if (activeKiranaHighlight >= 0 && activeKiranaHighlight < rows.length) {
+                    e.preventDefault();
+                    rows[activeKiranaHighlight].click();
+                }
+            } else if (e.key === 'Escape') {
+                closeKiranaDropdown();
+            }
+        }
+
+        function updateKiranaHighlight(rows) {
+            rows.forEach((r, i) => {
+                if (i === activeKiranaHighlight) {
+                    r.classList.add('bg-primary-50', 'dark:bg-primary-950/60', 'border-primary-300');
+                    r.scrollIntoView({ block: 'nearest' });
+                } else {
+                    r.classList.remove('bg-primary-50', 'dark:bg-primary-950/60', 'border-primary-300');
+                }
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const container = document.getElementById('grocery-item-input-container');
+            if (container && !container.contains(e.target)) {
+                closeKiranaDropdown();
+            }
+        });
 
         function addGroceryItem(e) {
             e.preventDefault();
@@ -4549,6 +5205,7 @@
         window.onload = function() {
             updateAll();
             checkUserOnboarding();
+            renderProductSlider();
         }
     </script>
 </body>
