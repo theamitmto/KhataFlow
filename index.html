@@ -423,20 +423,30 @@
                     </div>
                 </div>
 
-                <!-- History Sub-Tabs: All / Dashboard / Shopping Invoices / Friends Hub -->
-                <div class="flex items-center gap-2 border-b border-neutral-200 dark:border-neutral-800 pb-3 mb-5 overflow-x-auto no-scrollbar">
-                    <button onclick="setHistorySegment('all')" id="hist-sub-all" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-primary-600 text-white shadow-sm">
-                        <i class="fa-solid fa-layer-group mr-1"></i> All Activity (<span id="hist-badge-all">0</span>)
-                    </button>
-                    <button onclick="setHistorySegment('dashboard')" id="hist-sub-dashboard" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200">
-                        <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard Logs (<span id="hist-badge-dashboard">0</span>)
-                    </button>
-                    <button onclick="setHistorySegment('shopping')" id="hist-sub-shopping" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200">
-                        <i class="fa-solid fa-basket-shopping mr-1 text-emerald-500"></i> Shopping Invoices (<span id="hist-badge-shopping">0</span>)
-                    </button>
-                    <button onclick="setHistorySegment('hub')" id="hist-sub-hub" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200">
-                        <i class="fa-solid fa-users mr-1 text-purple-500"></i> Friends Hub Splits (<span id="hist-badge-hub">0</span>)
-                    </button>
+                <!-- History Sub-Tabs: All / Dashboard / Shopping Invoices / Friends Hub + Download PDF Trigger Button -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-neutral-200 dark:border-neutral-800 pb-3 mb-5">
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+                        <button onclick="setHistorySegment('all')" id="hist-sub-all" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-primary-600 text-white shadow-sm">
+                            <i class="fa-solid fa-layer-group mr-1"></i> All Activity (<span id="hist-badge-all">0</span>)
+                        </button>
+                        <button onclick="setHistorySegment('dashboard')" id="hist-sub-dashboard" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200">
+                            <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard Logs (<span id="hist-badge-dashboard">0</span>)
+                        </button>
+                        <button onclick="setHistorySegment('shopping')" id="hist-sub-shopping" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200">
+                            <i class="fa-solid fa-basket-shopping mr-1 text-emerald-500"></i> Shopping Invoices (<span id="hist-badge-shopping">0</span>)
+                        </button>
+                        <button onclick="setHistorySegment('hub')" id="hist-sub-hub" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200">
+                            <i class="fa-solid fa-users mr-1 text-purple-500"></i> Friends Hub Splits (<span id="hist-badge-hub">0</span>)
+                        </button>
+                    </div>
+
+                    <!-- History PDF Export Button -->
+                    <div class="flex-shrink-0">
+                        <button onclick="downloadHistoryPDF()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 hover:from-primary-800 hover:to-primary-600 text-white font-extrabold text-xs transition shadow-md shadow-primary-600/25 flex items-center justify-center gap-2 active:scale-95 border border-primary-400/20 whitespace-nowrap" title="Download Transaction Passbook PDF">
+                            <i class="fa-solid fa-file-pdf text-xs"></i>
+                            <span>Download PDF History</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Desktop Table View (visible on medium & larger screens) -->
@@ -460,6 +470,16 @@
 
                 <!-- Mobile Card Feed View (visible on screens < 768px) -->
                 <div id="transaction-mobile-list" class="md:hidden space-y-3">
+                </div>
+
+                <!-- Modern Pagination Controls (Max 10 per page) -->
+                <div id="history-pagination-container" class="mt-5 pt-4 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                    <div id="history-page-info" class="text-neutral-500 font-medium">
+                        Showing <span id="page-start" class="font-bold text-neutral-800 dark:text-neutral-200">1</span> - <span id="page-end" class="font-bold text-neutral-800 dark:text-neutral-200">10</span> of <span id="page-total" class="font-bold text-neutral-800 dark:text-neutral-200">0</span> records
+                    </div>
+                    <div class="flex items-center gap-1.5" id="history-pagination-buttons">
+                        <!-- Rendered dynamically -->
+                    </div>
                 </div>
 
                 <div id="no-tx-msg" class="text-center py-12 text-neutral-400 hidden animate-fade-in">
@@ -898,6 +918,168 @@
             </div>
         </div>
 
+        <!-- Hidden Professional History / Passbook Statement Template (Rendered strictly for History PDF generation) -->
+        <div id="history-export-canvas-container" style="position: fixed; left: -9999px; top: -9999px; width: 794px; z-index: -1;">
+            <div id="history-statement-slip" style="width: 794px; min-height: 1123px; background-color: #ffffff; color: #0f172a; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; padding: 40px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+                
+                <!-- 2.5% Inward Framing Border with 50% opacity (rgba(36, 83, 214, 0.5)) -->
+                <div style="position: absolute; top: 2.5%; bottom: 2.5%; left: 2.5%; right: 2.5%; border: 6px solid rgba(36, 83, 214, 0.5); border-radius: 20px; pointer-events: none; z-index: 20; box-sizing: border-box;"></div>
+
+                <!-- Front Foreground Dynamic Scattered Watermark Overlay (Same 2.5% opacity as shopping invoice) -->
+                <div style="position: absolute; inset: -60px; pointer-events: none; z-index: 10; opacity: 0.025; overflow: hidden; display: flex; flex-direction: column; justify-content: space-around;">
+                    <!-- Row 1 -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; white-space: nowrap; transform: rotate(-21deg); margin-left: 20px;">
+                        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 900; color: #000000; letter-spacing: 2.5px; transform: rotate(4deg);">
+                            <svg style="width: 20px; height: 20px; fill: currentColor;" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                            KHATAFLOW
+                        </span>
+                        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 19px; font-weight: 900; color: #000000; letter-spacing: 1.5px; margin-left: 140px; transform: rotate(-6deg);">
+                            <svg style="width: 19px; height: 19px; fill: currentColor;" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                            KHATAFLOW
+                        </span>
+                        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 22px; font-weight: 900; color: #000000; letter-spacing: 3px; margin-left: 90px; transform: rotate(2deg);">
+                            <svg style="width: 22px; height: 22px; fill: currentColor;" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                            KHATAFLOW
+                        </span>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div style="display: flex; justify-content: space-around; align-items: center; white-space: nowrap; transform: rotate(-28deg); margin-left: -110px; margin-top: 15px;">
+                        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 21px; font-weight: 900; color: #000000; letter-spacing: 2px; transform: rotate(-3deg);">
+                            <svg style="width: 21px; height: 21px; fill: currentColor;" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                            KHATAFLOW
+                        </span>
+                        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 900; color: #000000; letter-spacing: 2px; margin-left: 170px; transform: rotate(5deg);">
+                            <svg style="width: 20px; height: 20px; fill: currentColor;" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                            KHATAFLOW
+                        </span>
+                    </div>
+
+                    <!-- Row 3 -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; white-space: nowrap; transform: rotate(-24deg); margin-left: 80px; margin-top: 10px;">
+                        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 22px; font-weight: 900; color: #000000; letter-spacing: 2px; transform: rotate(3deg);">
+                            <svg style="width: 22px; height: 22px; fill: currentColor;" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                            KHATAFLOW
+                        </span>
+                        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 19px; font-weight: 900; color: #000000; letter-spacing: 1.5px; margin-left: 120px; transform: rotate(-4deg);">
+                            <svg style="width: 19px; height: 19px; fill: currentColor;" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                            KHATAFLOW
+                        </span>
+                        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 21px; font-weight: 900; color: #000000; letter-spacing: 3px; margin-left: 110px; transform: rotate(1deg);">
+                            <svg style="width: 21px; height: 21px; fill: currentColor;" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                            KHATAFLOW
+                        </span>
+                    </div>
+
+                    <!-- Row 4 -->
+                    <div style="display: flex; justify-content: space-around; align-items: center; white-space: nowrap; transform: rotate(-26deg); margin-left: -50px; margin-top: 15px;">
+                        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 900; color: #000000; letter-spacing: 2px; transform: rotate(5deg);">
+                            <svg style="width: 20px; height: 20px; fill: currentColor;" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                            KHATAFLOW
+                        </span>
+                        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 21px; font-weight: 900; color: #000000; letter-spacing: 2.5px; margin-left: 200px; transform: rotate(-3deg);">
+                            <svg style="width: 21px; height: 21px; fill: currentColor;" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+                            KHATAFLOW
+                        </span>
+                    </div>
+                </div>
+
+                <div style="position: relative; z-index: 1; padding: 24px 28px 0 28px;">
+                    <!-- Inner Decorative Frame -->
+                    <div style="position: absolute; inset: 6px 10px -10px 10px; border: 1.5px solid #dce7ff; border-radius: 12px; pointer-events: none;"></div>
+
+                    <!-- Header with Vector SVG Logo & Brand Typography -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 22px; border-bottom: 2px solid #f1f5f9;">
+                        <div style="display: flex; align-items: center;">
+                            <svg width="220" height="44" viewBox="0 0 220 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                                <rect width="44" height="44" rx="12" fill="#2453d6"/>
+                                <g transform="translate(10, 10)">
+                                    <path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="#ffffff"/>
+                                </g>
+                                <text x="56" y="29" fill="#1d42ad" font-family="'Inter', -apple-system, sans-serif" font-size="25" font-weight="900" letter-spacing="-0.5">KhataFlow</text>
+                            </svg>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="display: inline-flex; align-items: center; justify-content: center; text-align: center; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; background: #eef4ff; color: #2453d6; padding: 6px 14px; border-radius: 8px; border: 1px solid #dce7ff; line-height: 1; box-sizing: border-box;">ACCOUNT STATEMENT / PASSBOOK</span>
+                            <div id="statement-doc-no" style="font-size: 12px; font-weight: 800; color: #334155; margin-top: 6px; font-family: monospace;">STMT-2026-001</div>
+                            <div id="statement-gen-date" style="font-size: 10px; color: #94a3b8; font-weight: 500; margin-top: 2px;">Generated: 06 Nov 2026</div>
+                        </div>
+                    </div>
+
+                    <!-- User Identity & Summary Strip (Page 1 Exclusive) -->
+                    <div id="statement-user-info-section" style="display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 16px; padding: 20px 0; border-bottom: 1px solid #f1f5f9; font-size: 12px;">
+                        <div>
+                            <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.8px;">Account Holder / User</div>
+                            <div id="statement-user-name" style="font-weight: 900; color: #0f172a; margin-top: 3px; font-size: 17px; letter-spacing: -0.3px; text-transform: capitalize;">Amit Kumar</div>
+                            <div id="statement-user-phone" style="font-size: 12px; color: #2453d6; margin-top: 2px; font-weight: 700; font-family: monospace;">+91 9876543210</div>
+                            <div style="font-size: 10px; color: #64748b; margin-top: 2px;">Workspace: Daily Expenses, Invoices & Group Splits</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: 800; letter-spacing: 0.8px;">Segment Scope</div>
+                            <div id="statement-scope-tag" style="font-weight: 800; color: #16a34a; margin-top: 3px; font-size: 13px;">All Transactions</div>
+                            <div id="statement-records-count" style="font-size: 10px; color: #64748b; margin-top: 1px;">0 Records Computed</div>
+                        </div>
+                    </div>
+
+                    <!-- Mini KPI Summary Boxes (Page 1 Exclusive) -->
+                    <div id="statement-kpi-summary-section" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px;">
+                        <div style="padding: 10px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px;">
+                            <span style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #15803d; letter-spacing: 0.5px; display: block;">Total Inflow (+)</span>
+                            <div id="stmt-kpi-income" style="font-size: 15px; font-weight: 900; color: #166534; margin-top: 2px;">₹0</div>
+                        </div>
+                        <div style="padding: 10px 14px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px;">
+                            <span style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #b91c1c; letter-spacing: 0.5px; display: block;">Total Outflow (-)</span>
+                            <div id="stmt-kpi-expense" style="font-size: 15px; font-weight: 900; color: #991b1b; margin-top: 2px;">₹0</div>
+                        </div>
+                        <div style="padding: 10px 14px; background: #eef4ff; border: 1px solid #c7d9fe; border-radius: 10px;">
+                            <span style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #1d42ad; letter-spacing: 0.5px; display: block;">Net Balance</span>
+                            <div id="stmt-kpi-balance" style="font-size: 15px; font-weight: 900; color: #1e40af; margin-top: 2px;">₹0</div>
+                        </div>
+                    </div>
+
+                    <!-- History Transaction Table (Fills space seamlessly) -->
+                    <table style="width: 100%; margin-top: 16px; border-collapse: separate; border-spacing: 0; text-align: left; font-size: 10px; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0;">
+                        <thead>
+                            <tr style="background: #f8fafc; color: #475569; font-size: 8.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px;">
+                                <th style="padding: 9px 10px; width: 32px; border-bottom: 2px solid #e2e8f0;">#</th>
+                                <th style="padding: 9px 10px; width: 105px; border-bottom: 2px solid #e2e8f0;">Date & Time</th>
+                                <th style="padding: 9px 10px; width: 90px; border-bottom: 2px solid #e2e8f0;">Section</th>
+                                <th style="padding: 9px 10px; width: 80px; border-bottom: 2px solid #e2e8f0;">Category</th>
+                                <th style="padding: 9px 10px; border-bottom: 2px solid #e2e8f0;">Description / Ref</th>
+                                <th style="padding: 9px 10px; width: 55px; border-bottom: 2px solid #e2e8f0;">Mode</th>
+                                <th style="padding: 9px 10px; text-align: right; width: 90px; border-bottom: 2px solid #e2e8f0;">Amount (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statement-items-body" style="color: #334155; font-size: 10px;">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Bottom Section: Summary & Verification (Page 1 Exclusive card) -->
+                <div style="position: relative; z-index: 1; margin-top: auto; padding: 16px 28px 24px 28px;">
+                    <div id="statement-bottom-summary-box" style="padding: 16px 22px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.02); margin-bottom: 14px;">
+                        <div>
+                            <span style="display: inline-flex; align-items: center; justify-content: center; text-align: center; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #16a34a; background: #dcfce7; padding: 4px 10px; border-radius: 6px; line-height: 1;">Verified Ledger Statement</span>
+                            <div style="font-size: 11px; font-weight: 800; color: #0f172a; margin-top: 4px;">KhataFlow Financial Engine • 100% On-Device Audit</div>
+                            <div style="font-size: 9px; color: #64748b; margin-top: 1px;">Includes Dashboard, Shopping Invoices, and Friends Hub Splits</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">Total Net Outflow</div>
+                            <div id="statement-grand-total" style="font-size: 26px; font-weight: 900; color: #1d42ad; line-height: 1.1; margin-top: 2px;">₹0</div>
+                            <div style="font-size: 9px; color: #16a34a; font-weight: 700; margin-top: 3px;"><i class="fa-solid fa-circle-check"></i> Statement Verified</div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Note with dynamic Page Numbering -->
+                    <div style="padding-top: 12px; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #94a3b8; font-weight: 500;">
+                        <span>Computed & Generated via <strong style="color: #2453d6; font-weight: 700;">KhataFlow</strong></span>
+                        <span id="statement-page-footer-num" style="font-weight: 700; color: #475569; font-family: monospace;">Page 1 of 1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ================= SECTION 3: UNIFIED GROUP & FRIENDS HUB ================= -->
         <section id="section-hub" class="space-y-6 hidden">
             <div class="glass-card p-5 sm:p-6 rounded-3xl shadow-sm border border-neutral-200/80 dark:border-neutral-800/80">
@@ -908,15 +1090,9 @@
                         </h3>
                         <p class="text-xs text-neutral-500 mt-0.5">Split party & room expenses, track balances, and copy UPI for quick settlements.</p>
                     </div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <button onclick="openAddMemberModal()" class="px-4 py-2.5 rounded-xl bg-success-700 hover:bg-success-800 text-white font-semibold text-xs transition shadow-md flex items-center gap-2 active:scale-95">
+                    <div class="flex items-center gap-2">
+                        <button onclick="openAddMemberModal()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 hover:from-primary-800 hover:to-primary-600 text-white font-bold text-xs transition shadow-md shadow-primary-600/25 flex items-center gap-2 active:scale-95 border border-primary-400/20">
                             <i class="fa-solid fa-user-plus"></i> Add Member
-                        </button>
-                        <button onclick="shareSplitSummaryWhatsApp()" class="px-3.5 py-2.5 rounded-xl bg-success-100 dark:bg-success-700/20 text-success-700 dark:text-success-400 hover:bg-success-700 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 active:scale-95">
-                            <i class="fa-brands fa-whatsapp"></i> WhatsApp Summary
-                        </button>
-                        <button onclick="exportGroupReportCSV()" class="px-3.5 py-2.5 rounded-xl bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 text-xs font-semibold transition flex items-center gap-1.5 active:scale-95">
-                            <i class="fa-solid fa-file-csv"></i> Export Group CSV
                         </button>
                     </div>
                 </div>
@@ -1669,49 +1845,169 @@
         </div>
     </div>
 
-    <!-- Backup & Restore Data Modal -->
-    <div id="backup-restore-modal" class="fixed inset-0 z-50 bg-neutral-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 rounded-3xl shadow-2xl relative">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-neutral-200 dark:border-neutral-800">
-                <h3 class="text-base font-bold flex items-center gap-2 text-neutral-900 dark:text-white">
-                    <i class="fa-solid fa-arrows-rotate text-primary-600"></i> Backup & Restore Data
-                </h3>
-                <button onclick="closeBackupRestoreModal()" class="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 text-sm">
+    <!-- Redesigned High-Quality Backup & Restore Data Modal -->
+    <div id="backup-restore-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 sm:p-7 rounded-[2rem] shadow-2xl relative border border-white/60 dark:border-neutral-800 overflow-hidden animate-fade-in bg-white/95 dark:bg-neutral-900/95">
+            <!-- Top Ambient Gradient Accent Line -->
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary-700 via-primary-500 to-emerald-500"></div>
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-4 pt-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary-700 via-primary-600 to-primary-500 flex items-center justify-center text-white shadow-lg shadow-primary-500/30 flex-shrink-0">
+                        <i class="fa-solid fa-arrows-rotate text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[9px] font-black uppercase tracking-wider text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/70 px-2.5 py-0.5 rounded-full border border-primary-200/70 dark:border-primary-800/70">Encrypted Vault</span>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-black text-neutral-900 dark:text-white tracking-tight mt-0.5">
+                            Backup & Restore Data
+                        </h3>
+                    </div>
+                </div>
+                <button type="button" onclick="closeBackupRestoreModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 flex items-center justify-center transition active:scale-95 text-xs">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <p class="text-xs text-neutral-500 mb-4 leading-relaxed">
-                Export your entire financial workspace, shopping invoices, group splits, and profile settings into a secure JSON backup, or restore from an existing file.
+
+            <p class="text-xs text-neutral-500 dark:text-neutral-400 mb-5 leading-relaxed">
+                Save an offline snapshot of your complete workspace (expenses, shopping invoices, friends split ledger, and UPI profile) or restore previously saved data anytime.
             </p>
+
+            <!-- Dual Modern Action Cards -->
             <div class="space-y-3">
-                <button onclick="backupAppData()" class="w-full py-3 px-4 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md">
-                    <i class="fa-solid fa-download"></i> Download JSON Backup
-                </button>
-                <button onclick="document.getElementById('modal-restore-file').click()" class="w-full py-3 px-4 rounded-2xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-bold text-xs flex items-center justify-center gap-2 border border-neutral-300 dark:border-neutral-700 transition">
-                    <i class="fa-solid fa-upload"></i> Restore from JSON Backup
-                </button>
-                <input type="file" id="modal-restore-file" onchange="restoreAppData(event)" accept=".json" class="hidden">
+                <!-- Export Backup Card -->
+                <div class="p-3.5 rounded-2xl bg-primary-50/60 dark:bg-primary-950/30 border border-primary-200/60 dark:border-primary-800/60 flex flex-col justify-between gap-3 transition hover:border-primary-400">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-primary-600 text-white flex items-center justify-center text-sm shadow-md shadow-primary-600/30">
+                                <i class="fa-solid fa-cloud-arrow-down"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-black text-neutral-900 dark:text-white">Export Local Backup</h4>
+                                <p class="text-[10px] text-neutral-500 dark:text-neutral-400">Generates encrypted .json archive</p>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-extrabold text-primary-600 dark:text-primary-400 bg-white dark:bg-neutral-800 px-2 py-0.5 rounded-md border border-primary-200 dark:border-primary-800 shadow-sm">1-Click</span>
+                    </div>
+
+                    <button type="button" onclick="backupAppData()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 hover:from-primary-800 hover:to-primary-600 text-white font-extrabold text-xs tracking-wider uppercase transition shadow-lg shadow-primary-600/25 flex items-center justify-center gap-2 active:scale-95 border border-primary-400/20">
+                        <i class="fa-solid fa-download text-xs"></i>
+                        <span>Download JSON Backup</span>
+                    </button>
+                </div>
+
+                <!-- Restore Backup Drag & Drop Card -->
+                <div id="restore-dropzone" 
+                     ondragover="handleRestoreDragOver(event)" 
+                     ondragleave="handleRestoreDragLeave(event)" 
+                     ondrop="handleRestoreDrop(event)" 
+                     onclick="document.getElementById('modal-restore-file').click()" 
+                     class="p-4 rounded-2xl bg-neutral-100/70 dark:bg-neutral-800/50 border-2 border-dashed border-neutral-300 dark:border-neutral-700 flex flex-col items-center justify-center gap-2 text-center transition cursor-pointer hover:border-primary-500 dark:hover:border-primary-400 hover:bg-primary-50/40 dark:hover:bg-primary-950/20 group">
+                    
+                    <div class="w-10 h-10 rounded-2xl bg-white dark:bg-neutral-700/80 text-primary-600 dark:text-primary-400 flex items-center justify-center text-base shadow-sm border border-neutral-200/80 dark:border-neutral-600 group-hover:scale-110 group-hover:bg-primary-600 group-hover:text-white transition duration-200">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-center gap-1.5">
+                            <span class="text-xs font-black text-neutral-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition">
+                                Drag & Drop Backup File Here
+                            </span>
+                            <span class="text-[9px] font-bold text-neutral-500 bg-neutral-200 dark:bg-neutral-700 px-1.5 py-0.5 rounded">.json</span>
+                        </div>
+                        <p class="text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5">
+                            or <span class="text-primary-600 dark:text-primary-400 font-bold underline">browse file from device</span>
+                        </p>
+                    </div>
+
+                    <input type="file" id="modal-restore-file" onchange="handleRestoreFileSelect(event)" accept=".json" class="hidden">
+                </div>
+            </div>
+
+            <!-- Trust / Security Footnote -->
+            <div class="mt-4 pt-3 border-t border-neutral-200/70 dark:border-neutral-800 flex items-center justify-center gap-1.5 text-[11px] text-neutral-400 font-medium">
+                <i class="fa-solid fa-shield-halved text-success-500 text-[10px]"></i>
+                <span>Offline & Private • 100% On-Device Device Security</span>
             </div>
         </div>
     </div>
 
-    <!-- Invoice Detail History Modal -->
-    <div id="invoice-detail-modal" class="fixed inset-0 z-50 bg-neutral-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 rounded-3xl shadow-2xl relative max-h-[85vh] flex flex-col">
-            <div class="flex justify-between items-center mb-3 pb-2 border-b border-neutral-200 dark:border-neutral-800">
-                <div>
-                    <h3 id="detail-modal-inv-id" class="text-sm font-black text-primary-600 font-mono">INV-000000</h3>
-                    <p id="detail-modal-inv-date" class="text-[10px] text-neutral-500">Date & Time</p>
+    <!-- Redesigned Ultra-Premium Invoice Detail Modal with Real Invoice Download Capabilities -->
+    <div id="invoice-detail-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-3 sm:p-4">
+        <div class="glass-card w-full max-w-lg p-5 sm:p-7 rounded-[2rem] shadow-2xl relative max-h-[90vh] flex flex-col border border-white/60 dark:border-neutral-800 overflow-hidden animate-fade-in bg-white/95 dark:bg-neutral-900/95">
+            <!-- Top Ambient Gradient Accent Line -->
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary-700 via-primary-500 to-emerald-500"></div>
+
+            <!-- Modal Header -->
+            <div class="flex items-start justify-between mb-4 pb-3 border-b border-neutral-200/80 dark:border-neutral-800/80 pt-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-primary-700 via-primary-600 to-primary-500 text-white flex items-center justify-center shadow-lg shadow-primary-500/25 flex-shrink-0">
+                        <i class="fa-solid fa-file-invoice text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-[9px] font-black uppercase tracking-wider text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/70 px-2 py-0.5 rounded-full border border-primary-200/70 dark:border-primary-800/70">Tax Invoice Slip</span>
+                            <span id="detail-modal-inv-id" class="text-xs sm:text-sm font-black text-neutral-900 dark:text-white font-mono tracking-wide">INV-000000</span>
+                        </div>
+                        <p id="detail-modal-inv-date" class="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5 font-medium flex items-center gap-1.5">
+                            <i class="fa-regular fa-calendar-days text-[10px]"></i> Date & Time
+                        </p>
+                    </div>
                 </div>
-                <button onclick="closeInvoiceDetailModal()" class="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 text-sm">
+                <button type="button" onclick="closeInvoiceDetailModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 flex items-center justify-center transition active:scale-95 text-xs">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <div id="detail-modal-items-list" class="space-y-2 overflow-y-auto flex-1 pr-1 my-2">
+
+            <!-- Billed Details Info Strip -->
+            <div class="grid grid-cols-2 gap-2 p-2.5 rounded-2xl bg-neutral-100/70 dark:bg-neutral-800/60 border border-neutral-200/80 dark:border-neutral-700/60 mb-3 text-[11px]">
+                <div>
+                    <span class="text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Customer</span>
+                    <span id="detail-modal-customer" class="font-bold text-neutral-800 dark:text-neutral-200 truncate block">Amit Kumar</span>
+                </div>
+                <div class="text-right">
+                    <span class="text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Payment Target</span>
+                    <span id="detail-modal-upi-target" class="font-mono font-bold text-primary-600 dark:text-primary-400 truncate block">store@upi</span>
+                </div>
             </div>
-            <div class="pt-3 border-t border-neutral-200 dark:border-neutral-800 flex justify-between items-center">
-                <span class="text-xs font-bold text-neutral-500 uppercase">Grand Total:</span>
-                <span id="detail-modal-total" class="text-base font-black text-primary-600">₹0</span>
+
+            <!-- Items Table / List -->
+            <div class="text-[10px] uppercase font-bold text-neutral-400 tracking-wider px-1 mb-1.5 flex justify-between">
+                <span>Billed Item & Quantity</span>
+                <span>Amount</span>
+            </div>
+            <div id="detail-modal-items-list" class="space-y-2 overflow-y-auto flex-1 pr-1 my-1 max-h-56">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Grand Total Highlight Card -->
+            <div class="p-3.5 rounded-2xl bg-gradient-to-r from-primary-500/10 via-primary-500/5 to-transparent border border-primary-500/20 my-3 flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">Total Net Amount</span>
+                    <div class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                        <i class="fa-solid fa-circle-check text-[9px]"></i> NPCI Authenticated
+                    </div>
+                </div>
+                <div id="detail-modal-total" class="text-2xl sm:text-3xl font-black text-primary-700 dark:text-primary-400 tracking-tight">
+                    ₹0
+                </div>
+            </div>
+
+            <!-- Real Invoice Export & Download Action Bar -->
+            <div class="pt-2 border-t border-neutral-200/80 dark:border-neutral-800/80">
+                <div class="grid grid-cols-3 gap-2">
+                    <button type="button" onclick="downloadCurrentModalInvoice('pdf')" class="py-2.5 px-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow-md shadow-primary-600/25 transition active:scale-95" title="Download Official A4 PDF Invoice">
+                        <i class="fa-solid fa-file-pdf text-xs"></i> <span>Download PDF</span>
+                    </button>
+                    <button type="button" onclick="downloadCurrentModalInvoice('image')" class="py-2.5 px-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:hover:bg-white text-white dark:text-neutral-900 font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95" title="Download High-Resolution PNG Receipt">
+                        <i class="fa-solid fa-file-image text-xs"></i> <span>Download Image</span>
+                    </button>
+                    <button type="button" onclick="shareCurrentModalInvoiceWhatsApp()" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95" title="Share invoice on WhatsApp">
+                        <i class="fa-brands fa-whatsapp text-xs"></i> <span>WhatsApp</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1787,6 +2083,8 @@
     <!-- JavaScript Execution -->
     <script>
         let currentHistorySegment = 'all';
+        let historyCurrentPage = 1;
+        const HISTORY_ITEMS_PER_PAGE = 10;
 
         let appState = JSON.parse(localStorage.getItem('khataflow_state')) || {
             userProfile: {
@@ -2649,6 +2947,7 @@
 
         function setHistorySegment(segment) {
             currentHistorySegment = segment;
+            historyCurrentPage = 1; // Reset to page 1 on tab filter change
             ['all', 'dashboard', 'shopping', 'hub'].forEach(seg => {
                 const btn = document.getElementById(`hist-sub-${seg}`);
                 if(btn) {
@@ -2662,41 +2961,451 @@
             renderTransactions();
         }
 
+        function changeHistoryPage(newPage) {
+            historyCurrentPage = newPage;
+            renderTransactions();
+            const section = document.getElementById('section-transactions');
+            if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         function openInvoiceDetailModal(invId) {
             const tx = appState.transactions.find(t => t.invoiceId === invId) || (appState.groceryInvoices || []).find(i => i.invoiceId === invId);
             if(!tx) return;
 
-            document.getElementById('detail-modal-inv-id').textContent = tx.invoiceId || 'Invoice Details';
+            const modal = document.getElementById('invoice-detail-modal');
+            if(!modal) return;
+
+            // Store current active invoice record on modal dataset
+            modal.dataset.currentInvId = tx.invoiceId || invId;
+
+            const invIdEl = document.getElementById('detail-modal-inv-id');
+            const dateEl = document.getElementById('detail-modal-inv-date');
+            const totalEl = document.getElementById('detail-modal-total');
+            const customerEl = document.getElementById('detail-modal-customer');
+            const upiTargetEl = document.getElementById('detail-modal-upi-target');
+
+            if (invIdEl) invIdEl.textContent = tx.invoiceId || invId;
+            
             const d = new Date(tx.date || Date.now());
-            document.getElementById('detail-modal-inv-date').textContent = `${d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })} at ${d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`;
-            document.getElementById('detail-modal-total').textContent = `₹${Number(tx.amount || 0).toLocaleString('en-IN')}`;
-
-            const list = document.getElementById('detail-modal-items-list');
-            list.innerHTML = '';
-
-            if (tx.items && tx.items.length > 0) {
-                tx.items.forEach((item, idx) => {
-                    list.innerHTML += `
-                        <div class="flex justify-between items-center p-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200 dark:border-neutral-700 text-xs">
-                            <div>
-                                <span class="font-bold text-neutral-800 dark:text-neutral-200">${idx + 1}. ${item.name}</span>
-                                <span class="text-[10px] text-neutral-500 ml-1">(${item.qty} ${item.unit})</span>
-                            </div>
-                            <div class="font-black text-neutral-900 dark:text-white">₹${item.price || 0}</div>
-                        </div>
-                    `;
-                });
-            } else {
-                list.innerHTML = `<div class="text-center py-4 text-neutral-400 text-xs">${tx.note || 'No individual item details archived'}</div>`;
+            if (dateEl) {
+                dateEl.innerHTML = `<i class="fa-regular fa-calendar-days text-[10px]"></i> ${d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })} at ${d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`;
             }
 
-            document.getElementById('invoice-detail-modal').classList.remove('hidden');
-            document.getElementById('invoice-detail-modal').classList.add('flex');
+            const totalAmt = Number(tx.amount || 0);
+            if (totalEl) totalEl.textContent = `₹${totalAmt.toLocaleString('en-IN')}`;
+
+            const userName = getPrimaryUserName();
+            const userPhone = appState.merchantPhone ? `+91 ${appState.merchantPhone}` : '';
+            if (customerEl) customerEl.textContent = `${userName} ${userPhone ? `(${userPhone})` : ''}`;
+            if (upiTargetEl) upiTargetEl.textContent = tx.upiTarget || appState.merchantUpi || 'store@upi';
+
+            const list = document.getElementById('detail-modal-items-list');
+            if (list) {
+                list.innerHTML = '';
+                if (tx.items && tx.items.length > 0) {
+                    tx.items.forEach((item, idx) => {
+                        list.innerHTML += `
+                            <div class="flex items-center justify-between p-2.5 rounded-xl bg-neutral-100/80 dark:bg-neutral-800/70 border border-neutral-200/80 dark:border-neutral-700/60 text-xs transition hover:border-primary-500">
+                                <div class="flex items-center gap-2 min-w-0 flex-1">
+                                    <span class="w-5 h-5 rounded-lg bg-primary-100 dark:bg-primary-950/60 text-primary-700 dark:text-primary-300 font-black text-[10px] flex items-center justify-center flex-shrink-0">${idx + 1}</span>
+                                    <div class="truncate">
+                                        <span class="font-bold text-neutral-800 dark:text-neutral-100">${item.name}</span>
+                                        <span class="text-[10px] font-semibold text-neutral-500 ml-1 bg-white dark:bg-neutral-900 px-1.5 py-0.5 rounded border border-neutral-200 dark:border-neutral-700">(${item.qty} ${item.unit})</span>
+                                    </div>
+                                </div>
+                                <div class="font-black text-neutral-900 dark:text-white ml-2 text-right">
+                                    ₹${Number(item.price || 0).toLocaleString('en-IN')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    list.innerHTML = `
+                        <div class="text-center py-6 text-neutral-400 text-xs">
+                            <i class="fa-solid fa-receipt text-2xl mb-1.5 opacity-40"></i>
+                            <p>${tx.note || 'No individual item details archived'}</p>
+                        </div>`;
+                }
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
         function closeInvoiceDetailModal() {
-            document.getElementById('invoice-detail-modal').classList.add('hidden');
-            document.getElementById('invoice-detail-modal').classList.remove('flex');
+            const modal = document.getElementById('invoice-detail-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        // Dedicated High-Resolution History PDF Generator with KhataFlow Header & Watermark
+        // Page 1 contains Account Holder info, 3 KPI cards, Table, and Bottom Summary Box.
+        // Page 2+ contains strictly KhataFlow Header + Table (extended capacity) + Footer.
+        async function downloadHistoryPDF() {
+            if (!appState.transactions || appState.transactions.length === 0) {
+                showToast("No transactions found to export to PDF!", "error");
+                return;
+            }
+
+            showToast("Preparing PDF statement engine...");
+
+            try {
+                await ensureHtml2CanvasAndJsPdf();
+            } catch (loadErr) {
+                console.error("Library load error:", loadErr);
+                showToast("Network error loading PDF generator. Please check connection.", "error");
+                return;
+            }
+
+            const searchInput = document.getElementById('search-tx');
+            const filterCatEl = document.getElementById('filter-category');
+            const filterModeEl = document.getElementById('filter-mode');
+            const sortOrderEl = document.getElementById('sort-order');
+
+            const search = searchInput ? searchInput.value.toLowerCase() : '';
+            const filterCat = filterCatEl ? filterCatEl.value : 'ALL';
+            const filterMode = filterModeEl ? filterModeEl.value : 'ALL';
+            const sortOrder = sortOrderEl ? sortOrderEl.value : 'newest';
+
+            // Filter active view transactions according to current filters and subsegment
+            let exportTxs = appState.transactions.filter(t => {
+                const noteVal = (t.note || '').toLowerCase();
+                const catVal = (t.category || '').toLowerCase();
+                const invVal = (t.invoiceId || '').toLowerCase();
+                const matchesSearch = noteVal.includes(search) || catVal.includes(search) || invVal.includes(search);
+                const matchesCat = filterCat === 'ALL' || t.category === filterCat;
+                const matchesMode = filterMode === 'ALL' || t.mode === filterMode;
+
+                let matchesSegment = true;
+                if(currentHistorySegment === 'dashboard') {
+                    matchesSegment = (t.source || 'dashboard') === 'dashboard';
+                } else if(currentHistorySegment === 'shopping') {
+                    matchesSegment = t.source === 'shopping' || !!t.invoiceId;
+                } else if(currentHistorySegment === 'hub') {
+                    matchesSegment = t.source === 'hub';
+                }
+
+                return matchesSearch && matchesCat && matchesMode && matchesSegment;
+            });
+
+            if (exportTxs.length === 0) {
+                showToast("No transactions match the selected filters!", "error");
+                return;
+            }
+
+            exportTxs.sort((a, b) => {
+                if(sortOrder === 'newest') return new Date(b.date || 0) - new Date(a.date || 0);
+                if(sortOrder === 'oldest') return new Date(a.date || 0) - new Date(b.date || 0);
+                if(sortOrder === 'highest') return (b.amount || 0) - (a.amount || 0);
+                if(sortOrder === 'lowest') return (a.amount || 0) - (b.amount || 0);
+            });
+
+            const userName = getPrimaryUserName();
+            const userPhone = appState.merchantPhone || (appState.userProfile && appState.userProfile.phone) || '';
+            const stmtNo = `STMT-${Date.now().toString().slice(-6)}`;
+            const dateNow = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+            // Calculate KPIs
+            let totalIncome = 0;
+            let totalExpense = 0;
+            exportTxs.forEach(t => {
+                const amt = Number(t.amount || 0);
+                if (t.type === 'income') totalIncome += amt;
+                else totalExpense += amt;
+            });
+            const netBalance = totalIncome - totalExpense;
+
+            // Populate Statement Header & Identity
+            document.getElementById('statement-doc-no').textContent = stmtNo;
+            document.getElementById('statement-gen-date').textContent = `Generated: ${dateNow}`;
+            document.getElementById('statement-user-name').textContent = userName;
+            document.getElementById('statement-user-phone').textContent = userPhone ? `+91 ${userPhone}` : '+91 9876543210';
+
+            const scopeLabelMap = {
+                'all': 'All Activity Logs',
+                'dashboard': 'Dashboard Logs Only',
+                'shopping': 'Shopping Invoices Only',
+                'hub': 'Friends Hub Splits Only'
+            };
+            document.getElementById('statement-scope-tag').textContent = scopeLabelMap[currentHistorySegment] || 'Filtered Activity';
+            document.getElementById('statement-records-count').textContent = `${exportTxs.length} Records Computed`;
+
+            document.getElementById('stmt-kpi-income').textContent = `+₹${totalIncome.toLocaleString('en-IN')}`;
+            document.getElementById('stmt-kpi-expense').textContent = `-₹${totalExpense.toLocaleString('en-IN')}`;
+            document.getElementById('stmt-kpi-balance').textContent = `₹${netBalance.toLocaleString('en-IN')}`;
+            document.getElementById('statement-grand-total').textContent = `₹${totalExpense.toLocaleString('en-IN')}`;
+
+            // Dynamic Slicing: Page 1 fits exactly 18 items with summary sections.
+            // Subsequent pages fit 28 items filling the full page without top/bottom summary blocks.
+            const PAGE_1_ITEMS = 18;
+            const SUBSEQUENT_PAGE_ITEMS = 28;
+
+            let pagesChunks = [];
+            if (exportTxs.length <= PAGE_1_ITEMS) {
+                pagesChunks.push(exportTxs);
+            } else {
+                pagesChunks.push(exportTxs.slice(0, PAGE_1_ITEMS));
+                let remaining = exportTxs.slice(PAGE_1_ITEMS);
+                while (remaining.length > 0) {
+                    pagesChunks.push(remaining.slice(0, SUBSEQUENT_PAGE_ITEMS));
+                    remaining = remaining.slice(SUBSEQUENT_PAGE_ITEMS);
+                }
+            }
+
+            const totalPdfPages = pagesChunks.length;
+            const tbody = document.getElementById('statement-items-body');
+            const pageFooterNum = document.getElementById('statement-page-footer-num');
+            const statementElement = document.getElementById('history-statement-slip');
+            const userInfoSection = document.getElementById('statement-user-info-section');
+            const kpiSummarySection = document.getElementById('statement-kpi-summary-section');
+            const bottomSummaryBox = document.getElementById('statement-bottom-summary-box');
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfPageWidth = pdf.internal.pageSize.getWidth();
+            const pdfPageHeight = pdf.internal.pageSize.getHeight();
+
+            showToast(`Generating ${totalPdfPages} page(s) Statement with perfect space fill...`);
+
+            try {
+                let cumulativeIndex = 0;
+
+                for (let pageIdx = 0; pageIdx < totalPdfPages; pageIdx++) {
+                    const chunk = pagesChunks[pageIdx];
+                    const isFirstPage = (pageIdx === 0);
+
+                    // Show or hide user details, KPI boxes and bottom net outflow card based on page
+                    if (userInfoSection) {
+                        userInfoSection.style.display = isFirstPage ? 'grid' : 'none';
+                    }
+                    if (kpiSummarySection) {
+                        kpiSummarySection.style.display = isFirstPage ? 'grid' : 'none';
+                    }
+                    if (bottomSummaryBox) {
+                        bottomSummaryBox.style.display = isFirstPage ? 'flex' : 'none';
+                    }
+
+                    // Update page footer indicator
+                    if (pageFooterNum) {
+                        pageFooterNum.textContent = `Page ${pageIdx + 1} of ${totalPdfPages}`;
+                    }
+
+                    // Populate table rows for this specific page
+                    // Adjust row padding: 9px on Page 1 (18 rows), 10px on subsequent pages (28 rows) to fill the height completely
+                    const rowPadding = isFirstPage ? '8.8px 10px' : '9.5px 10px';
+
+                    tbody.innerHTML = '';
+                    chunk.forEach((t) => {
+                        cumulativeIndex++;
+                        const tr = document.createElement('tr');
+                        const isEven = cumulativeIndex % 2 === 0;
+                        tr.style.backgroundColor = isEven ? '#ffffff' : '#fcfdfe';
+                        tr.style.borderBottom = '1px solid #f1f5f9';
+
+                        const d = new Date(t.date || Date.now());
+                        const dateStr = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+                        const timeStr = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+                        const isIncome = t.type === 'income';
+
+                        let sectionTag = 'Dashboard';
+                        if (t.source === 'shopping' || t.invoiceId) sectionTag = 'Shopping Inv';
+                        else if (t.source === 'hub') sectionTag = 'Friends Hub';
+
+                        const descText = t.invoiceId ? `${t.note || 'Invoice'} (${t.invoiceId})` : (t.note || t.category || '-');
+
+                        tr.innerHTML = `
+                            <td style="padding: ${rowPadding}; color: #94a3b8; font-weight: 700; font-size: 9.5px;">${cumulativeIndex}</td>
+                            <td style="padding: ${rowPadding}; font-weight: 600; color: #475569; font-size: 9.5px;">${dateStr}, ${timeStr}</td>
+                            <td style="padding: ${rowPadding}; font-weight: 700; color: #2453d6; font-size: 9.5px;">${sectionTag}</td>
+                            <td style="padding: ${rowPadding}; font-weight: 600; color: #334155; font-size: 9.5px;">${t.category || 'General'}</td>
+                            <td style="padding: ${rowPadding}; color: #1e293b; font-weight: 500; font-size: 9.5px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${descText}</td>
+                            <td style="padding: ${rowPadding}; color: #64748b; font-size: 9px;">${t.mode || 'UPI'}</td>
+                            <td style="padding: ${rowPadding}; text-align: right; font-weight: 900; font-size: 10px; color: ${isIncome ? '#16a34a' : '#dc2626'};">
+                                ${isIncome ? '+' : '-'}₹${Number(t.amount || 0).toLocaleString('en-IN')}
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+
+                    // Capture this page
+                    const canvas = await html2canvas(statementElement, {
+                        scale: 2.5,
+                        useCORS: true,
+                        allowTaint: false,
+                        backgroundColor: '#ffffff',
+                        logging: false
+                    });
+
+                    const imgData = canvas.toDataURL('image/jpeg', 0.96);
+
+                    // Add to PDF document (add new page for subsequent pages)
+                    if (pageIdx > 0) {
+                        pdf.addPage();
+                    }
+                    pdf.addImage(imgData, 'JPEG', 0, 0, pdfPageWidth, pdfPageHeight);
+                }
+
+                // Reset elements back to default visibility for future renders
+                if (userInfoSection) userInfoSection.style.display = 'grid';
+                if (kpiSummarySection) kpiSummarySection.style.display = 'grid';
+                if (bottomSummaryBox) bottomSummaryBox.style.display = 'flex';
+
+                pdf.save(`KhataFlow_Statement_${stmtNo}.pdf`);
+                showToast(`Statement PDF downloaded (${totalPdfPages} page${totalPdfPages > 1 ? 's' : ''})!`);
+            } catch (err) {
+                console.error("Statement PDF export error:", err);
+                // Ensure elements are restored even if an error occurs
+                if (userInfoSection) userInfoSection.style.display = 'grid';
+                if (kpiSummarySection) kpiSummarySection.style.display = 'grid';
+                if (bottomSummaryBox) bottomSummaryBox.style.display = 'flex';
+                showToast("Failed to generate History PDF", "error");
+            }
+        }
+
+        // Generate and download the authentic tax invoice (PDF or PNG) directly from the details modal
+        async function downloadCurrentModalInvoice(format = 'pdf') {
+            const modal = document.getElementById('invoice-detail-modal');
+            const invId = modal?.dataset?.currentInvId;
+            if (!invId) {
+                showToast("Invoice identifier missing", "error");
+                return;
+            }
+
+            const tx = appState.transactions.find(t => t.invoiceId === invId) || (appState.groceryInvoices || []).find(i => i.invoiceId === invId);
+            if (!tx) {
+                showToast("Invoice data not found", "error");
+                return;
+            }
+
+            const items = tx.items && tx.items.length > 0 ? tx.items : [{ name: tx.note || 'Grocery Item', qty: 1, unit: 'Order', price: tx.amount }];
+            const total = Number(tx.amount || 0);
+            const merchantUpi = tx.upiTarget || appState.merchantUpi || 'store@upi';
+            const cleanPhone = appState.merchantPhone || extractCleanPhone(merchantUpi) || '9876543210';
+            const userName = getPrimaryUserName();
+            const userPhone = appState.merchantPhone || cleanPhone;
+            const dateStr = new Date(tx.date || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+            showToast(`Rendering ${format.toUpperCase()} invoice...`);
+
+            try {
+                await ensureHtml2CanvasAndJsPdf();
+            } catch (loadErr) {
+                showToast("Failed to load export libraries", "error");
+                return;
+            }
+
+            // Populate the isolated export canvas template
+            document.getElementById('invoice-bill-no').textContent = invId;
+            document.getElementById('invoice-bill-date').textContent = `Date: ${dateStr}`;
+            document.getElementById('invoice-bill-grand-total').textContent = `₹${total.toLocaleString('en-IN')}`;
+            document.getElementById('invoice-merchant-upi-display').textContent = merchantUpi;
+
+            const billedNameEl = document.getElementById('invoice-billed-user-name');
+            const billedPhoneEl = document.getElementById('invoice-billed-user-phone');
+            if (billedNameEl) billedNameEl.textContent = userName;
+            if (billedPhoneEl) billedPhoneEl.textContent = `+91 ${userPhone}`;
+
+            // Generate verified NPCI payment QR
+            const amountFormatted = total.toFixed(2);
+            const payeeName = `Customer_${cleanPhone.slice(-4)}`;
+            const upiPayload = `upi://pay?pa=${encodeURIComponent(merchantUpi)}&pn=${encodeURIComponent(payeeName)}&am=${amountFormatted}&cu=INR&tn=Invoice_${invId}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=4&data=${encodeURIComponent(upiPayload)}`;
+            const qrImg = document.getElementById('invoice-dynamic-upi-qr');
+            qrImg.src = qrUrl;
+
+            await new Promise((resolve) => {
+                if (qrImg.complete) resolve();
+                else {
+                    qrImg.onload = () => resolve();
+                    qrImg.onerror = () => resolve();
+                }
+            });
+
+            const tbody = document.getElementById('invoice-items-body');
+            tbody.innerHTML = '';
+            items.forEach((item, idx) => {
+                const tr = document.createElement('tr');
+                const isEven = idx % 2 === 0;
+                tr.style.backgroundColor = isEven ? '#ffffff' : '#fcfdfe';
+                tr.style.borderBottom = '1px solid #f1f5f9';
+                tr.innerHTML = `
+                    <td style="padding: 12px 16px; color: #94a3b8; font-weight: 700; font-size: 11px;">${idx + 1}</td>
+                    <td style="padding: 12px 16px; font-weight: 700; color: #1e293b;">${item.name}</td>
+                    <td style="padding: 12px 16px; text-align: center; color: #475569; font-weight: 600;">${item.qty} ${item.unit}</td>
+                    <td style="padding: 12px 16px; text-align: right; font-weight: 900; color: #0f172a; font-size: 13px;">₹${Number(item.price || 0).toLocaleString('en-IN')}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            try {
+                const invoiceElement = document.getElementById('grocery-invoice-slip');
+                const canvas = await html2canvas(invoiceElement, {
+                    scale: 3,
+                    useCORS: true,
+                    allowTaint: false,
+                    backgroundColor: '#ffffff',
+                    logging: false
+                });
+
+                if (format === 'image') {
+                    const imgData = canvas.toDataURL('image/png', 1.0);
+                    const link = document.createElement('a');
+                    link.href = imgData;
+                    link.download = `KhataFlow_${invId}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    showToast(`Invoice image ${invId} downloaded!`);
+                } else if (format === 'pdf') {
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                    const pdfPageWidth = pdf.internal.pageSize.getWidth();
+                    const pdfPageHeight = pdf.internal.pageSize.getHeight();
+                    pdf.addImage(imgData, 'JPEG', 0, 0, pdfPageWidth, pdfPageHeight);
+                    pdf.save(`KhataFlow_${invId}.pdf`);
+                    showToast(`Official A4 PDF ${invId} downloaded!`);
+                }
+            } catch (err) {
+                console.error("Export error:", err);
+                showToast("Failed to generate export file", "error");
+            }
+        }
+
+        function shareCurrentModalInvoiceWhatsApp() {
+            const modal = document.getElementById('invoice-detail-modal');
+            const invId = modal?.dataset?.currentInvId;
+            if (!invId) return;
+
+            const tx = appState.transactions.find(t => t.invoiceId === invId) || (appState.groceryInvoices || []).find(i => i.invoiceId === invId);
+            if (!tx) return;
+
+            const items = tx.items && tx.items.length > 0 ? tx.items : [{ name: tx.note || 'Grocery Item', qty: 1, unit: 'Order', price: tx.amount }];
+            const total = Number(tx.amount || 0);
+            const merchantUpi = tx.upiTarget || appState.merchantUpi || 'store@upi';
+            const userName = getPrimaryUserName();
+            const userPhone = appState.merchantPhone ? `+91 ${appState.merchantPhone}` : '';
+            const dateStr = new Date(tx.date || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+            const upiPayLink = `upi://pay?pa=${merchantUpi}&pn=KhataFlowStore&am=${total}&cu=INR`;
+
+            let text = `🧾 *KHATAFLOW - OFFICIAL TAX INVOICE*%0A`;
+            text += `🆔 *Invoice No:* ${invId}%0A`;
+            text += `📅 *Date:* ${dateStr}%0A`;
+            text += `👤 *Customer:* ${userName} ${userPhone ? `(${userPhone})` : ''}%0A`;
+            text += `🏪 *Payable UPI:* ${merchantUpi}%0A`;
+            text += `----------------------------------------------%0A`;
+            items.forEach((item, idx) => {
+                text += `${idx + 1}. *${item.name}* (${item.qty} ${item.unit}) — *₹${item.price || 0}*%0A`;
+            });
+            text += `----------------------------------------------%0A`;
+            text += `💰 *TOTAL AMOUNT: ₹${total}*%0A`;
+            text += `📲 *Pay Direct via UPI:* ${encodeURIComponent(upiPayLink)}%0A`;
+            text += `✅ *Status:* NPCI Verified Bill%0A%0A`;
+            text += `_Generated via KhataFlow Smart Financial OS_ 🚀`;
+
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
         }
 
         function renderTransactions() {
@@ -2706,6 +3415,7 @@
             const filterCatEl = document.getElementById('filter-category');
             const filterModeEl = document.getElementById('filter-mode');
             const sortOrderEl = document.getElementById('sort-order');
+            const paginationContainer = document.getElementById('history-pagination-container');
 
             if(!tbody && !mobileContainer) return;
 
@@ -2759,11 +3469,63 @@
                 if(sortOrder === 'lowest') return (a.amount || 0) - (b.amount || 0);
             });
 
+            const totalRecords = filtered.length;
+            const totalPages = Math.ceil(totalRecords / HISTORY_ITEMS_PER_PAGE) || 1;
+
+            if (historyCurrentPage > totalPages) historyCurrentPage = totalPages;
+            if (historyCurrentPage < 1) historyCurrentPage = 1;
+
             const noTxMsg = document.getElementById('no-tx-msg');
-            if(filtered.length === 0) {
+            if(totalRecords === 0) {
                 if(noTxMsg) noTxMsg.classList.remove('hidden');
+                if(paginationContainer) paginationContainer.classList.add('hidden');
             } else {
                 if(noTxMsg) noTxMsg.classList.add('hidden');
+                if(paginationContainer) paginationContainer.classList.remove('hidden');
+            }
+
+            // Slice exactly 10 records for the current page
+            const startIndex = (historyCurrentPage - 1) * HISTORY_ITEMS_PER_PAGE;
+            const endIndex = Math.min(startIndex + HISTORY_ITEMS_PER_PAGE, totalRecords);
+            const paginatedItems = filtered.slice(startIndex, endIndex);
+
+            // Update Pagination Numbers Info
+            const pageStartEl = document.getElementById('page-start');
+            const pageEndEl = document.getElementById('page-end');
+            const pageTotalEl = document.getElementById('page-total');
+            if (pageStartEl) pageStartEl.textContent = totalRecords > 0 ? (startIndex + 1) : 0;
+            if (pageEndEl) pageEndEl.textContent = endIndex;
+            if (pageTotalEl) pageTotalEl.textContent = totalRecords;
+
+            // Render Pagination Button Controls
+            const btnContainer = document.getElementById('history-pagination-buttons');
+            if (btnContainer && totalRecords > 0) {
+                let btnsHtml = `
+                    <button onclick="changeHistoryPage(${historyCurrentPage - 1})" ${historyCurrentPage === 1 ? 'disabled' : ''} class="w-8 h-8 rounded-xl flex items-center justify-center transition border border-neutral-200 dark:border-neutral-700 ${historyCurrentPage === 1 ? 'opacity-40 cursor-not-allowed text-neutral-400' : 'bg-white dark:bg-neutral-800 hover:bg-neutral-100 text-neutral-700 dark:text-neutral-200 active:scale-95'}" title="Previous Page">
+                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                    </button>
+                `;
+
+                for(let p = 1; p <= totalPages; p++) {
+                    // Show current page, first, last, and immediate siblings for cleanliness
+                    if (p === 1 || p === totalPages || (p >= historyCurrentPage - 1 && p <= historyCurrentPage + 1)) {
+                        const isActive = p === historyCurrentPage;
+                        btnsHtml += `
+                            <button onclick="changeHistoryPage(${p})" class="w-8 h-8 rounded-xl font-bold text-xs flex items-center justify-center transition ${isActive ? 'bg-primary-600 text-white shadow-md shadow-primary-600/30' : 'bg-white dark:bg-neutral-800 hover:bg-neutral-100 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 active:scale-95'}">
+                                ${p}
+                            </button>
+                        `;
+                    } else if (p === historyCurrentPage - 2 || p === historyCurrentPage + 2) {
+                        btnsHtml += `<span class="px-1 text-neutral-400">...</span>`;
+                    }
+                }
+
+                btnsHtml += `
+                    <button onclick="changeHistoryPage(${historyCurrentPage + 1})" ${historyCurrentPage === totalPages ? 'disabled' : ''} class="w-8 h-8 rounded-xl flex items-center justify-center transition border border-neutral-200 dark:border-neutral-700 ${historyCurrentPage === totalPages ? 'opacity-40 cursor-not-allowed text-neutral-400' : 'bg-white dark:bg-neutral-800 hover:bg-neutral-100 text-neutral-700 dark:text-neutral-200 active:scale-95'}" title="Next Page">
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                `;
+                btnContainer.innerHTML = btnsHtml;
             }
 
             // Category Icons & Color Map for Mobile Badges
@@ -2780,7 +3542,7 @@
                 'Other': { icon: 'fa-sparkles', color: 'text-primary-500 bg-primary-500/10' }
             };
 
-            filtered.forEach(t => {
+            paginatedItems.forEach(t => {
                 const d = new Date(t.date || Date.now());
                 const dateStr = d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' });
                 const timeStr = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
@@ -2858,6 +3620,13 @@
                     mobileContainer.appendChild(card);
                 }
             });
+        }
+
+        function deleteTransaction(id) {
+            appState.transactions = appState.transactions.filter(t => t.id !== id);
+            saveState();
+            updateAll();
+            showToast("Transaction removed");
         }
 
         function updateCharts() {
@@ -3678,46 +4447,95 @@
             }
         }
 
-        function restoreAppData(event) {
-            const file = event.target.files && event.target.files[0];
-            if (!file) return;
+        // Drag & Drop Event Handlers for Restore
+        function handleRestoreDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const dropzone = document.getElementById('restore-dropzone');
+            if (dropzone) {
+                dropzone.classList.remove('border-dashed', 'border-neutral-300', 'dark:border-neutral-700');
+                dropzone.classList.add('border-solid', 'border-primary-500', 'bg-primary-50', 'dark:bg-primary-950/40', 'scale-[1.01]');
+            }
+        }
 
+        function handleRestoreDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const dropzone = document.getElementById('restore-dropzone');
+            if (dropzone) {
+                dropzone.classList.remove('border-solid', 'border-primary-500', 'bg-primary-50', 'dark:bg-primary-950/40', 'scale-[1.01]');
+                dropzone.classList.add('border-dashed', 'border-neutral-300', 'dark:border-neutral-700');
+            }
+        }
+
+        function handleRestoreDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            handleRestoreDragLeave(e);
+
+            const dt = e.dataTransfer;
+            const files = dt?.files;
+            if (files && files.length > 0) {
+                const file = files[0];
+                if (!file.name.toLowerCase().endsWith('.json')) {
+                    showToast("Please drop a valid .json backup file", "error");
+                    return;
+                }
+                processBackupFile(file);
+            }
+        }
+
+        function handleRestoreFileSelect(event) {
+            const file = event.target.files && event.target.files[0];
+            if (file) {
+                processBackupFile(file);
+            }
+            event.target.value = '';
+        }
+
+        function processBackupFile(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const parsedData = JSON.parse(e.target.result);
                     if (parsedData && typeof parsedData === 'object') {
                         appState = {
+                            userProfile: parsedData.userProfile || { name: '', phone: '', registered: false },
                             budget: Number(parsedData.budget) || 0,
                             categoryBudgets: parsedData.categoryBudgets || {},
                             transactions: Array.isArray(parsedData.transactions) ? parsedData.transactions : [],
-                            splitMembers: Array.isArray(parsedData.splitMembers) && parsedData.splitMembers.length > 0 ? parsedData.splitMembers : [{ name: 'You', upi: '' }],
+                            splitMembers: Array.isArray(parsedData.splitMembers) && parsedData.splitMembers.length > 0 ? parsedData.splitMembers : [],
                             splitBills: Array.isArray(parsedData.splitBills) ? parsedData.splitBills : [],
-                            groceryItems: Array.isArray(parsedData.groceryItems) ? parsedData.groceryItems : []
+                            groceryItems: Array.isArray(parsedData.groceryItems) ? parsedData.groceryItems : [],
+                            groceryInvoices: Array.isArray(parsedData.groceryInvoices) ? parsedData.groceryInvoices : []
                         };
 
-                        if (!appState.splitMembers.some(m => m.name === 'You')) {
-                            appState.splitMembers.unshift({ name: 'You', upi: '' });
+                        // Extract and sync registered phone and UPI
+                        const restoredPhone = appState.userProfile.phone || extractCleanPhone(parsedData.merchantPhone || parsedData.merchantUpi);
+                        if (restoredPhone) {
+                            appState.merchantPhone = restoredPhone;
+                            appState.merchantUpi = `${restoredPhone}@upi`;
+                            if (!appState.userProfile.phone) appState.userProfile.phone = restoredPhone;
+                            appState.userProfile.registered = true;
                         }
 
-                        // Sync unified UPI upon restore
-                        const restoredUpi = (parsedData.merchantUpi || appState.splitMembers.find(m => m.name === 'You')?.upi || 'merchant@oksbi').trim();
-                        appState.merchantUpi = restoredUpi;
-                        const selfRestored = appState.splitMembers.find(m => m.name === 'You');
-                        if (selfRestored) selfRestored.upi = restoredUpi;
-
+                        ensureUnifiedPrimaryMember();
                         saveState();
                         updateAll();
-                        showToast("All data successfully restored and synced!");
+                        closeBackupRestoreModal();
+                        showToast("All workspace data successfully restored via file!");
                     } else {
                         showToast("Invalid backup file format", "error");
                     }
                 } catch (err) {
                     showToast("Failed to parse backup JSON file", "error");
                 }
-                event.target.value = '';
             };
             reader.readAsText(file);
+        }
+
+        function restoreAppData(event) {
+            handleRestoreFileSelect(event);
         }
 
         function updateAll() {
