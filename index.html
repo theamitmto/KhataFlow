@@ -2968,19 +2968,32 @@
                 // Direct standard user document path
                 const userDocRef = doc(db, 'users', uid, 'workspace', 'data');
                 
+                // 1. Immediate One-Time Fetch to avoid waiting for snapshot event
+                getDoc(userDocRef).then((snap) => {
+                    if (snap && snap.exists()) {
+                        const cloudData = snap.data();
+                        if (cloudData) {
+                            window.mergeCloudDataToState(cloudData);
+                            window.setCloudStatus('online', 'Cloud Synced');
+                        }
+                    } else {
+                        // If new device and cloud document doesn't exist yet, push current local state
+                        window.pushStateToCloud();
+                    }
+                }).catch(err => {
+                    console.warn("Direct cloud fetch notice:", err.message);
+                });
+
+                // 2. Real-Time Persistent Listener across all devices
                 userDocUnsubscribe = onSnapshot(userDocRef, (snapshot) => {
                     if (snapshot && snapshot.exists()) {
                         const cloudData = snapshot.data();
                         if (cloudData) {
                             window.mergeCloudDataToState(cloudData);
                         }
-                    } else {
-                        // First-time cloud workspace initialization
-                        window.pushStateToCloud();
                     }
                     window.setCloudStatus('online', 'Cloud Synced');
                 }, (error) => {
-                    // Handled gracefully without breaking UI
                     console.warn("Firestore sync notification:", error.code || error.message);
                     window.setCloudStatus('offline', 'Saved Locally');
                 });
@@ -3007,6 +3020,7 @@
                     uid: user.uid
                 });
 
+                // Immediately trigger cloud data fetch for this user ID
                 listenToUserCloudData(user.uid);
                 window.dismissAuthGate();
             } else {
@@ -3043,7 +3057,10 @@
                         name: fullName || identifier,
                         username: identifier,
                         email: email,
+                        phone: extractCleanPhone(identifier),
                         isBlocked: false,
+                        totalTransactions: 0,
+                        totalVolume: 0,
                         createdAt: new Date().toISOString()
                     }, { merge: true });
                 }
@@ -3056,6 +3073,30 @@
         window.firebaseLogout = async function() {
             window.setCloudStatus('offline', 'Logged Out');
             return await signOut(auth);
+        };
+
+        // Real-time listener for Admin: Listens to all public_users in Firestore
+        let adminUsersUnsubscribe = null;
+        window.listenToAllUsersForAdmin = function() {
+            if (adminUsersUnsubscribe) {
+                try { adminUsersUnsubscribe(); } catch(e) {}
+            }
+            try {
+                const usersColRef = collection(db, 'public_users');
+                adminUsersUnsubscribe = onSnapshot(usersColRef, (snapshot) => {
+                    const liveUsers = [];
+                    snapshot.forEach(docSnap => {
+                        liveUsers.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+                    if (liveUsers.length > 0) {
+                        window.syncCloudUsersToLocal(liveUsers);
+                    }
+                }, (err) => {
+                    console.warn("Admin users live listener notice:", err.message);
+                });
+            } catch(e) {
+                console.warn("Admin listener setup:", e);
+            }
         };
 
         // Push current appState to Cloud Firestore
@@ -3084,13 +3125,18 @@
                     lastSyncedAt: new Date().toISOString()
                 }, { merge: true });
 
-                // Also sync public directory entry
+                // Also calculate user totals and sync public directory entry for live Admin metrics
                 try {
+                    const txs = appState.transactions || [];
+                    const userVolume = txs.reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
                     const publicUserRef = doc(db, 'public_users', user.uid);
                     await setDoc(publicUserRef, {
-                        name: appState.userProfile.name || '',
-                        phone: appState.userProfile.phone || '',
-                        email: appState.userProfile.email || '',
+                        uid: user.uid,
+                        name: appState.userProfile.name || 'User',
+                        phone: appState.userProfile.phone || appState.merchantPhone || '',
+                        email: appState.userProfile.email || user.email || '',
+                        totalTransactions: txs.length,
+                        totalVolume: userVolume,
                         businessName: appState.userProfile.businessName || '',
                         gstin: appState.userProfile.gstin || '',
                         address: appState.userProfile.address || '',
@@ -3101,7 +3147,6 @@
 
                 window.setCloudStatus('online', 'Cloud Synced');
             } catch (err) {
-                // If rules block the write or network fails, keep data secure locally without console errors
                 window.setCloudStatus('offline', 'Saved Locally');
                 if (err.code !== 'permission-denied') {
                     console.warn("Cloud sync note:", err.message);
@@ -4113,7 +4158,55 @@
             showToast("Dashboard section positions restored to default!");
         }
 
-        // ================= USER MANAGEMENT LOGIC (Add, Block/Unblock, Delete) =================
+        // ================= REAL-TIME USER SYNC & MANAGEMENT ENGINE =================
+        window.syncCloudUsersToLocal = function(cloudUsers) {
+            let localUsers = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
+            
+            cloudUsers.forEach(cu => {
+                const identifier = cu.phone || cu.username || (cu.email ? cu.email.split('@')[0] : cu.uid);
+                const idx = localUsers.findIndex(lu => 
+                    (lu.uid && lu.uid === cu.uid) ||
+                    (lu.username && lu.username.toLowerCase() === identifier.toLowerCase()) ||
+                    (lu.email && cu.email && lu.email.toLowerCase() === cu.email.toLowerCase())
+                );
+                
+                if (idx >= 0) {
+                    localUsers[idx] = { ...localUsers[idx], ...cu };
+                } else {
+                    localUsers.push({
+                        uid: cu.uid || '',
+                        username: identifier,
+                        email: cu.email || '',
+                        phone: cu.phone || extractCleanPhone(identifier),
+                        name: cu.name || identifier,
+                        isBlocked: !!cu.isBlocked,
+                        totalTransactions: cu.totalTransactions || 0,
+                        totalVolume: cu.totalVolume || 0,
+                        dateJoined: cu.createdAt || new Date().toISOString()
+                    });
+                }
+            });
+
+            localStorage.setItem('khataflow_registered_users', JSON.stringify(localUsers));
+            
+            // Check if active session user was just blocked
+            const currentSession = getAuthSession();
+            if (currentSession && currentSession.isLoggedIn && currentSession.role !== 'admin') {
+                const me = localUsers.find(u => 
+                    (u.uid && u.uid === currentSession.uid) ||
+                    (u.username && u.username.toLowerCase() === currentSession.username.toLowerCase())
+                );
+                if (me && me.isBlocked) {
+                    showToast("Your account has been blocked by the administrator!", "error");
+                    logoutCurrentUser();
+                    return;
+                }
+            }
+
+            renderAdminUsersList();
+            updateAdminDashboardMetrics();
+        };
+
         function openAdminAddUserModal() {
             document.getElementById('admin-new-user-fullname').value = '';
             document.getElementById('admin-new-user-username').value = '';
@@ -4127,7 +4220,7 @@
             document.getElementById('admin-user-modal').classList.remove('flex');
         }
 
-        function handleAdminCreateUser(e) {
+        async function handleAdminCreateUser(e) {
             e.preventDefault();
             const fullName = document.getElementById('admin-new-user-fullname').value.trim();
             const username = document.getElementById('admin-new-user-username').value.trim();
@@ -4144,43 +4237,101 @@
                 return;
             }
 
-            usersList.push({
+            const cleanPhone = extractCleanPhone(username);
+            const userEmail = username.includes('@') ? username : `${cleanPhone || username}@khataflow.app`;
+            const generatedUid = `user_${Date.now()}`;
+
+            const newUserRecord = {
+                uid: generatedUid,
                 username,
                 password,
+                email: userEmail,
+                phone: cleanPhone,
                 name: fullName,
                 isBlocked: false,
+                totalTransactions: 0,
+                totalVolume: 0,
                 dateJoined: new Date().toISOString()
-            });
+            };
 
+            usersList.push(newUserRecord);
             localStorage.setItem('khataflow_registered_users', JSON.stringify(usersList));
+
+            // Sync to Firestore public_users
+            try {
+                if (window.fbDb && window.fbDoc && window.fbSetDoc) {
+                    const userRef = window.fbDoc(window.fbDb, 'public_users', generatedUid);
+                    await window.fbSetDoc(userRef, {
+                        uid: generatedUid,
+                        name: fullName,
+                        username: username,
+                        email: userEmail,
+                        phone: cleanPhone,
+                        isBlocked: false,
+                        totalTransactions: 0,
+                        totalVolume: 0,
+                        createdAt: new Date().toISOString()
+                    }, { merge: true });
+                }
+            } catch(cloudErr) {
+                console.warn("Cloud save user notice:", cloudErr.message);
+            }
+
             closeAdminAddUserModal();
             renderAdminUsersList();
             updateAdminDashboardMetrics();
             showToast(`User ${fullName} created successfully!`);
         }
 
-        function toggleBlockUser(username) {
+        async function toggleBlockUser(username) {
             let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
             const user = usersList.find(u => u.username.toLowerCase() === username.toLowerCase());
             if (!user) return;
 
             user.isBlocked = !user.isBlocked;
             localStorage.setItem('khataflow_registered_users', JSON.stringify(usersList));
+
+            // Sync block status to Firebase Firestore
+            try {
+                if (window.fbDb && window.fbDoc && window.fbSetDoc && user.uid) {
+                    const userRef = window.fbDoc(window.fbDb, 'public_users', user.uid);
+                    await window.fbSetDoc(userRef, { isBlocked: user.isBlocked }, { merge: true });
+                }
+            } catch(e) {
+                console.warn("Could not sync block to cloud:", e.message);
+            }
+
             renderAdminUsersList();
             showToast(`User ${user.name} is now ${user.isBlocked ? 'BLOCKED' : 'UNBLOCKED'}`);
         }
 
-        function deleteRegisteredUser(username) {
-            if (username === 'admin') {
+        async function deleteRegisteredUser(username) {
+            if (username === 'admin' || username === 'admin@khataflow.pro') {
                 showToast("Cannot delete root admin account!", "error");
                 return;
             }
+
             let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
+            const targetUser = usersList.find(u => u.username.toLowerCase() === username.toLowerCase());
+            const targetUid = targetUser ? targetUser.uid : null;
+
             usersList = usersList.filter(u => u.username.toLowerCase() !== username.toLowerCase());
             localStorage.setItem('khataflow_registered_users', JSON.stringify(usersList));
+
+            // Delete from Firestore public_users collection
+            try {
+                if (window.fbDb && window.fbDoc && targetUid) {
+                    const { deleteDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+                    const userRef = window.fbDoc(window.fbDb, 'public_users', targetUid);
+                    await deleteDoc(userRef);
+                }
+            } catch(e) {
+                console.warn("Cloud delete notice:", e.message);
+            }
+
             renderAdminUsersList();
             updateAdminDashboardMetrics();
-            showToast(`User ${username} removed permanently`);
+            showToast(`User "${username}" permanently removed from system`);
         }
 
         function renderAdminUsersList() {
@@ -4188,44 +4339,100 @@
             if (!container) return;
 
             let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
-            if (usersList.length === 0) {
+            
+            // If list is empty, populate current logged-in profile
+            if (usersList.length === 0 && appState.userProfile && appState.userProfile.phone) {
+                const currentSession = getAuthSession();
                 usersList = [{
-                    username: appState.userProfile.phone || '9876543210',
-                    name: appState.userProfile.name || 'Amit Kumar',
+                    uid: currentSession.uid || 'current_user',
+                    username: appState.userProfile.phone,
+                    name: appState.userProfile.name || currentSession.name || 'Active User',
+                    email: appState.userProfile.email || '',
+                    phone: appState.userProfile.phone,
                     isBlocked: false,
+                    totalTransactions: (appState.transactions || []).length,
+                    totalVolume: (appState.transactions || []).reduce((sum, t) => sum + (Number(t.amount) || 0), 0),
                     dateJoined: 'Active Profile'
                 }];
             }
 
             container.innerHTML = '';
+            if (usersList.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-neutral-400 text-xs font-semibold">No registered users found yet. Users will appear here in real-time as they sign up!</div>`;
+                return;
+            }
+
             usersList.forEach(u => {
                 const isBlocked = !!u.isBlocked;
+                const txCount = u.totalTransactions !== undefined ? u.totalTransactions : 0;
+                const volume = u.totalVolume !== undefined ? u.totalVolume : 0;
+
                 container.innerHTML += `
-                    <div class="p-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
-                        <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                            <span class="w-8 h-8 rounded-xl ${isBlocked ? 'bg-red-500/10 text-red-500' : 'bg-purple-100 dark:bg-purple-950/60 text-purple-600'} flex items-center justify-center font-bold text-sm flex-shrink-0">
+                    <div class="p-3.5 rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/80 border ${isBlocked ? 'border-red-300 dark:border-red-800/60 bg-red-50/40' : 'border-neutral-200 dark:border-neutral-700'} flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs transition hover:shadow-sm">
+                        <div class="flex items-center gap-3 min-w-0 flex-1">
+                            <span class="w-10 h-10 rounded-2xl ${isBlocked ? 'bg-red-500 text-white' : 'bg-gradient-to-tr from-purple-600 to-primary-600 text-white'} flex items-center justify-center font-black text-sm flex-shrink-0 shadow-sm">
                                 <i class="fa-solid ${isBlocked ? 'fa-user-slash' : 'fa-user'}"></i>
                             </span>
                             <div class="truncate">
-                                <div class="flex items-center gap-1.5 flex-wrap">
-                                    <h6 class="font-bold text-neutral-900 dark:text-neutral-100">${u.name}</h6>
-                                    ${isBlocked ? '<span class="px-2 py-0.2 rounded-full text-[9px] font-black bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-400">BLOCKED</span>' : '<span class="px-2 py-0.2 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">Active</span>'}
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <h6 class="font-extrabold text-neutral-900 dark:text-neutral-100 text-sm truncate">${u.name || 'User'}</h6>
+                                    ${isBlocked ? '<span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 border border-red-300">BLOCKED</span>' : '<span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300">ACTIVE</span>'}
                                 </div>
-                                <span class="text-[10px] text-neutral-400 font-mono">${u.username} • Password: ${u.password ? '••••' : 'Default'}</span>
+                                <div class="flex items-center gap-2 mt-0.5 text-[10px] text-neutral-500 font-mono flex-wrap">
+                                    <span>📱 ${u.phone || u.username}</span>
+                                    <span>•</span>
+                                    <span>✉️ ${u.email || 'No Email'}</span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-1 text-[10px] font-bold text-neutral-600 dark:text-neutral-300">
+                                    <span class="bg-white dark:bg-neutral-900 px-2 py-0.5 rounded-md border border-neutral-200 dark:border-neutral-700">📦 ${txCount} Txns</span>
+                                    <span class="bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">💰 ₹${Number(volume).toLocaleString('en-IN')} Vol</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-1.5 flex-shrink-0">
-                            <button onclick="toggleBlockUser('${u.username}')" class="px-2.5 py-1.5 rounded-xl font-bold text-[11px] transition active:scale-95 ${isBlocked ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-amber-500 hover:bg-amber-600 text-white'}">
+                        <div class="flex items-center gap-2 flex-shrink-0 justify-end pt-1 sm:pt-0 border-t sm:border-t-0 border-neutral-200/60 dark:border-neutral-700/60">
+                            <button onclick="toggleBlockUser('${u.username}')" class="px-3 py-2 rounded-xl font-black text-[11px] transition active:scale-95 flex items-center gap-1.5 shadow-sm ${isBlocked ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-amber-500 hover:bg-amber-600 text-white'}">
                                 <i class="fa-solid ${isBlocked ? 'fa-unlock' : 'fa-ban'}"></i> ${isBlocked ? 'Unblock' : 'Block'}
                             </button>
-                            <button onclick="deleteRegisteredUser('${u.username}')" class="px-2.5 py-1.5 rounded-xl bg-error-500/10 hover:bg-error-500 text-error-600 hover:text-white font-bold text-[11px] transition active:scale-95">
-                                <i class="fa-solid fa-trash"></i>
+                            <button onclick="deleteRegisteredUser('${u.username}')" class="px-3 py-2 rounded-xl bg-error-500/10 hover:bg-error-500 text-error-600 hover:text-white font-black text-[11px] transition active:scale-95 flex items-center gap-1" title="Delete User">
+                                <i class="fa-solid fa-trash"></i> Delete
                             </button>
                         </div>
                     </div>
                 `;
             });
+        }
+
+        function updateAdminDashboardMetrics() {
+            let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
+            
+            // Calculate system-wide totals across all users & local transactions
+            let totalTxCount = (appState.transactions || []).length;
+            let totalVolume = (appState.transactions || []).reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+
+            // Add volume from other registered users
+            usersList.forEach(u => {
+                if (u.totalTransactions && u.totalTransactions > 0) {
+                    // Avoid double counting current active session workspace if already present
+                    const isCurrent = (u.username === appState.merchantPhone || (appState.userProfile && u.username === appState.userProfile.phone));
+                    if (!isCurrent) {
+                        totalTxCount += Number(u.totalTransactions) || 0;
+                        totalVolume += Number(u.totalVolume) || 0;
+                    }
+                }
+            });
+
+            const totalAds = SPONSORED_ADS_LIST.length;
+
+            const txCountEl = document.getElementById('admin-stat-tx-count');
+            const volEl = document.getElementById('admin-stat-volume');
+            const adsCountEl = document.getElementById('admin-stat-ads-count');
+            const usersCountEl = document.getElementById('admin-stat-users-count');
+
+            if (txCountEl) txCountEl.textContent = totalTxCount;
+            if (volEl) volEl.textContent = `₹${totalVolume.toLocaleString('en-IN')}`;
+            if (adsCountEl) adsCountEl.textContent = totalAds;
+            if (usersCountEl) usersCountEl.textContent = Math.max(usersList.length, 1);
         }
 
         // ================= CURRENCY & FONT LOGIC =================
@@ -4990,6 +5197,8 @@
         // Helper to safely merge Cloud Firestore data into appState
         window.mergeCloudDataToState = function(cloudData) {
             try {
+                if (!cloudData) return;
+                
                 if (cloudData.budget !== undefined) appState.budget = Number(cloudData.budget) || 0;
                 if (cloudData.categoryBudgets) appState.categoryBudgets = cloudData.categoryBudgets;
                 if (cloudData.merchantPhone) appState.merchantPhone = cloudData.merchantPhone;
@@ -5022,8 +5231,11 @@
                         : cloudData.groceryInvoices;
                 }
 
+                // Update LocalStorage on the new device with freshly pulled Cloud data
                 localStorage.setItem('khataflow_state', JSON.stringify(appState));
                 ensureUnifiedPrimaryMember();
+                
+                // Immediately refresh entire UI on this phone
                 updateAll();
             } catch (err) {
                 console.error("Error merging cloud data:", err);
@@ -8137,6 +8349,10 @@
             const session = getAuthSession();
             if (session && session.isLoggedIn && (session.role === 'user' || session.role === 'admin')) {
                 window.dismissAuthGate();
+                // If logged in as admin, activate live users listener
+                if (session.role === 'admin' && typeof window.listenToAllUsersForAdmin === 'function') {
+                    window.listenToAllUsersForAdmin();
+                }
             } else {
                 window.enforceAuthGate();
             }
