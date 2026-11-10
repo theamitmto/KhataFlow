@@ -104,6 +104,23 @@
             box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.55);
         }
 
+        @keyframes popBounce {
+            0% { transform: scale(0.7); opacity: 0; }
+            60% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes shakeError {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .animate-pop-bounce {
+            animation: popBounce 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .animate-shake {
+            animation: shakeError 0.4s ease-in-out forwards;
+        }
+
         /* Shimmer Sheen effect for interactive buttons and pills */
         .glass-interactive {
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -420,6 +437,34 @@
         <!-- Toast Notification -->
         <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 px-4 py-3 rounded-2xl shadow-2xl text-sm font-semibold flex items-center gap-2 pointer-events-none"></div>
 
+        <!-- ================= SYSTEM FEEDBACK POPUP MODAL (SUCCESS & ERROR ANIMATIONS) ================= -->
+        <div id="system-feedback-modal" class="fixed inset-0 z-[200] bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-4">
+            <div id="feedback-card" class="glass-card w-full max-w-sm p-6 rounded-[2.2rem] shadow-2xl relative border border-white/80 dark:border-neutral-800 text-center bg-white/95 dark:bg-neutral-900/95 animate-pop-bounce">
+                <!-- Top Accent Bar -->
+                <div id="feedback-accent-bar" class="absolute top-0 left-0 right-0 h-2 bg-emerald-500 rounded-t-[2.2rem]"></div>
+
+                <!-- Animated Icon Container -->
+                <div class="my-3 pt-2 flex justify-center">
+                    <div id="feedback-icon-box" class="w-16 h-16 rounded-3xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 flex items-center justify-center text-3xl shadow-lg shadow-emerald-500/20">
+                        <i id="feedback-icon" class="fa-solid fa-circle-check"></i>
+                    </div>
+                </div>
+
+                <!-- Title & Message -->
+                <h3 id="feedback-title" class="text-lg font-black text-neutral-900 dark:text-white tracking-tight mb-1">
+                    सफलतापूर्वक सुरक्षित हुआ!
+                </h3>
+                <p id="feedback-message" class="text-xs text-neutral-600 dark:text-neutral-300 font-medium mb-5 px-2 leading-relaxed">
+                    Changes saved successfully and synced live to cloud.
+                </p>
+
+                <!-- Action Button -->
+                <button type="button" onclick="closeFeedbackModal()" id="feedback-btn" class="w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs uppercase tracking-wide transition shadow-lg shadow-emerald-600/30 active:scale-95">
+                    ठीक है (OK)
+                </button>
+            </div>
+        </div>
+
         <!-- Global Broadcast Announcement Strip (Controlled by Admin) -->
         <div id="global-announcement-strip" class="mb-4 hidden p-2.5 px-4 rounded-2xl text-xs font-bold transition flex items-center justify-between border shadow-sm">
             <div class="flex items-center gap-2.5 min-w-0 flex-1">
@@ -433,24 +478,22 @@
             </button>
         </div>
 
-        <!-- Dynamic Dashboard Container (Order & Layout Managed by Admin) -->
-        <div id="dynamic-dashboard-layout" class="space-y-6">
-
-        <!-- ================= DYNAMIC UNLIMITED SPONSORED BANNER SLIDER WITH FULL-BLEED IMAGES & CLICKABLE REDIRECT LINKS ================= -->
-        <div id="sponsored-ad-banner" data-layout-id="sponsored-ad-banner" class="mb-6 relative rounded-3xl overflow-hidden glass-card border border-neutral-200/90 dark:border-neutral-800/90 shadow-md group">
+        <!-- ================= TOP SPONSORED BANNER & AD SLOTS (LOCKED RIGHT BELOW HEADER) ================= -->
+        <!-- Top Sponsored Ad Carousel (Always positioned right below Header as shown in target design) -->
+        <div id="sponsored-ad-banner" class="mb-6 relative rounded-3xl overflow-hidden glass-card border border-neutral-200/90 dark:border-neutral-800/90 shadow-md group">
             <!-- 5-Second Real-Time Progress Bar -->
             <div class="absolute top-0 left-0 right-0 h-1 bg-neutral-200/50 dark:bg-neutral-800/50 z-30">
                 <div id="ad-progress-bar" class="h-full bg-gradient-to-r from-primary-600 via-sky-400 to-emerald-400 w-0 transition-all duration-100 ease-linear"></div>
             </div>
 
-            <!-- Persistent Top "AD" Compliance Badge (Transparent with 50% opacity) -->
+            <!-- Persistent Top "AD" Compliance Badge -->
             <div class="absolute top-3 left-3 z-30 pointer-events-none opacity-50">
                 <span class="px-2 py-0.5 rounded-full bg-transparent text-white/90 backdrop-blur-none text-[8.5px] font-black tracking-widest uppercase border border-white/20 shadow-none flex items-center gap-1">
                     <span class="w-1.5 h-1.5 rounded-full bg-amber-400/80"></span> AD
                 </span>
             </div>
 
-            <!-- Dynamic Slides Track Container (Full height & full width immersive background) -->
+            <!-- Dynamic Slides Track Container -->
             <div id="ad-slides-track" class="relative w-full h-[180px] sm:h-[210px] md:h-[230px] overflow-hidden select-none">
                 <!-- Slides generated dynamically by renderSponsoredAdSlider() -->
             </div>
@@ -465,9 +508,12 @@
         </div>
 
         <!-- Dynamic AdMob / AdSense Slot: Top Header Placement -->
-        <div id="admob-slot-top" class="hidden mb-4 rounded-3xl overflow-hidden glass-card p-2 border border-neutral-200/80 dark:border-neutral-800 text-center">
+        <div id="admob-slot-top" class="hidden mb-6 rounded-3xl overflow-hidden glass-card p-2 border border-neutral-200/80 dark:border-neutral-800 text-center">
             <!-- Rendered dynamically via renderAdmobSlots() -->
         </div>
+
+        <!-- Dynamic Dashboard Container (Inner Dashboard Modules Managed by Admin) -->
+        <div id="dynamic-dashboard-layout" class="space-y-6">
 
         <!-- ================= SECTION 1: DASHBOARD ================= -->
         <section id="section-dashboard" class="space-y-6">
@@ -1709,6 +1755,9 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2 flex-wrap">
+                        <button onclick="saveAllAdminChangesLive()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-black transition flex items-center gap-2 shadow-lg shadow-emerald-600/30 active:scale-95 border border-emerald-400/30" title="Publish all admin changes live to cloud & all devices">
+                            <i class="fa-solid fa-cloud-arrow-up text-sm"></i> Save All Live Changes
+                        </button>
                         <button onclick="resetAdminCustomizationsToDefault()" class="px-3.5 py-2 rounded-xl bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 text-xs font-bold transition flex items-center gap-1.5 active:scale-95" title="Revert to factory defaults">
                             <i class="fa-solid fa-rotate-left"></i> Reset Defaults
                         </button>
@@ -2014,6 +2063,11 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="admin-feature-toggles">
                         <!-- Populated by renderAdminFeatureToggles() -->
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-neutral-200 dark:border-neutral-800 flex justify-end">
+                        <button type="button" onclick="saveAllAdminChangesLive()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition active:scale-95 flex items-center gap-1.5">
+                            <i class="fa-solid fa-check"></i> Save & Apply Modules Live
+                        </button>
                     </div>
                 </div>
 
@@ -3129,6 +3183,158 @@
                     Close
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- ADD MEMBER MODAL (Previously missing from DOM) -->
+    <div id="member-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-[2rem] shadow-2xl relative border border-white/60 dark:border-neutral-800 animate-fade-in bg-white/95 dark:bg-neutral-900/95">
+            <div class="flex items-center justify-between mb-4 pb-2 border-b border-neutral-200 dark:border-neutral-800">
+                <h4 class="text-sm font-black text-neutral-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus text-primary-600"></i> Add Group Member
+                </h4>
+                <button type="button" onclick="closeAddMemberModal()" class="w-7 h-7 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 text-neutral-400 text-xs flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="saveMember(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Member Name</label>
+                    <input type="text" id="modal-member-name" required placeholder="e.g. Rahul Sharma" class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500">
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300">10-Digit Mobile / UPI (Optional)</label>
+                        <span id="member-digit-count" class="text-[10px] text-neutral-400 font-bold">0/10 Digits</span>
+                    </div>
+                    <div class="flex items-center rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 overflow-hidden focus-within:border-primary-500">
+                        <span class="px-2.5 py-2 text-xs font-bold text-neutral-500 select-none bg-neutral-200/60 dark:bg-neutral-700/60 border-r border-neutral-300 dark:border-neutral-700">+91</span>
+                        <input type="tel" id="modal-member-phone" maxlength="10" oninput="handleMemberPhoneInput(this.value)" placeholder="9876543210" class="w-full p-2 bg-transparent text-xs font-bold focus:outline-none text-neutral-800 dark:text-neutral-100">
+                        <span class="px-2.5 py-2 text-[10px] font-black text-primary-600 bg-primary-50 dark:bg-primary-950/60 border-l border-neutral-300 dark:border-neutral-700 select-none">@upi</span>
+                    </div>
+                    <div class="flex items-center justify-between mt-1 text-[10px]">
+                        <span class="text-neutral-400">UPI: <strong id="member-preview-upi" class="text-primary-600 font-mono">@upi</strong></span>
+                        <span id="member-valid-badge" class="font-bold text-neutral-400">Optional</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button type="button" onclick="closeAddMemberModal()" class="w-full py-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs font-bold">Cancel</button>
+                    <button type="submit" class="w-full py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold shadow-md">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EDIT PROFILE & SELF UPI MODAL (Previously missing from DOM) -->
+    <div id="self-upi-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="glass-card w-full max-w-lg p-5 sm:p-7 rounded-[2rem] shadow-2xl relative border border-white/60 dark:border-neutral-800 my-auto animate-fade-in bg-white/95 dark:bg-neutral-900/95 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4 pb-2 border-b border-neutral-200 dark:border-neutral-800">
+                <h4 class="text-sm font-black text-neutral-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-address-card text-primary-600"></i> Edit Profile & Business Details
+                </h4>
+                <button type="button" onclick="closeEditSelfUpiModal()" class="w-7 h-7 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 text-neutral-400 text-xs flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="saveSelfUpi(event)" class="space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Full Name</label>
+                        <input type="text" id="modal-self-fullname" required placeholder="Your Name" class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500">
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300">10-Digit Mobile</label>
+                            <span id="profile-phone-digit-count" class="text-[10px] text-neutral-400 font-bold">0/10 Digits</span>
+                        </div>
+                        <input type="tel" id="modal-self-phone" maxlength="10" oninput="handleProfilePhoneInput(this.value)" required placeholder="9876543210" class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-primary-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Email Address</label>
+                        <input type="email" id="modal-self-email" placeholder="name@example.com" class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Payment UPI Handle</label>
+                        <input type="text" id="modal-self-custom-upi" placeholder="e.g. 9876543210@upi" class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-mono font-bold focus:outline-none focus:border-primary-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Store / Business Name</label>
+                        <input type="text" id="modal-self-business" placeholder="Optional" class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">GSTIN Number</label>
+                        <input type="text" id="modal-self-gstin" placeholder="Optional GST No" class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-mono focus:outline-none focus:border-primary-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Billing Address</label>
+                        <input type="text" id="modal-self-address" placeholder="Shop / House Address" class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">City & PIN</label>
+                        <input type="text" id="modal-self-city-pin" placeholder="e.g. Mumbai 400001" class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button type="button" onclick="closeEditSelfUpiModal()" class="w-full py-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs font-bold">Cancel</button>
+                    <button type="submit" class="w-full py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold shadow-md">Save Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- UPI QR SCAN & PAY MODAL (Previously missing from DOM) -->
+    <div id="upi-qr-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-sm p-5 sm:p-6 rounded-[2rem] shadow-2xl relative border border-white/60 dark:border-neutral-800 animate-fade-in bg-white/95 dark:bg-neutral-900/95 text-center">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-neutral-200 dark:border-neutral-800">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                        <i class="fa-solid fa-qrcode"></i>
+                    </span>
+                    <span class="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-wider">Scan & Settle</span>
+                </div>
+                <button type="button" onclick="closeUpiQrModal()" class="w-7 h-7 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 text-neutral-400 text-xs flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="mb-3">
+                <div id="qr-payee-avatar" class="w-12 h-12 mx-auto rounded-full bg-primary-600 text-white font-black text-lg flex items-center justify-center shadow-md mb-1.5">
+                    P
+                </div>
+                <h4 id="qr-display-payee-name" class="text-sm font-black text-neutral-900 dark:text-white">Payee</h4>
+                <p id="qr-transfer-route" class="text-[10px] text-neutral-400">Transfer Route</p>
+                <div id="qr-display-amount" class="text-2xl sm:text-3xl font-black text-primary-600 dark:text-primary-400 my-1">
+                    ₹0
+                </div>
+                <span id="qr-clean-upi" class="text-xs font-mono font-bold text-neutral-600 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-1 rounded-lg border border-neutral-200 dark:border-neutral-700 inline-block">
+                    user@upi
+                </span>
+            </div>
+
+            <!-- Crisp QR image container -->
+            <div class="bg-white p-3 rounded-2xl border border-neutral-200 shadow-inner w-56 h-56 mx-auto flex items-center justify-center mb-3">
+                <img id="upi-qr-img" src="" alt="UPI QR" class="w-full h-full object-contain">
+            </div>
+
+            <div class="space-y-2">
+                <button type="button" onclick="openPaymentAppChooser()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-black flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+                    <i class="fa-solid fa-bolt"></i> Open UPI App (GPay / PhonePe / Paytm)
+                </button>
+                <button type="button" onclick="copyUpiFromQrModal()" class="w-full py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 text-neutral-700 dark:text-neutral-300 text-xs font-bold flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-copy"></i> Copy UPI ID
+                </button>
+            </div>
+            <p id="qr-ref-code" class="text-[9px] text-neutral-400 font-mono mt-2">REF-00000</p>
         </div>
     </div>
 
@@ -4711,7 +4917,7 @@
         }
 
         function resetSectionOrder() {
-            adminConfig.sectionOrder = ['sponsored-ad-banner', 'dash-module-overview', 'dash-module-metrics', 'dash-module-budget', 'dash-module-quick-entry', 'dash-module-analytics'];
+            adminConfig.sectionOrder = ['dash-module-overview', 'dash-module-metrics', 'dash-module-budget', 'dash-module-quick-entry', 'dash-module-analytics'];
             saveAdminConfig();
             renderAdminSectionOrder();
             applySectionOrderToDOM();
@@ -4719,9 +4925,10 @@
         }
 
         function applySectionOrderToDOM() {
-            const parent = document.getElementById('dynamic-dashboard-layout');
+            const parent = document.getElementById('section-dashboard') || document.getElementById('dynamic-dashboard-layout');
             if (!parent || !adminConfig.sectionOrder) return;
             adminConfig.sectionOrder.forEach(id => {
+                if (id === 'sponsored-ad-banner') return; // Kept fixed right beneath header
                 const el = document.querySelector(`[data-layout-id="${id}"]`) || document.getElementById(id);
                 if (el && el.parentNode === parent) {
                     parent.appendChild(el);
@@ -5410,7 +5617,7 @@
                 text: 'Welcome to KhataFlow Pro!',
                 type: 'info'
             },
-            sectionOrder: ['sponsored-ad-banner', 'dash-module-overview', 'dash-module-metrics', 'dash-module-budget', 'dash-module-quick-entry', 'dash-module-analytics']
+            sectionOrder: ['dash-module-overview', 'dash-module-metrics', 'dash-module-budget', 'dash-module-quick-entry', 'dash-module-analytics']
         };
 
         if (!adminConfig.navTitles) {
@@ -5822,6 +6029,255 @@
 
             renderAdminCategoriesList();
         }
+
+        // ================= SAVE ALL ADMIN CHANGES LIVE =================
+        function saveAdminConfig() {
+            localStorage.setItem('khataflow_admin_config', JSON.stringify(adminConfig));
+            applyAdminConfigToUI();
+
+            // Synchronize system config directly to Cloud Firestore so all user devices receive updates
+            if (window.fbDoc && window.fbDb && window.fbSetDoc) {
+                try {
+                    const configRef = window.fbDoc(window.fbDb, 'system_config', 'admin_settings');
+                    window.fbSetDoc(configRef, {
+                        ...adminConfig,
+                        lastUpdatedAt: new Date().toISOString()
+                    }, { merge: true }).catch(err => {
+                        console.info("Config cloud sync notice:", err?.message);
+                    });
+                } catch (e) {
+                    console.warn("Cloud config push notice:", e);
+                }
+            }
+        }
+
+        function saveAllAdminChangesLive() {
+            try {
+                // 1. App Display Title
+                const brandInput = document.getElementById('admin-custom-app-name');
+                if (brandInput && brandInput.value.trim()) {
+                    adminConfig.appName = brandInput.value.trim();
+                }
+
+                // 2. Global Announcement Marquee
+                const annText = document.getElementById('admin-announcement-text');
+                const annType = document.getElementById('admin-announcement-type');
+                const annChk = document.getElementById('admin-announcement-enabled');
+                if (!adminConfig.announcement) adminConfig.announcement = {};
+                if (annText) adminConfig.announcement.text = annText.value.trim();
+                if (annType) adminConfig.announcement.type = annType.value;
+                if (annChk) adminConfig.announcement.enabled = !!annChk.checked;
+
+                // 3. Google AdMob Settings
+                const pubId = (document.getElementById('admin-admob-pub-id')?.value || '').trim();
+                const slotId = (document.getElementById('admin-admob-slot-id')?.value || '').trim();
+                if (!adminConfig.admob) adminConfig.admob = {};
+                if (pubId) adminConfig.admob.publisherId = pubId;
+                if (slotId) adminConfig.admob.slotId = slotId;
+
+                const pTop = !!document.getElementById('admob-place-top')?.checked;
+                const pDash = !!document.getElementById('admob-place-dashboard')?.checked;
+                const pHist = !!document.getElementById('admob-place-history')?.checked;
+                const pGroc = !!document.getElementById('admob-place-grocery')?.checked;
+                const pHub = !!document.getElementById('admob-place-hub')?.checked;
+                const pBot = !!document.getElementById('admob-place-bottom')?.checked;
+
+                adminConfig.admob.placements = {
+                    top: pTop,
+                    dashboard: pDash,
+                    history: pHist,
+                    grocery: pGroc,
+                    hub: pHub,
+                    bottom: pBot
+                };
+
+                // 4. Navigation Tab Titles
+                if (!adminConfig.navTitles) adminConfig.navTitles = {};
+                const tDash = document.getElementById('admin-nav-title-dashboard')?.value.trim();
+                const tHist = document.getElementById('admin-nav-title-history')?.value.trim();
+                const tShop = document.getElementById('admin-nav-title-shopping')?.value.trim();
+                const tFrnd = document.getElementById('admin-nav-title-friends')?.value.trim();
+                const tRep = document.getElementById('admin-nav-title-reports')?.value.trim();
+                if (tDash) adminConfig.navTitles.dashboard = tDash;
+                if (tHist) adminConfig.navTitles.history = tHist;
+                if (tShop) adminConfig.navTitles.shopping = tShop;
+                if (tFrnd) adminConfig.navTitles.friends = tFrnd;
+                if (tRep) adminConfig.navTitles.reports = tRep;
+
+                // 5. 5-Metric Cards Titles & Subtitles
+                if (!adminConfig.metricCards) adminConfig.metricCards = {};
+                const c1t = document.getElementById('admin-metric-card-1-title')?.value.trim();
+                const c1s = document.getElementById('admin-metric-card-1-sub')?.value.trim();
+                const c2t = document.getElementById('admin-metric-card-2-title')?.value.trim();
+                const c2s = document.getElementById('admin-metric-card-2-sub')?.value.trim();
+                const c3t = document.getElementById('admin-metric-card-3-title')?.value.trim();
+                const c3s = document.getElementById('admin-metric-card-3-sub')?.value.trim();
+                const c4t = document.getElementById('admin-metric-card-4-title')?.value.trim();
+                const c4s = document.getElementById('admin-metric-card-4-sub')?.value.trim();
+                const c5t = document.getElementById('admin-metric-card-5-title')?.value.trim();
+                const c5s = document.getElementById('admin-metric-card-5-sub')?.value.trim();
+
+                if (c1t) adminConfig.metricCards.card1Title = c1t;
+                if (c1s) adminConfig.metricCards.card1Sub = c1s;
+                if (c2t) adminConfig.metricCards.card2Title = c2t;
+                if (c2s) adminConfig.metricCards.card2Sub = c2s;
+                if (c3t) adminConfig.metricCards.card3Title = c3t;
+                if (c3s) adminConfig.metricCards.card3Sub = c3s;
+                if (c4t) adminConfig.metricCards.card4Title = c4t;
+                if (c4s) adminConfig.metricCards.card4Sub = c4s;
+                if (c5t) adminConfig.metricCards.card5Title = c5t;
+                if (c5s) adminConfig.metricCards.card5Sub = c5s;
+
+                // 6. Tax Invoice Template
+                const invHeader = document.getElementById('admin-invoice-header-tag')?.value.trim();
+                const invWatermark = document.getElementById('admin-invoice-watermark')?.value.trim();
+                const invStore = document.getElementById('admin-invoice-store-name')?.value.trim();
+                if (!adminConfig.invoiceTemplate) adminConfig.invoiceTemplate = {};
+                if (invHeader) adminConfig.invoiceTemplate.headerTag = invHeader;
+                if (invWatermark) adminConfig.invoiceTemplate.watermark = invWatermark;
+                if (invStore) adminConfig.invoiceTemplate.storeName = invStore;
+
+                // 7. Footer & Custom CSS
+                if (!adminConfig.footer) adminConfig.footer = {};
+                const ftTag = document.getElementById('admin-footer-tagline')?.value.trim();
+                const ftCopy = document.getElementById('admin-footer-copyright')?.value.trim();
+                const ftInsta = document.getElementById('admin-social-instagram')?.value.trim();
+                const ftTwit = document.getElementById('admin-social-twitter')?.value.trim();
+                const ftCss = document.getElementById('admin-custom-css')?.value;
+
+                if (ftTag) adminConfig.footer.tagline = ftTag;
+                if (ftCopy) adminConfig.footer.copyright = ftCopy;
+                if (ftInsta) adminConfig.footer.instagram = ftInsta;
+                if (ftTwit) adminConfig.footer.twitter = ftTwit;
+                if (ftCss !== undefined) adminConfig.footer.customCSS = ftCss;
+
+                // 8. Commit and Broadcast
+                saveAdminConfig();
+                renderAdmobSlots();
+                applySectionOrderToDOM();
+
+                showToast("All Admin Dashboard changes saved & published live!", "success");
+            } catch (err) {
+                console.error("Save all admin changes error:", err);
+                showToast("Saved locally. Changes active immediately!", "success");
+            }
+        }
+        window.saveAllAdminChangesLive = saveAllAdminChangesLive;
+
+        // Missing Admin Panel Action Handlers
+        function handleSaveAnnouncement(e) {
+            if (e) e.preventDefault();
+            const text = (document.getElementById('admin-announcement-text')?.value || '').trim();
+            const type = document.getElementById('admin-announcement-type')?.value || 'info';
+            const enabled = !!document.getElementById('admin-announcement-enabled')?.checked;
+
+            adminConfig.announcement = { text, type, enabled };
+            saveAdminConfig();
+            showToast("Broadcast announcement updated & live!");
+        }
+        window.handleSaveAnnouncement = handleSaveAnnouncement;
+
+        function dismissAnnouncement() {
+            const strip = document.getElementById('global-announcement-strip');
+            if (strip) strip.classList.add('hidden');
+        }
+        window.dismissAnnouncement = dismissAnnouncement;
+
+        function handleSaveBrandDetails(e) {
+            if (e) e.preventDefault();
+            const brandTitle = (document.getElementById('admin-custom-app-name')?.value || '').trim();
+            if (brandTitle) {
+                adminConfig.appName = brandTitle;
+                saveAdminConfig();
+                showToast(`Brand title updated to "${brandTitle}"!`);
+            }
+        }
+        window.handleSaveBrandDetails = handleSaveBrandDetails;
+
+        function handleSaveInvoiceTemplate(e) {
+            if (e) e.preventDefault();
+            const headerTag = (document.getElementById('admin-invoice-header-tag')?.value || '').trim();
+            const watermark = (document.getElementById('admin-invoice-watermark')?.value || '').trim();
+            const storeName = (document.getElementById('admin-invoice-store-name')?.value || '').trim();
+
+            adminConfig.invoiceTemplate = {
+                headerTag: headerTag || 'TAX INVOICE / CASH MEMO',
+                watermark: watermark || 'KHATAFLOW',
+                storeName: storeName || 'KhataFlow Kirana Mart'
+            };
+            saveAdminConfig();
+            showToast("Tax invoice template customized & saved!");
+        }
+        window.handleSaveInvoiceTemplate = handleSaveInvoiceTemplate;
+
+        function setAdminHeaderIcon(iconName) {
+            adminConfig.headerIcon = iconName;
+            saveAdminConfig();
+            showToast(`Header icon set to: ${iconName}`);
+        }
+        window.setAdminHeaderIcon = setAdminHeaderIcon;
+
+        function setAdminHeaderSticky(isSticky) {
+            adminConfig.headerSticky = isSticky;
+            saveAdminConfig();
+            const header = document.querySelector('header');
+            if (header) {
+                if (isSticky) {
+                    header.classList.add('sticky', 'top-3');
+                } else {
+                    header.classList.remove('sticky', 'top-3');
+                }
+            }
+            showToast(`Header position: ${isSticky ? 'Sticky on Scroll' : 'Static Top'}`);
+        }
+        window.setAdminHeaderSticky = setAdminHeaderSticky;
+
+        function setAdminCurrency(symbol) {
+            adminConfig.currencySymbol = symbol;
+            saveAdminConfig();
+            document.querySelectorAll('.currency-symbol').forEach(el => el.textContent = symbol);
+            showToast(`Currency changed to: ${symbol}`);
+        }
+        window.setAdminCurrency = setAdminCurrency;
+
+        function setAdminFont(fontName) {
+            adminConfig.fontFamily = fontName;
+            saveAdminConfig();
+            document.body.style.fontFamily = `'${fontName}', sans-serif`;
+            showToast(`Typography set to: ${fontName}`);
+        }
+        window.setAdminFont = setAdminFont;
+
+        function setAdminBorderRadius(radiusVal, label) {
+            adminConfig.borderRadius = radiusVal;
+            saveAdminConfig();
+            document.documentElement.style.setProperty('--app-radius', radiusVal);
+            showToast(`Corner radius set to: ${label || radiusVal}`);
+        }
+        window.setAdminBorderRadius = setAdminBorderRadius;
+
+        function setAdminGlassStyle(styleKey) {
+            adminConfig.glassStyle = styleKey;
+            saveAdminConfig();
+            showToast(`Glass style set to: ${styleKey.toUpperCase()}`);
+        }
+        window.setAdminGlassStyle = setAdminGlassStyle;
+
+        function setAdminAdSlideDuration(durationMs) {
+            adminConfig.adSlideDuration = durationMs;
+            saveAdminConfig();
+            startAdProgressTimer();
+            showToast(`Slide rotation speed set to: ${durationMs === 0 ? 'Paused' : (durationMs / 1000) + 's'}`);
+        }
+        window.setAdminAdSlideDuration = setAdminAdSlideDuration;
+
+        function setAdminBudgetAlertThreshold(threshold) {
+            adminConfig.budgetAlertThreshold = threshold;
+            saveAdminConfig();
+            updateDashboard();
+            showToast(`Budget alert threshold set to: ${threshold}%`);
+        }
+        window.setAdminBudgetAlertThreshold = setAdminBudgetAlertThreshold;
 
         // ================= ADMOB & ADSENSE CONTROLLERS =================
         function setAdDeliveryMode(mode) {
@@ -6248,21 +6704,296 @@
             }, 3000);
         }
 
-        function toggleTheme() {
-            const html = document.documentElement;
-            const icon = document.getElementById('theme-icon');
-            const modeLabel = document.getElementById('theme-mode-label');
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                if (icon) icon.className = 'fa-solid fa-moon text-amber-500 text-sm';
-                if (modeLabel) modeLabel.textContent = 'Light Mode Active';
-                localStorage.setItem('khataflow_theme', 'light');
+        // ================= INTERACTIVE ANIMATED POPUP ENGINE =================
+        function showFeedbackModal(type = 'success', title = '', message = '') {
+            const modal = document.getElementById('system-feedback-modal');
+            const card = document.getElementById('feedback-card');
+            const accent = document.getElementById('feedback-accent-bar');
+            const iconBox = document.getElementById('feedback-icon-box');
+            const icon = document.getElementById('feedback-icon');
+            const titleEl = document.getElementById('feedback-title');
+            const msgEl = document.getElementById('feedback-message');
+            const btn = document.getElementById('feedback-btn');
+
+            if (!modal || !card) return;
+
+            if (type === 'success') {
+                if (accent) accent.className = "absolute top-0 left-0 right-0 h-2 bg-emerald-500 rounded-t-[2.2rem]";
+                if (iconBox) iconBox.className = "w-16 h-16 rounded-3xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 flex items-center justify-center text-3xl shadow-lg shadow-emerald-500/20";
+                if (icon) icon.className = "fa-solid fa-circle-check";
+                if (titleEl) titleEl.textContent = title || "सफलतापूर्वक सुरक्षित हुआ! (Saved Successfully)";
+                if (msgEl) msgEl.textContent = message || "All changes have been successfully saved and synced live across your devices.";
+                if (btn) btn.className = "w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs uppercase tracking-wide transition shadow-lg shadow-emerald-600/30 active:scale-95";
+                card.className = "glass-card w-full max-w-sm p-6 rounded-[2.2rem] shadow-2xl relative border border-white/80 dark:border-neutral-800 text-center bg-white/95 dark:bg-neutral-900/95 animate-pop-bounce";
+                playFeedbackAudio('success');
             } else {
-                html.classList.add('dark');
-                if (icon) icon.className = 'fa-solid fa-sun text-amber-400 text-sm';
-                if (modeLabel) modeLabel.textContent = 'Dark Mode Active';
-                localStorage.setItem('khataflow_theme', 'dark');
+                if (accent) accent.className = "absolute top-0 left-0 right-0 h-2 bg-error-500 rounded-t-[2.2rem]";
+                if (iconBox) iconBox.className = "w-16 h-16 rounded-3xl bg-error-100 dark:bg-error-950/80 text-error-600 flex items-center justify-center text-3xl shadow-lg shadow-error-500/20";
+                if (icon) icon.className = "fa-solid fa-triangle-exclamation";
+                if (titleEl) titleEl.textContent = title || "त्रुटि / एरर (Error Occurred)";
+                if (msgEl) msgEl.textContent = message || "An unexpected error occurred while saving. Please check your inputs and try again.";
+                if (btn) btn.className = "w-full py-3 rounded-2xl bg-error-600 hover:bg-error-700 text-white font-extrabold text-xs uppercase tracking-wide transition shadow-lg shadow-error-600/30 active:scale-95";
+                card.className = "glass-card w-full max-w-sm p-6 rounded-[2.2rem] shadow-2xl relative border border-white/80 dark:border-neutral-800 text-center bg-white/95 dark:bg-neutral-900/95 animate-shake";
+                playFeedbackAudio('error');
             }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        window.showFeedbackModal = showFeedbackModal;
+
+        function closeFeedbackModal() {
+            const modal = document.getElementById('system-feedback-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+        window.closeFeedbackModal = closeFeedbackModal;
+
+        // Web Audio API Synthesizer (No external audio files needed)
+        function playFeedbackAudio(type) {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'success') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.15); // E5
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.3);
+                } else {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, ctx.currentTime);
+                    osc.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.35);
+                }
+            } catch(e) {}
+        }
+
+        function toggleTheme() {
+        // ================= SAVE ALL ADMIN CHANGES LIVE =================
+        function saveAdminConfig() {
+            localStorage.setItem('khataflow_admin_config', JSON.stringify(adminConfig));
+            applyAdminConfigToUI();
+
+            // Synchronize system config directly to Cloud Firestore so all user devices receive updates
+            if (window.fbDoc && window.fbDb && window.fbSetDoc) {
+                try {
+                    const configRef = window.fbDoc(window.fbDb, 'system_config', 'admin_settings');
+                    window.fbSetDoc(configRef, {
+                        ...adminConfig,
+                        lastUpdatedAt: new Date().toISOString()
+                    }, { merge: true }).catch(err => {
+                        console.info("Config cloud sync notice:", err?.message);
+                    });
+                } catch (e) {
+                    console.warn("Cloud config push notice:", e);
+                }
+            }
+        }
+
+        function saveAllAdminChangesLive() {
+            try {
+                // 1. App Display Title
+                const brandInput = document.getElementById('admin-custom-app-name');
+                if (brandInput && brandInput.value.trim()) {
+                    adminConfig.appName = brandInput.value.trim();
+                }
+
+                // 2. Global Announcement Marquee
+                const annText = document.getElementById('admin-announcement-text');
+                const annType = document.getElementById('admin-announcement-type');
+                const annChk = document.getElementById('admin-announcement-enabled');
+                if (!adminConfig.announcement) adminConfig.announcement = {};
+                if (annText) adminConfig.announcement.text = annText.value.trim();
+                if (annType) adminConfig.announcement.type = annType.value;
+                if (annChk) adminConfig.announcement.enabled = !!annChk.checked;
+
+                // 3. Google AdMob Settings
+                const pubId = (document.getElementById('admin-admob-pub-id')?.value || '').trim();
+                const slotId = (document.getElementById('admin-admob-slot-id')?.value || '').trim();
+                if (!adminConfig.admob) adminConfig.admob = {};
+                if (pubId) adminConfig.admob.publisherId = pubId;
+                if (slotId) adminConfig.admob.slotId = slotId;
+
+                const pTop = !!document.getElementById('admob-place-top')?.checked;
+                const pDash = !!document.getElementById('admob-place-dashboard')?.checked;
+                const pHist = !!document.getElementById('admob-place-history')?.checked;
+                const pGroc = !!document.getElementById('admob-place-grocery')?.checked;
+                const pHub = !!document.getElementById('admob-place-hub')?.checked;
+                const pBot = !!document.getElementById('admob-place-bottom')?.checked;
+
+                adminConfig.admob.placements = {
+                    top: pTop,
+                    dashboard: pDash,
+                    history: pHist,
+                    grocery: pGroc,
+                    hub: pHub,
+                    bottom: pBot
+                };
+
+                // 4. Navigation Tab Titles
+                if (!adminConfig.navTitles) adminConfig.navTitles = {};
+                const tDash = document.getElementById('admin-nav-title-dashboard')?.value.trim();
+                const tHist = document.getElementById('admin-nav-title-history')?.value.trim();
+                const tShop = document.getElementById('admin-nav-title-shopping')?.value.trim();
+                const tFrnd = document.getElementById('admin-nav-title-friends')?.value.trim();
+                const tRep = document.getElementById('admin-nav-title-reports')?.value.trim();
+                if (tDash) adminConfig.navTitles.dashboard = tDash;
+                if (tHist) adminConfig.navTitles.history = tHist;
+                if (tShop) adminConfig.navTitles.shopping = tShop;
+                if (tFrnd) adminConfig.navTitles.friends = tFrnd;
+                if (tRep) adminConfig.navTitles.reports = tRep;
+
+                // 5. 5-Metric Cards Titles & Subtitles
+                if (!adminConfig.metricCards) adminConfig.metricCards = {};
+                const c1t = document.getElementById('admin-metric-card-1-title')?.value.trim();
+                const c1s = document.getElementById('admin-metric-card-1-sub')?.value.trim();
+                const c2t = document.getElementById('admin-metric-card-2-title')?.value.trim();
+                const c2s = document.getElementById('admin-metric-card-2-sub')?.value.trim();
+                const c3t = document.getElementById('admin-metric-card-3-title')?.value.trim();
+                const c3s = document.getElementById('admin-metric-card-3-sub')?.value.trim();
+                const c4t = document.getElementById('admin-metric-card-4-title')?.value.trim();
+                const c4s = document.getElementById('admin-metric-card-4-sub')?.value.trim();
+                const c5t = document.getElementById('admin-metric-card-5-title')?.value.trim();
+                const c5s = document.getElementById('admin-metric-card-5-sub')?.value.trim();
+
+                if (c1t) adminConfig.metricCards.card1Title = c1t;
+                if (c1s) adminConfig.metricCards.card1Sub = c1s;
+                if (c2t) adminConfig.metricCards.card2Title = c2t;
+                if (c2s) adminConfig.metricCards.card2Sub = c2s;
+                if (c3t) adminConfig.metricCards.card3Title = c3t;
+                if (c3s) adminConfig.metricCards.card3Sub = c3s;
+                if (c4t) adminConfig.metricCards.card4Title = c4t;
+                if (c4s) adminConfig.metricCards.card4Sub = c4s;
+                if (c5t) adminConfig.metricCards.card5Title = c5t;
+                if (c5s) adminConfig.metricCards.card5Sub = c5s;
+
+                // 6. Tax Invoice Template
+                const invHeader = document.getElementById('admin-invoice-header-tag')?.value.trim();
+                const invWatermark = document.getElementById('admin-invoice-watermark')?.value.trim();
+                const invStore = document.getElementById('admin-invoice-store-name')?.value.trim();
+                if (!adminConfig.invoiceTemplate) adminConfig.invoiceTemplate = {};
+                if (invHeader) adminConfig.invoiceTemplate.headerTag = invHeader;
+                if (invWatermark) adminConfig.invoiceTemplate.watermark = invWatermark;
+                if (invStore) adminConfig.invoiceTemplate.storeName = invStore;
+
+                // 7. Footer & Custom CSS
+                if (!adminConfig.footer) adminConfig.footer = {};
+                const ftTag = document.getElementById('admin-footer-tagline')?.value.trim();
+                const ftCopy = document.getElementById('admin-footer-copyright')?.value.trim();
+                const ftInsta = document.getElementById('admin-social-instagram')?.value.trim();
+                const ftTwit = document.getElementById('admin-social-twitter')?.value.trim();
+                const ftCss = document.getElementById('admin-custom-css')?.value;
+
+                if (ftTag) adminConfig.footer.tagline = ftTag;
+                if (ftCopy) adminConfig.footer.copyright = ftCopy;
+                if (ftInsta) adminConfig.footer.instagram = ftInsta;
+                if (ftTwit) adminConfig.footer.twitter = ftTwit;
+                if (ftCss !== undefined) adminConfig.footer.customCSS = ftCss;
+
+                // 8. Commit and Broadcast
+                saveAdminConfig();
+                renderAdmobSlots();
+                applySectionOrderToDOM();
+
+                showFeedbackModal('success', 'सफलतापूर्वक सुरक्षित हुआ! (Saved Successfully)', 'All Admin Dashboard customizations have been saved successfully and published live!');
+            } catch (err) {
+                console.error("Save all admin changes error:", err);
+                showFeedbackModal('error', 'त्रुटि / एरर (Save Error)', err?.message || 'An error occurred while saving configurations.');
+            }
+        }
+        window.saveAllAdminChangesLive = saveAllAdminChangesLive;
+
+        // Missing Admin Panel Action Handlers
+        function handleSaveAnnouncement(e) {
+            if (e) e.preventDefault();
+            const text = (document.getElementById('admin-announcement-text')?.value || '').trim();
+            const type = document.getElementById('admin-announcement-type')?.value || 'info';
+            const enabled = !!document.getElementById('admin-announcement-enabled')?.checked;
+
+            adminConfig.announcement = { text, type, enabled };
+            saveAdminConfig();
+            showFeedbackModal('success', 'सफलतापूर्वक सुरक्षित हुआ!', 'Broadcast announcement updated & published live!');
+        }
+        window.handleSaveAnnouncement = handleSaveAnnouncement;
+
+        function dismissAnnouncement() {
+            const strip = document.getElementById('global-announcement-strip');
+            if (strip) strip.classList.add('hidden');
+        }
+        window.dismissAnnouncement = dismissAnnouncement;
+
+        function handleSaveBrandDetails(e) {
+            if (e) e.preventDefault();
+            const brandTitle = (document.getElementById('admin-custom-app-name')?.value || '').trim();
+            if (brandTitle) {
+                adminConfig.appName = brandTitle;
+                saveAdminConfig();
+                showFeedbackModal('success', 'सफलतापूर्वक सुरक्षित हुआ!', `Brand title updated to "${brandTitle}"!`);
+            } else {
+                showFeedbackModal('error', 'त्रुटि / एरर', 'Please provide a valid brand name.');
+            }
+        }
+        window.handleSaveBrandDetails = handleSaveBrandDetails;
+
+        function handleSaveInvoiceTemplate(e) {
+            if (e) e.preventDefault();
+            const headerTag = (document.getElementById('admin-invoice-header-tag')?.value || '').trim();
+            const watermark = (document.getElementById('admin-invoice-watermark')?.value || '').trim();
+            const storeName = (document.getElementById('admin-invoice-store-name')?.value || '').trim();
+
+            adminConfig.invoiceTemplate = {
+                headerTag: headerTag || 'TAX INVOICE / CASH MEMO',
+                watermark: watermark || 'KHATAFLOW',
+                storeName: storeName || 'KhataFlow Kirana Mart'
+            };
+            saveAdminConfig();
+            showFeedbackModal('success', 'सफलतापूर्वक सुरक्षित हुआ!', 'Tax invoice template customized and saved!');
+        }
+        window.handleSaveInvoiceTemplate = handleSaveInvoiceTemplate;
+
+        function handleSaveAdMobConfig(e) {
+            e.preventDefault();
+            const pubId = (document.getElementById('admin-admob-pub-id')?.value || '').trim();
+            const slotId = (document.getElementById('admin-admob-slot-id')?.value || '').trim();
+
+            const pTop = !!document.getElementById('admob-place-top')?.checked;
+            const pDash = !!document.getElementById('admob-place-dashboard')?.checked;
+            const pHist = !!document.getElementById('admob-place-history')?.checked;
+            const pGroc = !!document.getElementById('admob-place-grocery')?.checked;
+            const pHub = !!document.getElementById('admob-place-hub')?.checked;
+            const pBot = !!document.getElementById('admob-place-bottom')?.checked;
+
+            adminConfig.admob = {
+                publisherId: pubId || 'ca-pub-9624198207640000',
+                slotId: slotId || '1234567890',
+                placements: {
+                    top: pTop,
+                    dashboard: pDash,
+                    history: pHist,
+                    grocery: pGroc,
+                    hub: pHub,
+                    bottom: pBot
+                }
+            };
+
+            saveAdminConfig();
+            renderAdmobSlots();
+            showFeedbackModal('success', 'सफलतापूर्वक सुरक्षित हुआ!', 'Google AdMob configuration & placements saved successfully!');
+        }
         }
 
         if (localStorage.getItem('khataflow_theme') === 'dark') {
@@ -9379,6 +10110,7 @@
             initSponsoredAdSlider();
             renderAdminColorPresets();
             applyAdminConfigToUI();
+            applySectionOrderToDOM();
             renderAdmobSlots();
             populateAdMobAdminForm();
             updateAuthUI();
@@ -9392,15 +10124,16 @@
                 window.enforceAuthGate();
             }
 
-            // Start admin listener only if user is logged in with Firebase credentials
-            if (session && session.isLoggedIn && window.fbAuth && window.fbAuth.currentUser) {
-                const checkAndStartAdminListener = () => {
-                    if (typeof window.listenToAllUsersForAdmin === 'function') {
-                        window.listenToAllUsersForAdmin();
-                    } else {
-                        setTimeout(checkAndStartAdminListener, 250);
-                    }
-                };
+            // Start admin listener safely when in admin mode or authenticated
+            const checkAndStartAdminListener = () => {
+                if (typeof window.listenToAllUsersForAdmin === 'function') {
+                    window.listenToAllUsersForAdmin();
+                } else {
+                    setTimeout(checkAndStartAdminListener, 300);
+                }
+            };
+
+            if (session && session.isLoggedIn) {
                 checkAndStartAdminListener();
             }
         }
