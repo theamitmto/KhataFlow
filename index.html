@@ -195,22 +195,31 @@
         <!-- Toast Notification -->
         <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 px-4 py-3 rounded-2xl shadow-2xl text-sm font-semibold flex items-center gap-2 pointer-events-none"></div>
 
-        <!-- Navigation Tabs -->
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-6">
-            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 bg-primary-600 text-white shadow-lg shadow-primary-600/25">
-                <i class="fa-solid fa-chart-pie"></i> Dashboard
+        <!-- ================= DYNAMIC UNLIMITED SPONSORED BANNER SLIDER WITH FULL-BLEED IMAGES & CLICKABLE REDIRECT LINKS ================= -->
+        <div id="sponsored-ad-banner" class="mb-6 relative rounded-3xl overflow-hidden glass-card border border-neutral-200/90 dark:border-neutral-800/90 shadow-md group">
+            <!-- 5-Second Real-Time Progress Bar -->
+            <div class="absolute top-0 left-0 right-0 h-1 bg-neutral-200/50 dark:bg-neutral-800/50 z-30">
+                <div id="ad-progress-bar" class="h-full bg-gradient-to-r from-primary-600 via-sky-400 to-emerald-400 w-0 transition-all duration-100 ease-linear"></div>
+            </div>
+
+            <!-- Persistent Top "AD" Compliance Badge (Transparent with 50% opacity) -->
+            <div class="absolute top-3 left-3 z-30 pointer-events-none opacity-50">
+                <span class="px-2 py-0.5 rounded-full bg-transparent text-white/90 backdrop-blur-none text-[8.5px] font-black tracking-widest uppercase border border-white/20 shadow-none flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400/80"></span> AD
+                </span>
+            </div>
+
+            <!-- Dynamic Slides Track Container (Full height & full width immersive background) -->
+            <div id="ad-slides-track" class="relative w-full h-[180px] sm:h-[210px] md:h-[230px] overflow-hidden select-none">
+                <!-- Slides generated dynamically by renderSponsoredAdSlider() -->
+            </div>
+
+            <!-- Left & Right Arrow Navigation Buttons -->
+            <button type="button" onclick="changeAdSlide(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/55 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition opacity-0 group-hover:opacity-100 active:scale-90 z-30 text-xs border border-white/20 shadow-lg" title="Previous Slide">
+                <i class="fa-solid fa-chevron-left"></i>
             </button>
-            <button onclick="switchTab('transactions')" id="tab-transactions" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-neutral-800/90 text-neutral-700 dark:text-neutral-200">
-                <i class="fa-solid fa-receipt"></i> History
-            </button>
-            <button onclick="switchTab('grocery')" id="tab-grocery" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-neutral-800/90 text-neutral-700 dark:text-neutral-200">
-                <i class="fa-solid fa-cart-shopping"></i> Shopping List
-            </button>
-            <button onclick="switchTab('hub')" id="tab-hub" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-neutral-800/90 text-neutral-700 dark:text-neutral-200">
-                <i class="fa-solid fa-users"></i> Friends Hub
-            </button>
-            <button onclick="switchTab('analytics')" id="tab-analytics" class="tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-neutral-800/90 text-neutral-700 dark:text-neutral-200 col-span-2 sm:col-span-1">
-                <i class="fa-solid fa-chart-line"></i> Reports
+            <button type="button" onclick="changeAdSlide(1)" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/55 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition opacity-0 group-hover:opacity-100 active:scale-90 z-30 text-xs border border-white/20 shadow-lg" title="Next Slide">
+                <i class="fa-solid fa-chevron-right"></i>
             </button>
         </div>
 
@@ -1345,6 +1354,56 @@
 
     </div>
 
+    <!-- ================= FIXED / FROZEN BOTTOM FINTECH NAVIGATION BAR ================= -->
+    <nav id="bottom-nav-bar" class="fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl border-t border-neutral-200/80 dark:border-neutral-800/80 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] px-2 sm:px-6 py-2 transition-all">
+        <div class="max-w-md mx-auto sm:max-w-lg flex items-center justify-around">
+            <!-- Dashboard Tab -->
+            <button onclick="switchTab('dashboard')" id="nav-btn-dashboard" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 group text-primary-600 dark:text-primary-400" title="Dashboard">
+                <div class="relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all bg-primary-100/70 dark:bg-primary-950/70 shadow-sm">
+                    <i class="fa-solid fa-chart-pie text-lg group-hover:scale-110 transition"></i>
+                    <span class="nav-indicator absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-primary-600 dark:bg-primary-400"></span>
+                </div>
+                <span class="nav-label text-[10px] font-extrabold mt-0.5 tracking-tight">Dashboard</span>
+            </button>
+
+            <!-- History Tab -->
+            <button onclick="switchTab('transactions')" id="nav-btn-transactions" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 group text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200" title="History & Logs">
+                <div class="relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all group-hover:bg-neutral-100 dark:group-hover:bg-neutral-800">
+                    <i class="fa-solid fa-clock-rotate-left text-lg group-hover:scale-110 transition"></i>
+                    <span class="nav-indicator hidden absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-primary-600 dark:bg-primary-400"></span>
+                </div>
+                <span class="nav-label text-[10px] font-bold mt-0.5 tracking-tight">History</span>
+            </button>
+
+            <!-- Shopping List Tab -->
+            <button onclick="switchTab('grocery')" id="nav-btn-grocery" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 group text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200" title="Shopping & Checklist">
+                <div class="relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all group-hover:bg-neutral-100 dark:group-hover:bg-neutral-800">
+                    <i class="fa-solid fa-cart-shopping text-lg group-hover:scale-110 transition"></i>
+                    <span class="nav-indicator hidden absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-primary-600 dark:bg-primary-400"></span>
+                </div>
+                <span class="nav-label text-[10px] font-bold mt-0.5 tracking-tight">Shopping</span>
+            </button>
+
+            <!-- Friends Hub Tab -->
+            <button onclick="switchTab('hub')" id="nav-btn-hub" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 group text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200" title="Friends Hub Split">
+                <div class="relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all group-hover:bg-neutral-100 dark:group-hover:bg-neutral-800">
+                    <i class="fa-solid fa-users text-lg group-hover:scale-110 transition"></i>
+                    <span class="nav-indicator hidden absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-primary-600 dark:bg-primary-400"></span>
+                </div>
+                <span class="nav-label text-[10px] font-bold mt-0.5 tracking-tight">Friends</span>
+            </button>
+
+            <!-- Reports Tab -->
+            <button onclick="switchTab('analytics')" id="nav-btn-analytics" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 group text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200" title="Analytics & Reports">
+                <div class="relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all group-hover:bg-neutral-100 dark:group-hover:bg-neutral-800">
+                    <i class="fa-solid fa-chart-line text-lg group-hover:scale-110 transition"></i>
+                    <span class="nav-indicator hidden absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-primary-600 dark:bg-primary-400"></span>
+                </div>
+                <span class="nav-label text-[10px] font-bold mt-0.5 tracking-tight">Reports</span>
+            </button>
+        </div>
+    </nav>
+
     <!-- ================= MODALS ================= -->
     <!-- Redesigned High-Quality Monthly Budget Modal -->
     <div id="budget-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-4">
@@ -2062,6 +2121,217 @@
         let historyCurrentPage = 1;
         const HISTORY_ITEMS_PER_PAGE = 10;
 
+        // ================= DYNAMIC UNLIMITED SPONSORED AD CAROUSEL WITH IMAGES ONLY =================
+        // Generates clean dark "Sponsored Ad - Slot Available" banner SVG images matching your image layout
+        function createAdSlotBannerSvg(headline, subtext, slotNumber, bgGradientStart, bgGradientEnd) {
+            const svgString = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 460" width="100%" height="100%">
+                <defs>
+                    <linearGradient id="bgGrad_${slotNumber}" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="${bgGradientStart || '#0f172a'}"/>
+                        <stop offset="100%" stop-color="${bgGradientEnd || '#1e293b'}"/>
+                    </linearGradient>
+                    <radialGradient id="glowGrad_${slotNumber}" cx="50%" cy="50%" r="55%">
+                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.18"/>
+                        <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+                    </radialGradient>
+                    <pattern id="grid_${slotNumber}" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                    </pattern>
+                </defs>
+                <rect width="1200" height="460" fill="url(#bgGrad_${slotNumber})"/>
+                <rect width="1200" height="460" fill="url(#grid_${slotNumber})"/>
+                <circle cx="600" cy="230" r="320" fill="url(#glowGrad_${slotNumber})"/>
+                
+                <!-- Main Bold Title -->
+                <text x="600" y="220" text-anchor="middle" fill="#ffffff" font-family="'Inter', -apple-system, sans-serif" font-size="78" font-weight="900" letter-spacing="-1.5">
+                    ${headline || 'Sponsored Ad'}
+                </text>
+                
+                <!-- Subtitle / Booking Info -->
+                <text x="600" y="278" text-anchor="middle" fill="#94a3b8" font-family="'Inter', -apple-system, sans-serif" font-size="24" font-weight="600" letter-spacing="1.5">
+                    ${subtext || 'THIS ADVERTISEMENT SLOT IS AVAILABLE • CLICK TO BOOK'}
+                </text>
+
+                <!-- Slot Tag Badge at Bottom Center -->
+                <g transform="translate(480, 320)">
+                    <rect width="240" height="42" rx="21" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+                    <text x="120" y="26" text-anchor="middle" fill="#38bdf8" font-family="'Inter', sans-serif" font-size="14" font-weight="800" letter-spacing="1">
+                        SLOT #${slotNumber} AVAILABLE
+                    </text>
+                </g>
+            </svg>`.trim();
+            return `data:image/svg+xml;utf8,${encodeURIComponent(svgString)}`;
+        }
+
+        const SPONSORED_ADS_LIST = [
+            {
+                id: 'ad-slot-1',
+                title: 'Sponsored Ad - Slot 1',
+                linkUrl: 'mailto:advertise@khataflow.pro?subject=Book%20Ad%20Slot%201%20on%20KhataFlow',
+                imageUrl: createAdSlotBannerSvg('Sponsored Ad', 'THIS ADVERTISEMENT SLOT IS AVAILABLE • CLICK TO BOOK', 1, '#080d1a', '#14213d')
+            },
+            {
+                id: 'ad-slot-2',
+                title: 'Sponsored Ad - Slot 2',
+                linkUrl: 'mailto:advertise@khataflow.pro?subject=Book%20Ad%20Slot%202%20on%20KhataFlow',
+                imageUrl: createAdSlotBannerSvg('Sponsored Ad', 'PROMOTE YOUR BRAND OR SERVICE HERE • TAP TO CONNECT', 2, '#0c111d', '#182235')
+            },
+            {
+                id: 'ad-slot-3',
+                title: 'Sponsored Ad - Slot 3',
+                linkUrl: 'mailto:advertise@khataflow.pro?subject=Book%20Ad%20Slot%203%20on%20KhataFlow',
+                imageUrl: createAdSlotBannerSvg('Sponsored Ad', 'REACH THOUSANDS OF DAILY ACTIVE FINTECH USERS', 3, '#0b0f19', '#1a1d2e')
+            },
+            {
+                id: 'ad-slot-4',
+                title: 'Sponsored Ad - Slot 4',
+                linkUrl: 'mailto:advertise@khataflow.pro?subject=Book%20Ad%20Slot%204%20on%20KhataFlow',
+                imageUrl: createAdSlotBannerSvg('Sponsored Ad', 'THIS ADVERTISEMENT SLOT IS AVAILABLE • 100% VISIBILITY', 4, '#080d1a', '#14213d')
+            },
+            {
+                id: 'ad-slot-5',
+                title: 'Sponsored Ad - Slot 5',
+                linkUrl: 'mailto:advertise@khataflow.pro?subject=Book%20Ad%20Slot%205%20on%20KhataFlow',
+                imageUrl: createAdSlotBannerSvg('Sponsored Ad', 'PARTNER WITH KHATAFLOW PRO • ADVERTISE YOUR PRODUCT', 5, '#0a1020', '#1c2541')
+            }
+        ];
+
+        let currentAdSlideIndex = 0;
+        const AD_SLIDE_DURATION = 5000; // Exact 5 seconds per slide
+        let adSlideTimer = null;
+        let adProgressTimer = null;
+        let adProgressStart = 0;
+
+        function handleAdClick(adId) {
+            const ad = SPONSORED_ADS_LIST.find(item => item.id === adId);
+            if (!ad) return;
+
+            showToast("Opening advertisement slot booking link...");
+            if (ad.linkUrl) {
+                window.open(ad.linkUrl, '_blank', 'noopener,noreferrer');
+            }
+        }
+
+        function renderSponsoredAdSlider() {
+            const track = document.getElementById('ad-slides-track');
+            if (!track) return;
+
+            const total = SPONSORED_ADS_LIST.length;
+            if (total === 0) {
+                const banner = document.getElementById('sponsored-ad-banner');
+                if (banner) banner.classList.add('hidden');
+                return;
+            }
+
+            // Generate Slides with Pure Images Only
+            track.innerHTML = '';
+            SPONSORED_ADS_LIST.forEach((ad, idx) => {
+                const slide = document.createElement('div');
+                slide.className = `ad-slide absolute inset-0 w-full h-full transition-opacity duration-700 cursor-pointer overflow-hidden ${
+                    idx === 0 ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none'
+                }`;
+                slide.onclick = () => handleAdClick(ad.id);
+
+                slide.innerHTML = `
+                    <img src="${ad.imageUrl}" alt="${ad.title}" class="w-full h-full object-cover object-center select-none" onerror="this.onerror=null;">
+                `;
+
+                track.appendChild(slide);
+            });
+        }
+
+        function initSponsoredAdSlider() {
+            renderSponsoredAdSlider();
+
+            const banner = document.getElementById('sponsored-ad-banner');
+            if (banner) {
+                banner.addEventListener('mouseenter', pauseAdTimer);
+                banner.addEventListener('mouseleave', resumeAdTimer);
+                banner.addEventListener('touchstart', pauseAdTimer, { passive: true });
+                banner.addEventListener('touchend', resumeAdTimer, { passive: true });
+            }
+
+            startAdTimer();
+        }
+
+        function showAdSlide(targetIndex) {
+            const track = document.getElementById('ad-slides-track');
+            if (!track) return;
+
+            const slides = track.querySelectorAll('.ad-slide');
+            const total = slides.length;
+            if (total === 0) return;
+
+            if (targetIndex >= total) targetIndex = 0;
+            if (targetIndex < 0) targetIndex = total - 1;
+
+            currentAdSlideIndex = targetIndex;
+
+            slides.forEach((slide, idx) => {
+                if (idx === currentAdSlideIndex) {
+                    slide.classList.remove('opacity-0', 'pointer-events-none');
+                    slide.classList.add('opacity-100', 'z-10');
+                } else {
+                    slide.classList.remove('opacity-100', 'z-10');
+                    slide.classList.add('opacity-0', 'pointer-events-none');
+                }
+            });
+
+            resetAdProgressBar();
+        }
+
+        function resetAdProgressBar() {
+            const bar = document.getElementById('ad-progress-bar');
+            if (!bar) return;
+            bar.style.transition = 'none';
+            bar.style.width = '0%';
+            adProgressStart = Date.now();
+
+            if (adProgressTimer) clearInterval(adProgressTimer);
+            adProgressTimer = setInterval(() => {
+                const elapsed = Date.now() - adProgressStart;
+                const pct = Math.min((elapsed / AD_SLIDE_DURATION) * 100, 100);
+                if (bar) bar.style.width = `${pct}%`;
+                if (pct >= 100) clearInterval(adProgressTimer);
+            }, 50);
+        }
+
+        function startAdTimer() {
+            clearAdTimers();
+            resetAdProgressBar();
+            adSlideTimer = setInterval(() => {
+                showAdSlide(currentAdSlideIndex + 1);
+            }, AD_SLIDE_DURATION);
+        }
+
+        function pauseAdTimer() {
+            clearAdTimers();
+            const bar = document.getElementById('ad-progress-bar');
+            if (bar) bar.style.transition = 'none';
+        }
+
+        function resumeAdTimer() {
+            startAdTimer();
+        }
+
+        function clearAdTimers() {
+            if (adSlideTimer) clearInterval(adSlideTimer);
+            if (adProgressTimer) clearInterval(adProgressTimer);
+        }
+
+        function changeAdSlide(step) {
+            clearAdTimers();
+            showAdSlide(currentAdSlideIndex + step);
+            startAdTimer();
+        }
+
+        function goToAdSlide(index) {
+            clearAdTimers();
+            showAdSlide(index);
+            startAdTimer();
+        }
+
         let appState = JSON.parse(localStorage.getItem('khataflow_state')) || {
             userProfile: {
                 name: '',
@@ -2372,14 +2642,33 @@
         }
 
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = "tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 glass-card hover:bg-white/90 dark:hover:bg-neutral-800/90 text-neutral-700 dark:text-neutral-200";
-            });
-            const activeBtn = document.getElementById(`tab-${tabId}`);
-            if(activeBtn) {
-                activeBtn.className = "tab-btn py-3 px-3 rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5 bg-primary-600 text-white shadow-lg shadow-primary-600/25";
-            }
+            // Update Frozen Bottom Navigation Bar Active State
+            const tabs = ['dashboard', 'transactions', 'grocery', 'hub', 'analytics'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`nav-btn-${t}`);
+                if (!btn) return;
+                const iconBox = btn.querySelector('div');
+                const indicator = btn.querySelector('.nav-indicator');
+                const label = btn.querySelector('.nav-label');
 
+                if (t === tabId) {
+                    btn.className = "nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 group text-primary-600 dark:text-primary-400 scale-105";
+                    if (iconBox) iconBox.className = "relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all bg-primary-100/80 dark:bg-primary-950/80 shadow-md shadow-primary-500/20";
+                    if (indicator) indicator.classList.remove('hidden');
+                    if (label) {
+                        label.className = "nav-label text-[10px] font-black mt-0.5 tracking-tight text-primary-600 dark:text-primary-400";
+                    }
+                } else {
+                    btn.className = "nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 group text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200";
+                    if (iconBox) iconBox.className = "relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all group-hover:bg-neutral-100 dark:group-hover:bg-neutral-800";
+                    if (indicator) indicator.classList.add('hidden');
+                    if (label) {
+                        label.className = "nav-label text-[10px] font-medium mt-0.5 tracking-tight text-neutral-400";
+                    }
+                }
+            });
+
+            // Toggle Section Visibility
             ['dashboard', 'transactions', 'grocery', 'hub', 'analytics'].forEach(id => {
                 const sec = document.getElementById(`section-${id}`);
                 if(sec) sec.classList.add('hidden');
@@ -2389,6 +2678,9 @@
                 targetSec.classList.remove('hidden');
                 targetSec.classList.add('animate-fade-in');
             }
+
+            // Scroll smoothly to top on tab switch
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             if(tabId === 'dashboard' || tabId === 'analytics') updateCharts();
             if(tabId === 'transactions') renderTransactions();
@@ -5354,6 +5646,7 @@
             updateAll();
             checkUserOnboarding();
             renderProductSlider();
+            initSponsoredAdSlider();
         }
     </script>
 </body>
