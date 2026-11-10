@@ -2174,6 +2174,168 @@
     </div>
 </div>
 
+                <!-- NEW: 9.5 DYNAMIC TRANSACTION CATEGORIES & TAGS MANAGER (NO-CODE) -->
+                <div class="p-5 rounded-2xl bg-white/70 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 mb-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b border-neutral-200 dark:border-neutral-800">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 text-[10px] font-black uppercase tracking-wider border border-emerald-300 dark:border-emerald-800">No-Code Studio</span>
+                                <span class="text-xs text-neutral-400 font-mono">CATEGORY_ENGINE</span>
+                            </div>
+                            <h4 class="text-base font-black text-neutral-900 dark:text-white tracking-tight mt-1 flex items-center gap-2">
+                                <i class="fa-solid fa-tags text-emerald-600"></i> Expense Categories & Tags Manager
+                            </h4>
+                            <p class="text-xs text-neutral-500 mt-0.5">Add custom categories, edit labels & emojis appearing across all entry forms & filters.</p>
+                        </div>
+                    </div>
+
+                    <!-- Add New Category Form -->
+                    <form onsubmit="handleAddAdminCategory(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-4 p-3 rounded-2xl bg-neutral-100/80 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700">
+                        <div class="sm:col-span-3">
+                            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Emoji / Icon</label>
+                            <input type="text" id="admin-new-cat-emoji" maxlength="4" required placeholder="e.g. 🎮 or ⛽" class="w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-bold text-center focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div class="sm:col-span-6">
+                            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Category Label Name</label>
+                            <input type="text" id="admin-new-cat-label" required placeholder="e.g. Gaming & OTT, Gym, Fuel, etc." class="w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div class="sm:col-span-3 flex items-end">
+                            <button type="submit" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-md transition active:scale-95 flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-plus"></i> Add Category
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Active Categories Badges Grid -->
+                    <div id="admin-categories-list" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
+                        <!-- Populated dynamically via renderAdminCategoriesList() -->
+                    </div>
+                </div>
+
+                <!-- NEW: 9.6 NAVIGATION BAR TAB TITLES & VISIBILITY MANAGER -->
+                <div class="p-5 rounded-2xl bg-white/70 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 mb-6">
+                    <h4 class="text-sm font-black text-neutral-900 dark:text-white mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-bars-progress text-indigo-500"></i> Bottom Navigation Bar Tab Titles & Visibility
+                    </h4>
+                    <p class="text-xs text-neutral-500 mb-3">Rename the tab text displayed on the frozen bottom dock or toggle tabs on/off.</p>
+
+                    <form onsubmit="handleSaveNavTitles(event)" class="space-y-3">
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">Tab 1 (Dashboard)</label>
+                                <input type="text" id="admin-nav-title-dashboard" placeholder="Dashboard" class="w-full p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">Tab 2 (History)</label>
+                                <input type="text" id="admin-nav-title-history" placeholder="History" class="w-full p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">Tab 3 (Shopping)</label>
+                                <input type="text" id="admin-nav-title-shopping" placeholder="Shopping" class="w-full p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">Tab 4 (Friends)</label>
+                                <input type="text" id="admin-nav-title-friends" placeholder="Friends" class="w-full p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">Tab 5 (Reports)</label>
+                                <input type="text" id="admin-nav-title-reports" placeholder="Reports" class="w-full p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-indigo-500">
+                            </div>
+                        </div>
+                        <div class="flex justify-end pt-1">
+                            <button type="submit" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md transition active:scale-95 flex items-center gap-1.5">
+                                <i class="fa-solid fa-check"></i> Save Nav Bar Titles
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- NEW: 9.7 TOP 5 FINANCIAL METRIC CARDS CUSTOMIZER -->
+                <div class="p-5 rounded-2xl bg-white/70 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 mb-6">
+                    <h4 class="text-sm font-black text-neutral-900 dark:text-white mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-table-columns text-primary-600"></i> Top 5 Financial Metric Cards Customizer
+                    </h4>
+                    <p class="text-xs text-neutral-500 mb-3">Customize titles and micro-subtitles of the 5 pulse metric cards.</p>
+
+                    <form onsubmit="handleSaveMetricCards(event)" class="space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+                            <div class="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+                                <label class="block text-[10px] font-black uppercase text-neutral-400 mb-1">Card 1 (Today)</label>
+                                <input type="text" id="admin-metric-card-1-title" placeholder="Today's Expense" class="w-full p-1.5 mb-1.5 rounded-lg bg-white dark:bg-neutral-900 border text-xs font-bold">
+                                <input type="text" id="admin-metric-card-1-sub" placeholder="Spent today" class="w-full p-1.5 rounded-lg bg-white dark:bg-neutral-900 border text-[10px]">
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+                                <label class="block text-[10px] font-black uppercase text-neutral-400 mb-1">Card 2 (Yesterday)</label>
+                                <input type="text" id="admin-metric-card-2-title" placeholder="Yesterday" class="w-full p-1.5 mb-1.5 rounded-lg bg-white dark:bg-neutral-900 border text-xs font-bold">
+                                <input type="text" id="admin-metric-card-2-sub" placeholder="Previous day outflow" class="w-full p-1.5 rounded-lg bg-white dark:bg-neutral-900 border text-[10px]">
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+                                <label class="block text-[10px] font-black uppercase text-neutral-400 mb-1">Card 3 (7 Days)</label>
+                                <input type="text" id="admin-metric-card-3-title" placeholder="Last 7 Days" class="w-full p-1.5 mb-1.5 rounded-lg bg-white dark:bg-neutral-900 border text-xs font-bold">
+                                <input type="text" id="admin-metric-card-3-sub" placeholder="Weekly velocity" class="w-full p-1.5 rounded-lg bg-white dark:bg-neutral-900 border text-[10px]">
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+                                <label class="block text-[10px] font-black uppercase text-neutral-400 mb-1">Card 4 (30 Days)</label>
+                                <input type="text" id="admin-metric-card-4-title" placeholder="Last 30 Days" class="w-full p-1.5 mb-1.5 rounded-lg bg-white dark:bg-neutral-900 border text-xs font-bold">
+                                <input type="text" id="admin-metric-card-4-sub" placeholder="Monthly outflow" class="w-full p-1.5 rounded-lg bg-white dark:bg-neutral-900 border text-[10px]">
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+                                <label class="block text-[10px] font-black uppercase text-neutral-400 mb-1">Card 5 (Lifetime)</label>
+                                <input type="text" id="admin-metric-card-5-title" placeholder="Total Lifetime" class="w-full p-1.5 mb-1.5 rounded-lg bg-white dark:bg-neutral-900 border text-xs font-bold">
+                                <input type="text" id="admin-metric-card-5-sub" placeholder="All-time recorded spends" class="w-full p-1.5 rounded-lg bg-white dark:bg-neutral-900 border text-[10px]">
+                            </div>
+                        </div>
+                        <div class="flex justify-end pt-1">
+                            <button type="submit" class="px-5 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs shadow-md transition active:scale-95 flex items-center gap-1.5">
+                                <i class="fa-solid fa-check"></i> Save Cards Configuration
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- NEW: 9.8 FOOTER BRAND DETAILS, SOCIALS & CUSTOM CSS INJECTION -->
+                <div class="p-5 rounded-2xl bg-white/70 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 mb-6">
+                    <h4 class="text-sm font-black text-neutral-900 dark:text-white mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-code text-cyan-500"></i> Footer Brand Details & Custom Code Injection
+                    </h4>
+                    <p class="text-xs text-neutral-500 mb-3">Control footer description, social links, and inject custom CSS code.</p>
+
+                    <form onsubmit="handleSaveFooterAndCustomCSS(event)" class="space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Footer Tagline</label>
+                                <input type="text" id="admin-footer-tagline" placeholder="Smart Daily Expense, Budget Splitter & Shopping OS" class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border text-xs font-semibold focus:outline-none focus:border-cyan-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Copyright Label</label>
+                                <input type="text" id="admin-footer-copyright" placeholder="© 2026 KhataFlow Pro. All rights reserved." class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border text-xs font-semibold focus:outline-none focus:border-cyan-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Instagram URL</label>
+                                <input type="text" id="admin-social-instagram" placeholder="https://instagram.com/..." class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border text-xs font-semibold focus:outline-none focus:border-cyan-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Twitter / X URL</label>
+                                <input type="text" id="admin-social-twitter" placeholder="https://x.com/..." class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border text-xs font-semibold focus:outline-none focus:border-cyan-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-paintbrush text-cyan-500"></i> Advanced Custom CSS Injection (Live CSS)</span>
+                                <span class="text-[10px] text-neutral-400 font-mono">Injected into &lt;head&gt;</span>
+                            </label>
+                            <textarea id="admin-custom-css" rows="3" placeholder="/* Custom CSS overrides e.g. .glass-card { box-shadow: 0 10px 40px rgba(0,0,0,0.1); } */" class="w-full p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-mono focus:outline-none focus:border-cyan-500"></textarea>
+                        </div>
+
+                        <div class="flex justify-end pt-1">
+                            <button type="submit" class="px-5 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs shadow-md transition active:scale-95 flex items-center gap-1.5">
+                                <i class="fa-solid fa-check"></i> Save Footer & Custom CSS
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- 10. ADVANCED DATA & SYSTEM PURGE TOOLS -->
                 <div class="p-5 rounded-2xl bg-white/70 dark:bg-neutral-900/60 border border-error-500/30 mb-2">
                     <h4 class="text-sm font-black text-error-600 dark:text-error-400 mb-1 flex items-center gap-2">
@@ -2626,15 +2788,15 @@
         <div class="glass-card w-full max-w-2xl p-5 sm:p-7 rounded-[2rem] shadow-2xl relative max-h-[90vh] flex flex-col border border-white/60 dark:border-neutral-800 overflow-hidden animate-fade-in bg-white/95 dark:bg-neutral-900/95">
             <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-600 via-primary-500 to-emerald-500"></div>
 
-            <div class="flex items-center justify-between mb-4 pb-3 border-b border-neutral-200 dark:border-neutral-800 pt-1">
+            <div class="flex items-center justify-between mb-3 pb-3 border-b border-neutral-200 dark:border-neutral-800 pt-1">
                 <div class="flex items-center gap-3">
                     <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 to-primary-600 text-white flex items-center justify-center shadow-lg text-lg font-black flex-shrink-0">
                         <i class="fa-solid fa-user-secret"></i>
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
-                            <span class="text-[9px] font-black uppercase tracking-wider text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/70 px-2 py-0.5 rounded-full border border-purple-200 dark:border-purple-800">
-                                Real-Time Cloud Inspector
+                            <span class="text-[9px] font-black uppercase tracking-wider text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/70 px-2.5 py-0.5 rounded-full border border-purple-200 dark:border-purple-800">
+                                360° Cloud Data Inspector
                             </span>
                             <span id="inspector-user-phone" class="text-xs font-mono font-bold text-neutral-500"></span>
                         </div>
@@ -2649,350 +2811,74 @@
             </div>
 
             <!-- Summary KPI Strip for this inspected user -->
-            <div class="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-neutral-100/80 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 text-center mb-4">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 p-2.5 rounded-2xl bg-neutral-100/80 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 text-center mb-3">
                 <div>
                     <span class="text-[9px] font-bold uppercase text-neutral-400 block">Total Entries</span>
-                    <span id="inspector-stat-count" class="text-base font-black text-neutral-900 dark:text-white">0</span>
+                    <span id="inspector-stat-count" class="text-sm sm:text-base font-black text-neutral-900 dark:text-white">0</span>
                 </div>
                 <div>
                     <span class="text-[9px] font-bold uppercase text-neutral-400 block">Total Outflow</span>
-                    <span id="inspector-stat-expense" class="text-base font-black text-error-600">₹0</span>
+                    <span id="inspector-stat-expense" class="text-sm sm:text-base font-black text-error-600">₹0</span>
+                </div>
+                <div>
+                    <span class="text-[9px] font-bold uppercase text-neutral-400 block">Total Inflow</span>
+                    <span id="inspector-stat-income" class="text-sm sm:text-base font-black text-emerald-600">₹0</span>
                 </div>
                 <div>
                     <span class="text-[9px] font-bold uppercase text-neutral-400 block">Monthly Budget</span>
-                    <span id="inspector-stat-budget" class="text-base font-black text-primary-600">₹0</span>
+                    <span id="inspector-stat-budget" class="text-sm sm:text-base font-black text-primary-600">₹0</span>
                 </div>
             </div>
 
-            <!-- Inspect User Transactions List -->
-            <div class="flex-1 overflow-y-auto pr-1 space-y-2" id="inspector-transactions-list">
-                <!-- Dynamically populated -->
+            <!-- Data Category Filter Tabs for Admin -->
+            <div class="flex items-center gap-1.5 p-1 mb-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 overflow-x-auto no-scrollbar">
+                <button type="button" onclick="switchInspectorTab('transactions')" id="insp-tab-txs" class="px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap bg-white dark:bg-neutral-900 text-purple-600 dark:text-purple-400 shadow-sm">
+                    <i class="fa-solid fa-receipt mr-1"></i> Transactions (<span id="insp-badge-txs">0</span>)
+                </button>
+                <button type="button" onclick="switchInspectorTab('grocery')" id="insp-tab-grocery" class="px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap text-neutral-500 hover:text-neutral-900 dark:hover:text-white">
+                    <i class="fa-solid fa-basket-shopping mr-1 text-emerald-500"></i> Grocery List (<span id="insp-badge-grocery">0</span>)
+                </button>
+                <button type="button" onclick="switchInspectorTab('hub')" id="insp-tab-hub" class="px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap text-neutral-500 hover:text-neutral-900 dark:hover:text-white">
+                    <i class="fa-solid fa-users mr-1 text-indigo-500"></i> Friends Split (<span id="insp-badge-hub">0</span>)
+                </button>
+                <button type="button" onclick="switchInspectorTab('profile')" id="insp-tab-profile" class="px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap text-neutral-500 hover:text-neutral-900 dark:hover:text-white">
+                    <i class="fa-solid fa-address-card mr-1 text-amber-500"></i> Profile & Business Info
+                </button>
+            </div>
+
+            <!-- Tab 1: Transactions Container -->
+            <div id="inspector-view-transactions" class="flex-1 overflow-y-auto pr-1 space-y-2 max-h-[46vh]">
+                <div id="inspector-transactions-list" class="space-y-2">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Tab 2: Grocery & Shopping Checklist Container -->
+            <div id="inspector-view-grocery" class="flex-1 overflow-y-auto pr-1 space-y-2 max-h-[46vh] hidden">
+                <div id="inspector-grocery-list" class="space-y-2">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Tab 3: Friends Hub Split Container -->
+            <div id="inspector-view-hub" class="flex-1 overflow-y-auto pr-1 space-y-2 max-h-[46vh] hidden">
+                <div id="inspector-hub-list" class="space-y-2">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Tab 4: User Profile & Details Container -->
+            <div id="inspector-view-profile" class="flex-1 overflow-y-auto pr-1 space-y-2.5 max-h-[46vh] hidden">
+                <div id="inspector-profile-details" class="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200 dark:border-neutral-700 text-xs space-y-2">
+                    <!-- Populated dynamically -->
+                </div>
             </div>
 
             <div class="pt-3 mt-3 border-t border-neutral-200 dark:border-neutral-800 flex justify-between items-center text-xs">
-                <span class="text-[10px] text-neutral-400 font-medium">Updates live from Firebase Firestore</span>
-                <button onclick="closeAdminUserInspector()" class="px-5 py-2 rounded-xl bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-bold transition">
-                    Done
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Member Modal - Aligned with App's Primary Blue Brand Palette -->
-    <div id="member-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 sm:p-7 rounded-[2rem] shadow-2xl relative border border-white/60 dark:border-neutral-800 overflow-hidden animate-fade-in bg-white/95 dark:bg-neutral-900/95">
-            <!-- Top Ambient Accent Line matching app's primary gradient -->
-            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary-700 via-primary-500 to-primary-400"></div>
-
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between mb-5 pt-1">
-                <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-primary-700 via-primary-600 to-primary-500 flex items-center justify-center text-white shadow-lg shadow-primary-500/30">
-                        <i class="fa-solid fa-user-plus text-base"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-[9px] font-black uppercase tracking-wider text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/70 px-2.5 py-0.5 rounded-full border border-primary-200/70 dark:border-primary-800/70">Split Directory</span>
-                        </div>
-                        <h3 class="text-base sm:text-lg font-black text-neutral-900 dark:text-white tracking-tight mt-0.5">
-                            Add Group Member
-                        </h3>
-                    </div>
-                </div>
-                <button type="button" onclick="closeAddMemberModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 flex items-center justify-center transition active:scale-95 text-xs">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <form onsubmit="saveMember(event)" class="space-y-4">
-                <!-- Member Name Input -->
-                <div>
-                    <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-200 mb-1.5 flex items-center justify-between">
-                        <span class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-signature text-primary-600 text-xs"></i> Member Name
-                        </span>
-                        <span class="text-[10px] text-neutral-400 font-semibold">Required</span>
-                    </label>
-                    <input type="text" id="modal-member-name" required placeholder="e.g. Rahul Verma" class="w-full px-4 py-3 rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300/80 dark:border-neutral-700 text-xs sm:text-sm font-semibold focus:outline-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 text-neutral-800 dark:text-neutral-100 transition shadow-inner">
-                </div>
-
-                <!-- UPI / Mobile Field with Locked @upi & 10-Digit Validation -->
-                <div>
-                    <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-200 mb-1.5 flex items-center justify-between">
-                        <span class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-mobile-screen-button text-primary-600 text-xs"></i> Mobile Number (UPI Linked)
-                        </span>
-                        <span id="member-digit-count" class="text-[10px] text-neutral-400 font-bold bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-full border border-neutral-200 dark:border-neutral-700">0/10 Digits</span>
-                    </label>
-                    <div class="flex items-center rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300/80 dark:border-neutral-700 overflow-hidden focus-within:border-primary-500 focus-within:ring-4 focus-within:ring-primary-500/10 transition shadow-inner">
-                        <span class="px-3.5 py-3 text-xs font-black text-neutral-600 dark:text-neutral-300 select-none bg-neutral-200/70 dark:bg-neutral-700/60 border-r border-neutral-300/80 dark:border-neutral-700 tracking-wider">+91</span>
-                        <input type="tel" id="modal-member-phone" maxlength="10" oninput="handleMemberPhoneInput(this.value)" placeholder="Enter 10-digit mobile number" class="w-full px-3 py-3 bg-transparent text-xs sm:text-sm font-black tracking-widest focus:outline-none text-neutral-800 dark:text-neutral-100 placeholder:font-normal placeholder:tracking-normal">
-                        <span class="px-3.5 py-3 text-xs font-black text-primary-600 dark:text-primary-400 bg-primary-100/70 dark:bg-primary-950/80 border-l border-neutral-300/80 dark:border-neutral-700 select-none tracking-wide font-mono">@upi</span>
-                    </div>
-                    <div class="flex justify-between items-center mt-1.5 px-1 text-[11px]">
-                        <span class="text-neutral-400">Auto UPI: <strong id="member-preview-upi" class="text-primary-600 font-mono font-bold">@upi</strong></span>
-                        <span id="member-valid-badge" class="font-bold text-neutral-400 text-[10px]">Optional (Needs 10 digits)</span>
-                    </div>
-                </div>
-
-                <!-- Action Buttons: Cancel + Brand Primary Gradient Button -->
-                <div class="grid grid-cols-2 gap-3 pt-2">
-                    <button type="button" onclick="closeAddMemberModal()" class="w-full py-3 px-4 rounded-2xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-bold text-xs transition border border-neutral-200 dark:border-neutral-700 active:scale-95">
-                        Cancel
-                    </button>
-                    <button type="submit" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 hover:from-primary-800 hover:to-primary-600 text-white font-extrabold text-xs tracking-wider uppercase transition shadow-lg shadow-primary-600/30 flex items-center justify-center gap-1.5 active:scale-95 border border-primary-400/20">
-                        <i class="fa-solid fa-user-plus text-xs"></i> Add Friend
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Comprehensive Full User Profile Modal -->
-    <div id="self-upi-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div class="glass-card w-full max-w-lg p-5 sm:p-7 rounded-[2rem] shadow-2xl relative border border-white/60 dark:border-neutral-800 overflow-hidden animate-fade-in bg-white/95 dark:bg-neutral-900/95 my-auto">
-            <!-- Top Gradient Accent -->
-            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary-600 via-primary-500 to-emerald-500"></div>
-
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between mb-4 pb-2 border-b border-neutral-200/80 dark:border-neutral-800 pt-1">
-                <div class="flex items-center gap-3">
-                    <div id="profile-modal-avatar" class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-primary-600 to-primary-500 text-white flex items-center justify-center font-black text-lg shadow-md shadow-primary-500/25 flex-shrink-0">
-                        <i class="fa-solid fa-user-gear"></i>
-                    </div>
-                    <div>
-                        <span class="text-[9px] font-black uppercase tracking-wider text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/70 px-2 py-0.5 rounded-full border border-primary-200/70 dark:border-primary-800/70">
-                            Account & Identity
-                        </span>
-                        <h3 class="text-base sm:text-lg font-black text-neutral-900 dark:text-white tracking-tight mt-0.5">
-                            Edit User Profile Details
-                        </h3>
-                    </div>
-                </div>
-                <button type="button" onclick="closeEditSelfUpiModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 flex items-center justify-center transition active:scale-95 text-xs">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- Profile Form with Extended Information -->
-            <form onsubmit="saveSelfUpi(event)" class="space-y-3.5 max-h-[72vh] overflow-y-auto pr-1">
-                <!-- Section 1: Basic Identity -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">
-                            Full Name <span class="text-error-500">*</span>
-                        </label>
-                        <input type="text" id="modal-self-fullname" required placeholder="e.g. Amit Kumar" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500 transition">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">
-                            Email Address
-                        </label>
-                        <input type="email" id="modal-self-email" placeholder="e.g. amit@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500 transition">
-                    </div>
-                </div>
-
-                <!-- Section 2: Mobile Number & Primary UPI Handle -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1 flex items-center justify-between">
-                            <span>10-Digit Mobile Number <span class="text-error-500">*</span></span>
-                            <span id="profile-phone-digit-count" class="text-[9px] text-neutral-400 font-bold">0/10 Digits</span>
-                        </label>
-                        <div class="flex items-center rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 overflow-hidden focus-within:border-primary-500 transition">
-                            <span class="px-2.5 py-2 text-xs font-bold text-neutral-500 dark:text-neutral-400 select-none bg-neutral-200/60 dark:bg-neutral-700/60 border-r border-neutral-300 dark:border-neutral-700">+91</span>
-                            <input type="tel" id="modal-self-phone" maxlength="10" required oninput="handleProfilePhoneInput(this.value)" placeholder="Enter 10 digits" class="w-full p-2 bg-transparent text-xs font-bold tracking-wider focus:outline-none text-neutral-800 dark:text-neutral-100">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1 flex items-center justify-between">
-                            <span>Primary Payment UPI ID</span>
-                            <span class="text-[9px] text-primary-600 font-bold">Auto-Linked</span>
-                        </label>
-                        <div class="flex items-center rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 overflow-hidden focus-within:border-primary-500 transition">
-                            <input type="text" id="modal-self-custom-upi" placeholder="9876543210@upi" class="w-full p-2 bg-transparent text-xs font-mono font-bold focus:outline-none text-neutral-800 dark:text-neutral-100">
-                            <span class="px-2.5 py-2 text-[10px] font-black text-primary-600 bg-primary-50 dark:bg-primary-950/60 border-l border-neutral-300 dark:border-neutral-700 select-none">UPI</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section 3: Business / Store Details (For Invoices & Bills) -->
-                <div class="p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-700/80 space-y-2.5">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
-                        <i class="fa-solid fa-store text-primary-600"></i> Store / Business & Tax Info (For Invoices)
-                    </span>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                        <div>
-                            <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">
-                                Store / Business Name
-                            </label>
-                            <input type="text" id="modal-self-business" placeholder="e.g. Kumar General Store" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">
-                                GSTIN / Tax ID (Optional)
-                            </label>
-                            <input type="text" id="modal-self-gstin" maxlength="15" placeholder="e.g. 07AAAAA0000A1Z5" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-mono font-bold uppercase focus:outline-none focus:border-primary-500">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section 4: Address Details -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    <div class="sm:col-span-2">
-                        <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">
-                            Address / Area
-                        </label>
-                        <input type="text" id="modal-self-address" placeholder="e.g. Shop #4, Main Market, Civil Lines" class="w-full px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-medium focus:outline-none focus:border-primary-500">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">
-                            City & PIN
-                        </label>
-                        <input type="text" id="modal-self-city-pin" placeholder="e.g. Delhi - 110001" class="w-full px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-medium focus:outline-none focus:border-primary-500">
-                    </div>
-                </div>
-
-                <!-- Cloud Sync Status Banner -->
-                <div class="p-2.5 rounded-xl bg-primary-50/70 dark:bg-primary-950/40 border border-primary-200/60 dark:border-primary-800/60 text-[10px] text-neutral-600 dark:text-neutral-300 flex items-center justify-between">
-                    <span class="flex items-center gap-1.5 font-medium">
-                        <i class="fa-solid fa-cloud-arrow-up text-primary-600"></i> Saves to your profile & syncs with Firebase Cloud
-                    </span>
-                    <span class="font-extrabold text-emerald-600 dark:text-emerald-400">Encrypted</span>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="grid grid-cols-2 gap-2.5 pt-2">
-                    <button type="button" onclick="closeEditSelfUpiModal()" class="w-full py-2.5 px-3 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-bold text-xs transition border border-neutral-200 dark:border-neutral-700 active:scale-95">
-                        Cancel
-                    </button>
-                    <button type="submit" class="w-full py-2.5 px-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-xs tracking-wider uppercase transition shadow-md shadow-primary-600/30 flex items-center justify-center gap-1.5 active:scale-95">
-                        <i class="fa-solid fa-check text-xs"></i> Save Profile Details
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Ultra-Sleek Luxury Fintech UPI Settlement Card with Detailed Information -->
-    <div id="upi-qr-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div class="w-full max-w-[370px] bg-white dark:bg-neutral-900 rounded-[1.8rem] shadow-[0_20px_50px_rgba(0,0,0,0.35)] relative border border-neutral-200/80 dark:border-neutral-800 overflow-hidden animate-fade-in p-4 sm:p-4.5 transition-all text-center my-auto">
-            
-            <!-- Top Ambient Bar -->
-            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-600 via-sky-500 to-emerald-500"></div>
-
-            <!-- Header: Status, Reference & Close -->
-            <div class="flex items-center justify-between mb-1.5 pt-0.5">
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/60 dark:border-emerald-800/60 text-[9px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    NPCI 2.0
+                <span class="text-[10px] text-neutral-400 font-medium flex items-center gap-1.5">
+                    <i class="fa-solid fa-cloud text-emerald-500"></i> Live data fetched directly from Cloud Firestore
                 </span>
-                <span id="qr-ref-code" class="text-[9px] font-mono font-bold text-neutral-400">REF-44564</span>
-                <button onclick="closeUpiQrModal()" class="w-6 h-6 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-500 dark:text-neutral-400 flex items-center justify-center transition active:scale-95 text-[11px]">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- Payee Profile & Amount -->
-            <div class="flex flex-col items-center mb-2">
-                <div class="flex items-center gap-2 mb-0.5">
-                    <div class="relative">
-                        <div id="qr-payee-avatar" class="w-8 h-8 rounded-xl bg-gradient-to-tr from-primary-600 to-primary-500 text-white font-black text-sm flex items-center justify-center shadow-sm">
-                            A
-                        </div>
-                        <div class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 text-white text-[7px] flex items-center justify-center border border-white dark:border-neutral-900 shadow-sm">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-                    </div>
-                    <div class="text-left">
-                        <div class="text-[8px] font-bold text-neutral-400 uppercase tracking-wider leading-none">Beneficiary</div>
-                        <div id="qr-display-payee-name" class="text-xs sm:text-sm font-extrabold text-neutral-800 dark:text-neutral-100 leading-tight">
-                            Amit Kumar
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex items-baseline justify-center gap-1">
-                    <div id="qr-display-amount" class="text-2xl sm:text-3xl font-black text-primary-600 dark:text-primary-400 tracking-tight">
-                        ₹0
-                    </div>
-                </div>
-                <div class="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-600 dark:text-emerald-400">
-                    <i class="fa-solid fa-shield-halved text-[8px]"></i> Zero Fee • Instant Bank Settlement
-                </div>
-            </div>
-
-            <!-- Contextual Settlement Breakdown Info Box -->
-            <div class="mb-2 p-2 rounded-xl bg-neutral-50 dark:bg-neutral-950/60 border border-neutral-200/70 dark:border-neutral-800 text-left text-[10px] space-y-1">
-                <div class="flex items-center justify-between text-neutral-600 dark:text-neutral-300">
-                    <span class="text-neutral-400 text-[9px] uppercase font-bold">Route:</span>
-                    <span id="qr-transfer-route" class="font-bold text-neutral-800 dark:text-neutral-200 truncate max-w-[210px]">You ➔ Payee</span>
-                </div>
-                <div class="flex items-center justify-between text-neutral-600 dark:text-neutral-300">
-                    <span class="text-neutral-400 text-[9px] uppercase font-bold">Purpose:</span>
-                    <span id="qr-purpose-tag" class="font-medium text-neutral-700 dark:text-neutral-300">Friends Hub Split Bill</span>
-                </div>
-                <div class="flex items-center justify-between text-neutral-600 dark:text-neutral-300 border-t border-neutral-200/50 dark:border-neutral-800/80 pt-0.5">
-                    <span class="text-neutral-400 text-[9px] uppercase font-bold">Security:</span>
-                    <span class="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 text-[9px]">
-                        <i class="fa-solid fa-lock text-[8px]"></i> 256-Bit Encrypted
-                    </span>
-                </div>
-            </div>
-
-            <!-- Centered QR Viewport (Compacted ~25%) -->
-            <div class="inline-block p-2 bg-neutral-50 dark:bg-neutral-950 rounded-xl border border-neutral-200/90 dark:border-neutral-800 shadow-inner mb-1.5">
-                <div class="relative w-[136px] h-[136px] flex items-center justify-center bg-white p-1 rounded-lg">
-                    <img id="upi-qr-img" src="" alt="UPI Settlement QR" class="w-full h-full object-contain">
-                </div>
-            </div>
-
-            <!-- Supported Apps Pill -->
-            <div class="flex items-center justify-center gap-1.5 text-[9px] font-bold text-neutral-400 mb-1.5">
-                <span class="text-blue-600">GPay</span>
-                <span>•</span>
-                <span class="text-purple-600">PhonePe</span>
-                <span>•</span>
-                <span class="text-sky-500">Paytm</span>
-                <span>•</span>
-                <span class="text-orange-500">BHIM</span>
-                <span>•</span>
-                <span class="text-emerald-600">Any UPI</span>
-            </div>
-
-            <!-- 3-Step Clear User Guidance -->
-            <div class="grid grid-cols-3 gap-1 p-1.5 rounded-lg bg-primary-50/60 dark:bg-primary-950/30 border border-primary-100 dark:border-primary-900/40 text-[8px] font-semibold text-neutral-600 dark:text-neutral-300 mb-2">
-                <div class="flex items-center justify-center gap-1">
-                    <span class="w-3.5 h-3.5 rounded-full bg-primary-600 text-white text-[8px] font-black flex items-center justify-center flex-shrink-0">1</span>
-                    <span>Any UPI App</span>
-                </div>
-                <div class="flex items-center justify-center gap-1 border-x border-primary-200/40 dark:border-primary-800/40 px-0.5">
-                    <span class="w-3.5 h-3.5 rounded-full bg-primary-600 text-white text-[8px] font-black flex items-center justify-center flex-shrink-0">2</span>
-                    <span>Scan Code</span>
-                </div>
-                <div class="flex items-center justify-center gap-1">
-                    <span class="w-3.5 h-3.5 rounded-full bg-primary-600 text-white text-[8px] font-black flex items-center justify-center flex-shrink-0">3</span>
-                    <span>Enter PIN</span>
-                </div>
-            </div>
-
-            <!-- Bottom Beneficiary Info & Copy Box -->
-            <div class="p-2 rounded-xl bg-neutral-100/90 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700/80 flex items-center justify-between gap-2 mb-2">
-                <div class="text-left px-1 min-w-0 flex-1">
-                    <div class="text-[8px] uppercase font-bold text-neutral-400 leading-none">Beneficiary UPI ID</div>
-                    <div id="qr-clean-upi" class="text-[11px] font-mono font-bold text-neutral-800 dark:text-neutral-200 truncate mt-0.5">user@upi</div>
-                </div>
-                <button onclick="copyUpiFromQrModal()" class="px-2.5 py-1 rounded-lg bg-white dark:bg-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-600 text-primary-600 dark:text-primary-300 font-bold text-[11px] flex items-center gap-1 shadow-sm border border-neutral-200/80 dark:border-neutral-600 active:scale-95 transition">
-                    <i class="fa-solid fa-copy text-[10px]"></i> Copy
-                </button>
-            </div>
-
-            <!-- Dual Action Buttons: Direct Mobile Pay Intent + Done -->
-            <div class="grid grid-cols-2 gap-2">
-                <button type="button" onclick="openPaymentAppChooser()" class="py-2 px-2.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition active:scale-95 border border-neutral-200 dark:border-neutral-700">
-                    <i class="fa-solid fa-mobile-screen"></i> Pay on App
-                </button>
-                <button onclick="closeUpiQrModal()" class="py-2 px-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-[11px] tracking-wider uppercase shadow-md shadow-primary-600/25 transition active:scale-[0.98]">
+                <button onclick="closeAdminUserInspector()" class="px-5 py-2 rounded-xl bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-bold transition">
                     Done / Close
                 </button>
             </div>
@@ -3231,6 +3117,21 @@
                 </div>
             </div>
 
+            <!-- Modal Action Buttons -->
+            <div class="grid grid-cols-3 gap-2 pt-2 border-t border-neutral-200 dark:border-neutral-800">
+                <button type="button" onclick="downloadCurrentModalInvoice('pdf')" class="py-2.5 px-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition">
+                    <i class="fa-solid fa-file-pdf"></i> PDF
+                </button>
+                <button type="button" onclick="downloadCurrentModalInvoice('image')" class="py-2.5 px-3 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition">
+                    <i class="fa-solid fa-image"></i> PNG
+                </button>
+                <button type="button" onclick="closeInvoiceDetailModal()" class="py-2.5 px-3 rounded-xl bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-200 font-bold text-xs active:scale-95 transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK Modular Scripts (Auth & Firestore) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -3239,15 +3140,14 @@
             signInWithEmailAndPassword, 
             createUserWithEmailAndPassword, 
             signOut, 
-            onAuthStateChanged,
-            signInWithCustomToken,
-            signInAnonymously
+            onAuthStateChanged
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { 
             getFirestore, 
             doc, 
             setDoc, 
             getDoc, 
+            getDocs,
             collection, 
             onSnapshot, 
             deleteDoc 
@@ -3269,12 +3169,17 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Helper to format user identifiers for Firebase Email Auth
-        function formatFirebaseEmail(identifier) {
-            const clean = identifier.trim().toLowerCase();
-            if (clean.includes('@')) return clean;
-            const digits = clean.replace(/\D/g, '');
-            return digits ? `${digits}@khataflow.app` : `${clean}@khataflow.app`;
+        // Dedicated Secondary App for Background User Provisioning by Admin
+        // This prevents the Admin from being signed out when creating accounts for other users
+        let workerApp = null;
+        let workerAuth = null;
+        let workerDb = null;
+        try {
+            workerApp = initializeApp(firebaseConfig, "KhataAdminWorker");
+            workerAuth = getAuth(workerApp);
+            workerDb = getFirestore(workerApp);
+        } catch (e) {
+            // Already initialized or secondary worker fallback
         }
 
         // Expose Firebase tools to global window scope
@@ -3283,9 +3188,196 @@
         window.fbDoc = doc;
         window.fbSetDoc = setDoc;
         window.fbGetDoc = getDoc;
+        window.fbGetDocs = getDocs;
         window.fbCollection = collection;
         window.fbOnSnapshot = onSnapshot;
         window.fbDeleteDoc = deleteDoc;
+
+        // Dedicated Cloud User Creator for Admin Panel (Writes identical schema to Firestore)
+        window.createCloudUserFromAdmin = async function(userData) {
+            const rawPhone = userData.phone || userData.username || '';
+            const cleanPhone = safeExtractPhone(rawPhone);
+            const userEmail = userData.email || (cleanPhone ? `${cleanPhone}@khataflow.app` : `${userData.username || 'user'}@khataflow.app`);
+            const userPassword = userData.password || "123456";
+            const nowIso = new Date().toISOString();
+
+            let targetUid = userData.uid || null;
+            let activeDb = db;
+
+            // 1. If we have the secondary worker auth instance, authenticate in background to fulfill `request.auth != null`
+            if (workerAuth && workerDb) {
+                try {
+                    const workerCred = await createUserWithEmailAndPassword(workerAuth, userEmail, userPassword);
+                    if (workerCred && workerCred.user) {
+                        targetUid = workerCred.user.uid;
+                        activeDb = workerDb;
+                    }
+                } catch (workerErr) {
+                    // If user is already registered in Firebase Auth, attempt signing in with worker to get valid auth token
+                    if (workerErr.code === 'auth/email-already-in-use') {
+                        try {
+                            const signinCred = await signInWithEmailAndPassword(workerAuth, userEmail, userPassword);
+                            if (signinCred && signinCred.user) {
+                                targetUid = signinCred.user.uid;
+                                activeDb = workerDb;
+                            }
+                        } catch (e2) {
+                            console.warn("Worker auth token retrieval notice:", e2?.message);
+                        }
+                    } else {
+                        console.warn("Background worker user creation notice:", workerErr?.message);
+                    }
+                }
+            }
+
+            // Fallback unique UID if worker auth was bypassed
+            if (!targetUid) {
+                targetUid = userData.uid || `user_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+            }
+
+            try {
+                // 2. Write to public_users with identical schema to self-registered users
+                const publicDocRef = doc(activeDb, 'public_users', targetUid);
+                await setDoc(publicDocRef, {
+                    uid: targetUid,
+                    id: targetUid,
+                    name: userData.name || 'User',
+                    phone: cleanPhone || '',
+                    email: userEmail,
+                    username: cleanPhone || userData.username || targetUid,
+                    address: userData.address || '',
+                    businessName: userData.businessName || '',
+                    cityPin: userData.cityPin || '',
+                    gstin: userData.gstin || '',
+                    isBlocked: false,
+                    totalTransactions: 0,
+                    totalVolume: 0,
+                    totalIncome: 0,
+                    budget: 15000,
+                    recentTransactions: '[]',
+                    lastUpdated: nowIso,
+                    createdAt: nowIso
+                }, { merge: true });
+
+                // 3. Initialize workspace document in users/{targetUid}/workspace/data
+                const workspaceDocRef = doc(activeDb, 'users', targetUid, 'workspace', 'data');
+                await setDoc(workspaceDocRef, {
+                    budget: 15000,
+                    categoryBudgets: {},
+                    transactions: '[]',
+                    splitMembers: JSON.stringify([{ name: userData.name, upi: cleanPhone ? `${cleanPhone}@upi` : '@upi' }]),
+                    splitBills: '[]',
+                    groceryItems: '[]',
+                    groceryInvoices: '[]',
+                    merchantPhone: cleanPhone || '',
+                    merchantUpi: cleanPhone ? `${cleanPhone}@upi` : '@upi',
+                    userProfile: {
+                        name: userData.name,
+                        phone: cleanPhone || '',
+                        email: userEmail,
+                        upi: cleanPhone ? `${cleanPhone}@upi` : '@upi',
+                        registered: true,
+                        dateJoined: nowIso
+                    },
+                    lastSyncedAt: nowIso
+                }, { merge: true });
+
+                // Sign out worker auth session cleanly so background instance stays fresh
+                if (workerAuth && workerAuth.currentUser) {
+                    signOut(workerAuth).catch(() => {});
+                }
+
+                console.log("Admin successfully synchronized user to Firestore:", targetUid);
+                return { success: true, uid: targetUid };
+            } catch (err) {
+                if (err && (err.code === 'permission-denied' || (err.message && err.message.includes('permissions')))) {
+                    console.info("Firestore user creation requires Firestore rule permission or verified Auth session.");
+                } else {
+                    console.warn("createCloudUserFromAdmin notice:", err?.message || err);
+                }
+                return { success: false, uid: targetUid, error: err };
+            }
+        };
+
+        function safeExtractPhone(input) {
+            if (!input) return '';
+            const digits = String(input).replace(/\D/g, '');
+            return digits.length >= 10 ? digits.slice(-10) : digits;
+        }
+
+        function formatFirebaseEmail(identifier) {
+            const clean = identifier.trim().toLowerCase();
+            if (clean.includes('@')) return clean;
+            const digits = clean.replace(/\D/g, '');
+            return digits ? `${digits}@khataflow.app` : `${clean}@khataflow.app`;
+        }
+
+        // Global Direct Firestore Fetch for All Users
+        window.fetchFirestoreUsersNow = async function() {
+            try {
+                const usersColRef = collection(db, 'public_users');
+                const snapshot = await getDocs(usersColRef).catch((err) => {
+                    if (err && (err.code === 'permission-denied' || (err.message && err.message.includes('permissions')))) {
+                        console.info("Firestore user directory requires authenticated session or rule permission.");
+                    } else {
+                        console.warn("fetchFirestoreUsersNow notice:", err?.message || err);
+                    }
+                    return null;
+                });
+                if (!snapshot) return [];
+
+                const liveUsers = [];
+                snapshot.forEach(docSnap => {
+                    liveUsers.push({ id: docSnap.id, uid: docSnap.id, ...docSnap.data() });
+                });
+                console.log("Fetched live users from Firestore:", liveUsers.length);
+                if (typeof window.syncCloudUsersToLocal === 'function') {
+                    window.syncCloudUsersToLocal(liveUsers);
+                }
+                return liveUsers;
+            } catch (err) {
+                if (err && (err.code === 'permission-denied' || (err.message && err.message.includes('permissions')))) {
+                    console.info("Firestore user directory requires authenticated session.");
+                } else {
+                    console.warn("fetchFirestoreUsersNow notice:", err?.message || err);
+                }
+                return [];
+            }
+        };
+
+        // Real-time listener for Admin - Connected directly to Firestore public_users
+        let adminUsersUnsubscribe = null;
+        window.listenToAllUsersForAdmin = function() {
+            if (adminUsersUnsubscribe) {
+                try { adminUsersUnsubscribe(); } catch(e) {}
+                adminUsersUnsubscribe = null;
+            }
+            try {
+                const usersColRef = collection(db, 'public_users');
+
+                // 1. Immediate fetch
+                window.fetchFirestoreUsersNow().catch(() => {});
+
+                // 2. Real-time snapshot listener
+                adminUsersUnsubscribe = onSnapshot(usersColRef, (snapshot) => {
+                    const liveUsers = [];
+                    snapshot.forEach(docSnap => {
+                        liveUsers.push({ id: docSnap.id, uid: docSnap.id, ...docSnap.data() });
+                    });
+                    if (typeof window.syncCloudUsersToLocal === 'function') {
+                        window.syncCloudUsersToLocal(liveUsers);
+                    }
+                }, (err) => {
+                    if (err && (err.code === 'permission-denied' || (err.message && err.message.includes('permissions')))) {
+                        console.info("Admin live listener paused: awaiting elevated permissions.");
+                    } else {
+                        console.warn("Firestore snapshot notice:", err?.message);
+                    }
+                });
+            } catch(e) {
+                console.warn("listenToAllUsersForAdmin notice:", e);
+            }
+        };
 
         // Cloud status indicator updater
         window.setCloudStatus = function(status, text) {
@@ -3304,7 +3396,6 @@
             }
         };
 
-        // Real-Time Sync User Workspace from Firestore
         let userDocUnsubscribe = null;
         let userStatusUnsubscribe = null;
 
@@ -3324,7 +3415,9 @@
                         }
                     }
                 }, (err) => {
-                    console.warn("User status watcher:", err.message);
+                    if (err && err.code !== 'permission-denied') {
+                        console.warn("User status watcher notice:", err.message);
+                    }
                 });
             } catch(e) {
                 console.warn(e);
@@ -3338,10 +3431,7 @@
             }
             
             try {
-                // Direct standard user document path
                 const userDocRef = doc(db, 'users', uid, 'workspace', 'data');
-                
-                // 1. Immediate One-Time Fetch to avoid waiting for snapshot event
                 getDoc(userDocRef).then((snap) => {
                     if (snap && snap.exists()) {
                         const cloudData = snap.data();
@@ -3350,14 +3440,14 @@
                             window.setCloudStatus('online', 'Cloud Synced');
                         }
                     } else {
-                        // If new device and cloud document doesn't exist yet, push current local state
-                        window.pushStateToCloud();
+                        window.pushStateToCloud().catch(() => {});
                     }
                 }).catch(err => {
-                    console.warn("Direct cloud fetch notice:", err.message);
+                    if (err && err.code !== 'permission-denied') {
+                        console.warn("Direct cloud fetch notice:", err.message);
+                    }
                 });
 
-                // 2. Real-Time Persistent Listener across all devices
                 userDocUnsubscribe = onSnapshot(userDocRef, (snapshot) => {
                     if (snapshot && snapshot.exists()) {
                         const cloudData = snapshot.data();
@@ -3367,7 +3457,9 @@
                     }
                     window.setCloudStatus('online', 'Cloud Synced');
                 }, (error) => {
-                    console.warn("Firestore sync notification:", error.code || error.message);
+                    if (error && error.code !== 'permission-denied') {
+                        console.warn("Firestore sync notification:", error.code || error.message);
+                    }
                     window.setCloudStatus('offline', 'Saved Locally');
                 });
             } catch (err) {
@@ -3376,7 +3468,6 @@
             }
         }
 
-        // Firebase Auth State Listener
         onAuthStateChanged(auth, async (user) => {
             if (user && user.uid) {
                 const currentSession = window.getAuthSession();
@@ -3393,18 +3484,13 @@
                     uid: user.uid
                 });
 
-                // Auto-propagate user profile data across all modules
                 if (typeof window.propagateUserProfileAcrossApp === 'function') {
                     window.propagateUserProfileAcrossApp();
                 }
 
-                // Immediately trigger cloud data fetch for this user ID
                 listenToUserCloudData(user.uid);
                 listenToUserStatus(user.uid);
-                
-                // Always keep admin listener running so the admin panel is 100% updated
                 window.listenToAllUsersForAdmin();
-
                 window.dismissAuthGate();
             } else {
                 if (userDocUnsubscribe) {
@@ -3415,6 +3501,10 @@
                     try { userStatusUnsubscribe(); } catch(e) {}
                     userStatusUnsubscribe = null;
                 }
+                if (adminUsersUnsubscribe) {
+                    try { adminUsersUnsubscribe(); } catch(e) {}
+                    adminUsersUnsubscribe = null;
+                }
                 window.setCloudStatus('offline', 'Local Mode');
                 const session = window.getAuthSession();
                 if (!session || !session.isLoggedIn) {
@@ -3423,7 +3513,6 @@
             }
         });
 
-        // Global Firebase Auth Methods
         window.firebaseLogin = async function(identifier, password) {
             const email = formatFirebaseEmail(identifier);
             window.setCloudStatus('syncing', 'Authenticating...');
@@ -3435,13 +3524,13 @@
             window.setCloudStatus('syncing', 'Creating Cloud Profile...');
             const cred = await createUserWithEmailAndPassword(auth, email, password);
             
-            // Record user in public directory for admin view
             try {
                 if (cred && cred.user && cred.user.uid) {
-                    const cleanPhone = extractCleanPhone(identifier);
+                    const cleanPhone = safeExtractPhone(identifier);
                     const userDirRef = doc(db, 'public_users', cred.user.uid);
                     await setDoc(userDirRef, {
                         uid: cred.user.uid,
+                        id: cred.user.uid,
                         name: fullName || identifier,
                         username: cleanPhone || identifier,
                         email: email,
@@ -3463,34 +3552,9 @@
             return await signOut(auth);
         };
 
-        // Real-time listener for Admin: Listens to all public_users in Firestore
-        let adminUsersUnsubscribe = null;
-        window.listenToAllUsersForAdmin = function() {
-            if (adminUsersUnsubscribe) {
-                try { adminUsersUnsubscribe(); } catch(e) {}
-            }
-            try {
-                const usersColRef = collection(db, 'public_users');
-                adminUsersUnsubscribe = onSnapshot(usersColRef, (snapshot) => {
-                    const liveUsers = [];
-                    snapshot.forEach(docSnap => {
-                        liveUsers.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                    if (liveUsers.length > 0) {
-                        window.syncCloudUsersToLocal(liveUsers);
-                    }
-                }, (err) => {
-                    console.warn("Admin users live listener notice:", err.message);
-                });
-            } catch(e) {
-                console.warn("Admin listener setup:", e);
-            }
-        };
-
-        // Push current appState to Cloud Firestore and update public metrics
+        // Push state to Cloud Firestore (Both private workspace & public feed)
         window.pushStateToCloud = async function() {
             const user = auth.currentUser;
-            // Only push if there is an active Firebase authenticated user
             if (!user || !user.uid) {
                 window.setCloudStatus('offline', 'Saved Locally');
                 return;
@@ -3501,10 +3565,10 @@
                 const txs = appState.transactions || [];
                 const totalExp = txs.filter(t => t.type === 'expense').reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
                 const totalInc = txs.filter(t => t.type === 'income').reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
-                const cleanPhone = appState.userProfile?.phone || appState.merchantPhone || extractCleanPhone(user.email);
+                const cleanPhone = appState.userProfile?.phone || appState.merchantPhone || safeExtractPhone(user.email);
                 const currentName = appState.userProfile?.name || user.displayName || (user.email ? user.email.split('@')[0] : 'User');
 
-                // 1. Save Full Workspace Data Document
+                // 1. Private User Workspace
                 const userDocRef = doc(db, 'users', user.uid, 'workspace', 'data');
                 await setDoc(userDocRef, {
                     budget: appState.budget || 0,
@@ -3520,36 +3584,31 @@
                     lastSyncedAt: new Date().toISOString()
                 }, { merge: true });
 
-                // 2. Save Live Aggregated Activity & Complete Payload to public_users for Instant Admin Visibility
-                try {
-                    const publicUserRef = doc(db, 'public_users', user.uid);
-                    await setDoc(publicUserRef, {
-                        uid: user.uid,
-                        name: currentName,
-                        phone: cleanPhone,
-                        username: cleanPhone || user.email.split('@')[0],
-                        email: appState.userProfile?.email || user.email || '',
-                        totalTransactions: txs.length,
-                        totalVolume: totalExp,
-                        totalIncome: totalInc,
-                        budget: appState.budget || 0,
-                        businessName: appState.userProfile?.businessName || '',
-                        gstin: appState.userProfile?.gstin || '',
-                        address: appState.userProfile?.address || '',
-                        cityPin: appState.userProfile?.cityPin || '',
-                        recentTransactions: JSON.stringify(txs.slice(0, 50)),
-                        lastActiveAt: new Date().toISOString()
-                    }, { merge: true });
-                } catch(e) {
-                    console.warn("Public user summary sync:", e.message);
-                }
+                // 2. Shared Public Registry (Visible to Admin & Cross-Device)
+                const publicUserRef = doc(db, 'public_users', user.uid);
+                await setDoc(publicUserRef, {
+                    uid: user.uid,
+                    id: user.uid,
+                    name: currentName,
+                    phone: cleanPhone,
+                    username: cleanPhone || user.email.split('@')[0],
+                    email: appState.userProfile?.email || user.email || '',
+                    totalTransactions: txs.length,
+                    totalVolume: totalExp,
+                    totalIncome: totalInc,
+                    budget: appState.budget || 0,
+                    businessName: appState.userProfile?.businessName || '',
+                    gstin: appState.userProfile?.gstin || '',
+                    address: appState.userProfile?.address || '',
+                    cityPin: appState.userProfile?.cityPin || '',
+                    recentTransactions: JSON.stringify(txs.slice(0, 50)),
+                    lastActiveAt: new Date().toISOString()
+                }, { merge: true });
 
                 window.setCloudStatus('online', 'Cloud Synced');
             } catch (err) {
                 window.setCloudStatus('offline', 'Saved Locally');
-                if (err.code !== 'permission-denied') {
-                    console.warn("Cloud sync note:", err.message);
-                }
+                console.warn("Cloud sync note:", err.message);
             }
         };
     </script>
@@ -3585,67 +3644,58 @@
 
         // Cloud users synchronization function for Admin panel
         window.syncCloudUsersToLocal = function(cloudUsers) {
-            if (!Array.isArray(cloudUsers) || cloudUsers.length === 0) return;
+            if (!Array.isArray(cloudUsers)) return;
             try {
-                let localUsers = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
-                let hasChanges = false;
-
-                cloudUsers.forEach(cu => {
-                    const cleanPhone = cu.phone || (cu.username ? extractCleanPhone(cu.username) : '') || cu.uid;
-                    const existingIdx = localUsers.findIndex(u => 
-                        (u.uid && cu.uid && u.uid === cu.uid) || 
-                        (u.username && cu.username && u.username.toLowerCase() === cu.username.toLowerCase()) ||
-                        (cleanPhone && u.username === cleanPhone)
-                    );
-
-                    if (existingIdx >= 0) {
-                        localUsers[existingIdx] = {
-                            ...localUsers[existingIdx],
-                            uid: cu.uid || localUsers[existingIdx].uid,
-                            name: cu.name || localUsers[existingIdx].name,
-                            email: cu.email || localUsers[existingIdx].email,
-                            phone: cu.phone || localUsers[existingIdx].phone,
-                            isBlocked: cu.isBlocked !== undefined ? cu.isBlocked : localUsers[existingIdx].isBlocked,
-                            totalTransactions: cu.totalTransactions !== undefined ? cu.totalTransactions : localUsers[existingIdx].totalTransactions,
-                            totalVolume: cu.totalVolume !== undefined ? cu.totalVolume : localUsers[existingIdx].totalVolume,
-                            budget: cu.budget !== undefined ? cu.budget : localUsers[existingIdx].budget,
-                            recentTransactions: cu.recentTransactions || localUsers[existingIdx].recentTransactions,
-                            lastActiveAt: cu.lastActiveAt || localUsers[existingIdx].lastActiveAt
-                        };
-                        hasChanges = true;
-                    } else {
-                        localUsers.push({
-                            uid: cu.uid,
-                            username: cu.username || cleanPhone || cu.uid,
-                            email: cu.email || '',
-                            phone: cleanPhone || '',
-                            password: cu.password || '******',
-                            name: cu.name || cu.username || 'User',
-                            isBlocked: !!cu.isBlocked,
-                            totalTransactions: cu.totalTransactions || 0,
-                            totalVolume: cu.totalVolume || 0,
-                            budget: cu.budget || 0,
-                            recentTransactions: cu.recentTransactions || '[]',
-                            dateJoined: cu.createdAt || new Date().toISOString()
-                        });
-                        hasChanges = true;
-                    }
+                let formattedUsers = cloudUsers.map(cu => {
+                    const uniqueKey = cu.id || cu.uid || `user-${Date.now()}`;
+                    return {
+                        uid: uniqueKey,
+                        id: uniqueKey,
+                        name: cu.name || 'User',
+                        phone: cu.phone || '',
+                        username: cu.phone || cu.username || cu.email || uniqueKey,
+                        email: cu.email || '',
+                        password: cu.password || '******',
+                        isBlocked: Boolean(cu.isBlocked),
+                        totalTransactions: Number(cu.totalTransactions) || 0,
+                        totalVolume: Number(cu.totalVolume) || 0,
+                        budget: Number(cu.budget) || 0,
+                        businessName: cu.businessName || '',
+                        recentTransactions: cu.recentTransactions || '[]',
+                        lastActiveAt: cu.lastActiveAt || cu.lastUpdated || new Date().toISOString(),
+                        dateJoined: cu.createdAt || cu.lastUpdated || new Date().toISOString()
+                    };
                 });
 
-                if (hasChanges) {
-                    localStorage.setItem('khataflow_registered_users', JSON.stringify(localUsers));
-                }
+                // Save directly to localStorage
+                localStorage.setItem('khataflow_registered_users', JSON.stringify(formattedUsers));
 
-                // If currently viewing admin panel, immediately update the users list and KPI counters
+                // Instantly update the counter and list in DOM
                 updateAdminDashboardMetrics();
-                const adminSection = document.getElementById('section-admin');
-                if (adminSection && !adminSection.classList.contains('hidden')) {
-                    renderAdminUsersList();
-                }
+                renderAdminUsersList();
             } catch (err) {
-                console.warn("syncCloudUsersToLocal warning:", err);
+                console.error("syncCloudUsersToLocal error:", err);
             }
         };
+
+        // Force Admin Cloud Re-sync Handler
+        function forceAdminCloudReSync() {
+            showToast("Fetching all users from Firebase Cloud...", "success");
+            if (typeof window.fetchFirestoreUsersNow === 'function') {
+                window.fetchFirestoreUsersNow().then(users => {
+                    updateAdminDashboardMetrics();
+                    renderAdminUsersList();
+                    showToast(`Synced ${users.length} users from Cloud!`, "success");
+                });
+            } else if (typeof window.listenToAllUsersForAdmin === 'function') {
+                window.listenToAllUsersForAdmin();
+                setTimeout(() => {
+                    updateAdminDashboardMetrics();
+                    renderAdminUsersList();
+                }, 500);
+            }
+        }
+        window.forceAdminCloudReSync = forceAdminCloudReSync;
 
         // Chart.js instances
         let pieChartInstance = null;
@@ -3761,8 +3811,8 @@
 
         // Secure Master Admin Identifiers & Credentials
         const SECURE_ADMIN_ACCOUNTS = [
-            { username: 'admin@khataflow', pass: 'Amit@MTO2006' },
-            { username: 'theamitmto', pass: 'Amit@MTO2006' }
+            { username: 'admin@khataflow.pro', pass: 'KhataMaster#9824$Secure' },
+            { username: 'admin_khata_master', pass: 'KhataMaster#9824$Secure' }
         ];
 
         function isMasterAdminLogin(identifier, password) {
@@ -4555,17 +4605,27 @@
             const adsCountEl = document.getElementById('admin-stat-ads-count');
             const usersCountEl = document.getElementById('admin-stat-users-count');
 
-            const totalTxs = appState.transactions ? appState.transactions.length : 0;
-            const totalVol = appState.transactions
+            let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
+
+            // Aggregate volume and transactions across ALL registered users
+            let totalTxs = appState.transactions ? appState.transactions.length : 0;
+            let totalVol = appState.transactions
                 ? appState.transactions.filter(t => t.type === 'expense').reduce((s, t) => s + (Number(t.amount) || 0), 0)
                 : 0;
 
-            let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
+            usersList.forEach(u => {
+                if (u.totalTransactions && u.totalTransactions > 0) {
+                    totalTxs += Number(u.totalTransactions);
+                }
+                if (u.totalVolume && u.totalVolume > 0) {
+                    totalVol += Number(u.totalVolume);
+                }
+            });
 
             if (txCountEl) txCountEl.textContent = totalTxs;
             if (volumeEl) volumeEl.textContent = `₹${totalVol.toLocaleString('en-IN')}`;
             if (adsCountEl) adsCountEl.textContent = SPONSORED_ADS_LIST.length;
-            if (usersCountEl) usersCountEl.textContent = Math.max(usersList.length, 1);
+            if (usersCountEl) usersCountEl.textContent = usersList.length;
         }
 
         function renderAdminColorPresets() {
@@ -4714,6 +4774,149 @@
             }
         }
 
+        function openAdminAddUserModal() {
+            const nameInput = document.getElementById('admin-new-user-fullname');
+            const userInput = document.getElementById('admin-new-user-username');
+            const passInput = document.getElementById('admin-new-user-password');
+            if (nameInput) nameInput.value = '';
+            if (userInput) userInput.value = '';
+            if (passInput) passInput.value = '123456';
+
+            const modal = document.getElementById('admin-user-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+        window.openAdminAddUserModal = openAdminAddUserModal;
+
+        function closeAdminAddUserModal() {
+            const modal = document.getElementById('admin-user-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+        window.closeAdminAddUserModal = closeAdminAddUserModal;
+
+        async function handleAdminCreateUser(e) {
+            e.preventDefault();
+            const fullName = (document.getElementById('admin-new-user-fullname')?.value || '').trim();
+            const rawUsername = (document.getElementById('admin-new-user-username')?.value || '').trim();
+            const password = (document.getElementById('admin-new-user-password')?.value || '').trim();
+
+            if (!fullName) {
+                showToast("Please enter user full name", "error");
+                return;
+            }
+            if (!rawUsername) {
+                showToast("Please enter a mobile number or username", "error");
+                return;
+            }
+            if (!password || password.length < 6) {
+                showToast("Password must be at least 6 characters", "error");
+                return;
+            }
+
+            const cleanPhone = extractCleanPhone(rawUsername);
+            const userIdentifier = cleanPhone || rawUsername;
+            const userEmail = cleanPhone ? `${cleanPhone}@khataflow.app` : (rawUsername.includes('@') ? rawUsername.toLowerCase() : `${rawUsername}@khataflow.app`);
+
+            let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
+            if (usersList.some(u => u.username === userIdentifier || (cleanPhone && u.phone === cleanPhone))) {
+                showToast("A user with this mobile/username already exists!", "error");
+                return;
+            }
+
+            showToast("Syncing user to Firebase Cloud...", "info");
+
+            // Generate clean document ID for Firestore
+            const newUid = `user_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+            let finalUid = newUid;
+
+            // 1. Direct write to Firebase Firestore public_users using module-scoped helper
+            if (typeof window.createCloudUserFromAdmin === 'function') {
+                try {
+                    const result = await window.createCloudUserFromAdmin({
+                        uid: finalUid,
+                        name: fullName,
+                        phone: cleanPhone || '',
+                        username: userIdentifier,
+                        email: userEmail,
+                        password: password
+                    });
+                    if (result && result.uid) {
+                        finalUid = result.uid;
+                    }
+                } catch (fbErr) {
+                    console.warn("Cloud write note:", fbErr.message || fbErr);
+                }
+            } else if (window.fbDoc && window.fbDb && window.fbSetDoc) {
+                try {
+                    const userRef = window.fbDoc(window.fbDb, 'public_users', finalUid);
+                    await window.fbSetDoc(userRef, {
+                        uid: finalUid,
+                        id: finalUid,
+                        name: fullName,
+                        phone: cleanPhone || '',
+                        username: userIdentifier,
+                        email: userEmail,
+                        address: '',
+                        businessName: '',
+                        cityPin: '',
+                        gstin: '',
+                        isBlocked: false,
+                        totalTransactions: 0,
+                        totalVolume: 0,
+                        totalIncome: 0,
+                        budget: 15000,
+                        recentTransactions: '[]',
+                        createdAt: new Date().toISOString(),
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                } catch (fbErr) {
+                    console.warn("Direct Firestore fallback error:", fbErr);
+                }
+            }
+
+            // 2. Save into local persistent cache with uniform schema
+            const newUser = {
+                id: finalUid,
+                uid: finalUid,
+                name: fullName,
+                phone: cleanPhone || '',
+                username: userIdentifier,
+                email: userEmail,
+                password: password,
+                address: '',
+                businessName: '',
+                cityPin: '',
+                gstin: '',
+                isBlocked: false,
+                totalTransactions: 0,
+                totalVolume: 0,
+                budget: 15000,
+                recentTransactions: '[]',
+                lastUpdated: new Date().toISOString(),
+                dateJoined: new Date().toISOString()
+            };
+
+            usersList.push(newUser);
+            localStorage.setItem('khataflow_registered_users', JSON.stringify(usersList));
+
+            closeAdminAddUserModal();
+            updateAdminDashboardMetrics();
+            renderAdminUsersList();
+
+            // Re-fetch from Firebase to confirm real-time synchronization
+            if (typeof window.fetchFirestoreUsersNow === 'function') {
+                window.fetchFirestoreUsersNow().catch(() => {});
+            }
+
+            showToast(`User "${fullName}" successfully created and synced to Firebase!`, "success");
+        }
+        window.handleAdminCreateUser = handleAdminCreateUser;
+
         function handleSaveAd(e) {
             e.preventDefault();
             const title = document.getElementById('admin-ad-title').value.trim();
@@ -4741,21 +4944,18 @@
 
             container.innerHTML = '';
             if (usersList.length === 0) {
-                usersList = [{
-                    username: appState.userProfile?.phone || '9876543210',
-                    name: appState.userProfile?.name || 'Amit Kumar',
-                    email: appState.userProfile?.email || '',
-                    isBlocked: false,
-                    dateJoined: new Date().toISOString()
-                }];
+                container.innerHTML = `<div class="text-center py-6 text-neutral-400 text-xs">No registered users found. Click "Force Cloud Sync" to pull from Firebase.</div>`;
+                return;
             }
 
-            usersList.forEach((u, idx) => {
+            usersList.forEach((u) => {
                 const div = document.createElement('div');
                 div.className = "flex items-center justify-between p-3.5 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs transition hover:border-purple-400";
                 
+                const userKey = u.uid || u.id || u.username;
                 const volText = u.totalVolume ? `• Vol: ₹${Number(u.totalVolume).toLocaleString('en-IN')}` : '';
                 const txText = u.totalTransactions ? `(${u.totalTransactions} txs)` : '';
+                const phoneDisplay = u.phone ? `+91 ${u.phone}` : (u.email || u.username || 'No Phone');
 
                 div.innerHTML = `
                     <div class="flex items-center gap-3 truncate flex-1 min-w-0">
@@ -4764,27 +4964,49 @@
                         </span>
                         <div class="truncate">
                             <div class="flex items-center gap-1.5">
-                                <span class="font-bold text-neutral-900 dark:text-white truncate block">${u.name || u.username}</span>
+                                <span class="font-bold text-neutral-900 dark:text-white truncate block">${u.name || 'User'}</span>
                                 ${u.isBlocked ? '<span class="px-1.5 py-0.2 rounded bg-error-100 text-error-600 dark:bg-error-950 text-[9px] font-black uppercase">Blocked</span>' : '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Active"></span>'}
                             </div>
-                            <span class="text-[10px] text-neutral-400 font-mono block truncate">${u.username} ${u.email ? `• ${u.email}` : ''} ${volText} ${txText}</span>
+                            <span class="text-[10px] text-neutral-400 font-mono block truncate">${phoneDisplay} ${volText} ${txText}</span>
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 flex-shrink-0">
-                        <button type="button" onclick="openAdminUserInspector('${u.username}')" class="px-2.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/60 dark:hover:bg-purple-900 text-purple-600 dark:text-purple-300 font-bold text-[10px] flex items-center gap-1 transition" title="Inspect user passbook">
-                            <i class="fa-solid fa-eye"></i> View
+                        <button type="button" onclick="openAdminUserInspector('${userKey}')" class="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-[10px] flex items-center gap-1.5 transition shadow-sm active:scale-95" title="Inspect full user data">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i> Inspect Data
                         </button>
-                        <button type="button" onclick="toggleBlockUser('${u.username}')" class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold transition ${u.isBlocked ? 'bg-emerald-500 hover:bg-emerald-600 text-white' : 'bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600 text-neutral-700 dark:text-neutral-200'}">
+                        <button type="button" onclick="toggleBlockUser('${userKey}')" class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold transition ${u.isBlocked ? 'bg-emerald-500 hover:bg-emerald-600 text-white' : 'bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600 text-neutral-700 dark:text-neutral-200'}">
                             ${u.isBlocked ? 'Unblock' : 'Block'}
                         </button>
-                        <button type="button" onclick="deleteAdminUser('${u.username}')" class="p-1.5 text-neutral-400 hover:text-error-500 transition" title="Delete User"><i class="fa-solid fa-trash"></i></button>
+                        <button type="button" onclick="deleteAdminUser('${userKey}')" class="p-1.5 text-neutral-400 hover:text-error-500 transition" title="Delete User"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 `;
                 container.appendChild(div);
             });
         }
 
-        function openAdminUserInspector(username) {
+        let currentActiveInspectorTab = 'transactions';
+
+        function switchInspectorTab(tabKey) {
+            currentActiveInspectorTab = tabKey;
+            ['transactions', 'grocery', 'hub', 'profile'].forEach(k => {
+                const tabBtn = document.getElementById(`insp-tab-${k}`);
+                const viewDiv = document.getElementById(`inspector-view-${k}`);
+                if (tabBtn) {
+                    if (k === tabKey) {
+                        tabBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap bg-white dark:bg-neutral-900 text-purple-600 dark:text-purple-400 shadow-sm";
+                    } else {
+                        tabBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap text-neutral-500 hover:text-neutral-900 dark:hover:text-white";
+                    }
+                }
+                if (viewDiv) {
+                    if (k === tabKey) viewDiv.classList.remove('hidden');
+                    else viewDiv.classList.add('hidden');
+                }
+            });
+        }
+        window.switchInspectorTab = switchInspectorTab;
+
+        async function openAdminUserInspector(username) {
             let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
             const user = usersList.find(u => u.username === username || (u.uid && u.uid === username));
             if (!user) {
@@ -4796,41 +5018,219 @@
             const phoneEl = document.getElementById('inspector-user-phone');
             const countEl = document.getElementById('inspector-stat-count');
             const expEl = document.getElementById('inspector-stat-expense');
+            const incEl = document.getElementById('inspector-stat-income');
             const budgetEl = document.getElementById('inspector-stat-budget');
-            const listEl = document.getElementById('inspector-transactions-list');
+
+            const txListEl = document.getElementById('inspector-transactions-list');
+            const grocListEl = document.getElementById('inspector-grocery-list');
+            const hubListEl = document.getElementById('inspector-hub-list');
+            const profileEl = document.getElementById('inspector-profile-details');
+
+            const badgeTxs = document.getElementById('insp-badge-txs');
+            const badgeGroc = document.getElementById('insp-badge-grocery');
+            const badgeHub = document.getElementById('insp-badge-hub');
 
             if (nameEl) nameEl.textContent = user.name || user.username;
             if (phoneEl) phoneEl.textContent = user.username + (user.email ? ` • ${user.email}` : '');
-            if (countEl) countEl.textContent = user.totalTransactions || 0;
-            if (expEl) expEl.textContent = `₹${Number(user.totalVolume || 0).toLocaleString('en-IN')}`;
-            if (budgetEl) budgetEl.textContent = `₹${Number(user.budget || 0).toLocaleString('en-IN')}`;
 
-            if (listEl) {
-                listEl.innerHTML = '';
-                let txs = [];
+            // Reset tab to transactions
+            switchInspectorTab('transactions');
+
+            // Default data from user object / cache
+            let txs = [];
+            let grocItems = [];
+            let hubBills = [];
+            let userProfile = {};
+            let budgetVal = user.budget || 0;
+            let incVal = user.totalIncome || 0;
+            let expVal = user.totalVolume || 0;
+
+            try {
+                if (user.recentTransactions) {
+                    txs = typeof user.recentTransactions === 'string' ? JSON.parse(user.recentTransactions) : user.recentTransactions;
+                }
+            } catch(e) {}
+
+            // If user has a Firebase UID, pull their full real-time workspace directly from Cloud Firestore
+            if (window.fbDoc && window.fbDb && window.fbGetDoc && user.uid) {
                 try {
-                    if (user.recentTransactions) {
-                        txs = typeof user.recentTransactions === 'string' ? JSON.parse(user.recentTransactions) : user.recentTransactions;
+                    const workspaceRef = window.fbDoc(window.fbDb, 'users', user.uid, 'workspace', 'data');
+                    const snap = await window.fbGetDoc(workspaceRef);
+                    if (snap && snap.exists()) {
+                        const cData = snap.data();
+                        if (cData.transactions) {
+                            txs = typeof cData.transactions === 'string' ? JSON.parse(cData.transactions) : cData.transactions;
+                        }
+                        if (cData.groceryItems) {
+                            grocItems = typeof cData.groceryItems === 'string' ? JSON.parse(cData.groceryItems) : cData.groceryItems;
+                        }
+                        if (cData.splitBills) {
+                            hubBills = typeof cData.splitBills === 'string' ? JSON.parse(cData.splitBills) : cData.splitBills;
+                        }
+                        if (cData.userProfile) {
+                            userProfile = cData.userProfile;
+                        }
+                        if (cData.budget !== undefined) budgetVal = cData.budget;
                     }
-                } catch(e) {}
+                } catch(cloudErr) {
+                    console.warn("Inspector direct cloud fetch:", cloudErr.message);
+                }
+            }
 
+            // Fallback for current device user's data
+            const currentUserSession = getAuthSession();
+            if ((user.username === currentUserSession.username || user.username === appState.userProfile?.phone) && txs.length === 0) {
+                txs = appState.transactions || [];
+                grocItems = appState.groceryItems || [];
+                hubBills = appState.splitBills || [];
+                userProfile = appState.userProfile || {};
+                budgetVal = appState.budget || 0;
+            }
+
+            // Recalculate Totals
+            let computedExp = 0;
+            let computedInc = 0;
+            txs.forEach(t => {
+                const a = Number(t.amount) || 0;
+                if (t.type === 'income') computedInc += a;
+                else computedExp += a;
+            });
+
+            if (countEl) countEl.textContent = txs.length;
+            if (expEl) expEl.textContent = `₹${(computedExp || expVal).toLocaleString('en-IN')}`;
+            if (incEl) incEl.textContent = `₹${(computedInc || incVal).toLocaleString('en-IN')}`;
+            if (budgetEl) budgetEl.textContent = `₹${Number(budgetVal || 0).toLocaleString('en-IN')}`;
+
+            if (badgeTxs) badgeTxs.textContent = txs.length;
+            if (badgeGroc) badgeGroc.textContent = grocItems.length;
+            if (badgeHub) badgeHub.textContent = hubBills.length;
+
+            // 1. Populate Transactions Tab
+            if (txListEl) {
+                txListEl.innerHTML = '';
                 if (!txs || txs.length === 0) {
-                    listEl.innerHTML = `<div class="text-center py-6 text-neutral-400 text-xs">No transactions recorded by this user yet.</div>`;
+                    txListEl.innerHTML = `<div class="text-center py-8 text-neutral-400 text-xs">No transactions recorded by this user yet.</div>`;
                 } else {
                     txs.forEach((t, i) => {
-                        listEl.innerHTML += `
-                            <div class="p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs">
-                                <div>
-                                    <div class="font-bold text-neutral-800 dark:text-neutral-200">${t.note || t.category || 'Entry'}</div>
-                                    <div class="text-[10px] text-neutral-400">${t.date ? new Date(t.date).toLocaleDateString('en-IN') : ''} • ${t.category || 'Expense'} • ${t.mode || 'UPI'}</div>
+                        const dStr = t.date ? new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+                        const tStr = t.date ? new Date(t.date).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '';
+                        const isInc = t.type === 'income';
+                        txListEl.innerHTML += `
+                            <div class="p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs hover:border-purple-300 transition">
+                                <div class="min-w-0 flex-1 pr-2">
+                                    <div class="font-bold text-neutral-800 dark:text-neutral-100 truncate">${t.note || t.category || 'Transaction Entry'}</div>
+                                    <div class="text-[10px] text-neutral-400 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                                        <span>${dStr} ${tStr}</span>
+                                        <span>•</span>
+                                        <span class="px-1.5 py-0.2 rounded bg-neutral-100 dark:bg-neutral-800 font-bold">${t.category || 'General'}</span>
+                                        <span>•</span>
+                                        <span class="font-semibold text-primary-600">${t.mode || 'UPI'}</span>
+                                        ${t.invoiceId ? `<span class="text-emerald-600 font-mono font-bold">${t.invoiceId}</span>` : ''}
+                                    </div>
                                 </div>
-                                <div class="font-black ${t.type === 'income' ? 'text-emerald-600' : 'text-error-600'}">
-                                    ${t.type === 'income' ? '+' : '-'}₹${Number(t.amount || 0).toLocaleString('en-IN')}
+                                <div class="font-black text-sm whitespace-nowrap ${isInc ? 'text-emerald-600' : 'text-error-600'}">
+                                    ${isInc ? '+' : '-'}₹${Number(t.amount || 0).toLocaleString('en-IN')}
                                 </div>
                             </div>
                         `;
                     });
                 }
+            }
+
+            // 2. Populate Grocery Tab
+            if (grocListEl) {
+                grocListEl.innerHTML = '';
+                if (!grocItems || grocItems.length === 0) {
+                    grocListEl.innerHTML = `<div class="text-center py-8 text-neutral-400 text-xs">No shopping checklist items in this user's account.</div>`;
+                } else {
+                    grocItems.forEach((g, idx) => {
+                        grocListEl.innerHTML += `
+                            <div class="p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid ${g.checked ? 'fa-circle-check text-emerald-500' : 'fa-circle text-neutral-300'}"></i>
+                                    <div>
+                                        <div class="font-bold text-neutral-800 dark:text-neutral-100 ${g.checked ? 'line-through text-neutral-400' : ''}">${g.name}</div>
+                                        <div class="text-[10px] text-neutral-400">Qty: ${g.qty} ${g.unit || ''}</div>
+                                    </div>
+                                </div>
+                                <div class="font-black text-xs text-neutral-800 dark:text-neutral-200">
+                                    ₹${Number(g.price || 0).toLocaleString('en-IN')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            }
+
+            // 3. Populate Friends Split Tab
+            if (hubListEl) {
+                hubListEl.innerHTML = '';
+                if (!hubBills || hubBills.length === 0) {
+                    hubListEl.innerHTML = `<div class="text-center py-8 text-neutral-400 text-xs">No group split bills created by this user.</div>`;
+                } else {
+                    hubBills.forEach(b => {
+                        const dStr = b.date ? new Date(b.date).toLocaleDateString('en-IN') : '';
+                        hubListEl.innerHTML += `
+                            <div class="p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs">
+                                <div>
+                                    <div class="font-bold text-neutral-800 dark:text-neutral-100">${b.desc}</div>
+                                    <div class="text-[10px] text-neutral-400">Paid by: <strong>${b.payer}</strong> • Split with: ${(b.splitWith || []).join(', ')} • ${dStr}</div>
+                                </div>
+                                <div class="font-black text-sm text-purple-600">
+                                    ₹${Number(b.amount || 0).toLocaleString('en-IN')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            }
+
+            // 4. Populate Full Profile & Tax Tab
+            if (profileEl) {
+                const prof = Object.keys(userProfile).length > 0 ? userProfile : user;
+                profileEl.innerHTML = `
+                    <div class="grid grid-cols-2 gap-3 pb-2 border-b border-neutral-200 dark:border-neutral-700">
+                        <div>
+                            <span class="text-[9px] uppercase font-bold text-neutral-400 block">Full Name</span>
+                            <span class="font-bold text-neutral-900 dark:text-white text-sm">${prof.name || user.name || 'Not Specified'}</span>
+                        </div>
+                        <div>
+                            <span class="text-[9px] uppercase font-bold text-neutral-400 block">Mobile Number</span>
+                            <span class="font-bold text-primary-600 font-mono text-sm">${prof.phone || user.username || 'Not Specified'}</span>
+                        </div>
+                        <div>
+                            <span class="text-[9px] uppercase font-bold text-neutral-400 block">Email Address</span>
+                            <span class="font-bold text-neutral-700 dark:text-neutral-300 font-mono text-xs">${prof.email || user.email || 'None'}</span>
+                        </div>
+                        <div>
+                            <span class="text-[9px] uppercase font-bold text-neutral-400 block">Payment UPI Handle</span>
+                            <span class="font-bold text-emerald-600 font-mono text-xs">${prof.upi || (prof.phone ? `${prof.phone}@upi` : 'None')}</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 pt-1 pb-2 border-b border-neutral-200 dark:border-neutral-700">
+                        <div>
+                            <span class="text-[9px] uppercase font-bold text-neutral-400 block">Store / Business Name</span>
+                            <span class="font-bold text-neutral-800 dark:text-neutral-200">${prof.businessName || 'Individual Account'}</span>
+                        </div>
+                        <div>
+                            <span class="text-[9px] uppercase font-bold text-neutral-400 block">GSTIN / Tax ID</span>
+                            <span class="font-mono font-bold text-neutral-800 dark:text-neutral-200">${prof.gstin || 'Unregistered'}</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-1">
+                        <span class="text-[9px] uppercase font-bold text-neutral-400 block">Billing / Delivery Address</span>
+                        <p class="font-medium text-neutral-700 dark:text-neutral-300 mt-0.5">
+                            ${prof.address ? `${prof.address}, ` : ''}${prof.cityPin || 'No address provided'}
+                        </p>
+                    </div>
+
+                    <div class="pt-1 flex items-center justify-between text-[10px] text-neutral-400">
+                        <span>Account ID / UID: <strong class="font-mono">${user.uid || 'Local'}</strong></span>
+                        <span>Joined: ${user.dateJoined ? new Date(user.dateJoined).toLocaleDateString('en-IN') : 'Active'}</span>
+                    </div>
+                `;
             }
 
             const modal = document.getElementById('admin-user-inspector-modal');
@@ -4839,6 +5239,7 @@
                 modal.classList.add('flex');
             }
         }
+        window.openAdminUserInspector = openAdminUserInspector;
 
         function closeAdminUserInspector() {
             const modal = document.getElementById('admin-user-inspector-modal');
@@ -4847,176 +5248,15 @@
                 modal.classList.remove('flex');
             }
         }
-
-        function handleAdminCreateUser(e) {
-            e.preventDefault();
-            const fullName = document.getElementById('admin-new-user-fullname').value.trim();
-            const username = document.getElementById('admin-new-user-username').value.trim();
-            const password = document.getElementById('admin-new-user-password').value.trim();
-
-            let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
-            if (usersList.some(u => u.username.toLowerCase() === username.toLowerCase())) {
-                showToast("User already exists", "error");
-                return;
-            }
-
-            usersList.push({
-                username,
-                password,
-                name: fullName,
-                isBlocked: false,
-                dateJoined: new Date().toISOString()
-            });
-
-            localStorage.setItem('khataflow_registered_users', JSON.stringify(usersList));
-            renderAdminUsersList();
-            updateAdminDashboardMetrics();
-            closeAdminAddUserModal();
-            showToast(`User ${fullName} created!`);
-        }
-
-        function forceAdminCloudReSync() {
-            if (typeof window.pushStateToCloud === 'function') {
-                window.pushStateToCloud();
-            }
-            if (typeof window.listenToAllUsersForAdmin === 'function') {
-                window.listenToAllUsersForAdmin();
-            }
-            showToast("Cloud sync forced successfully!");
-        }
-
-        // ================= ADMIN CUSTOMIZATION ACTION HANDLERS =================
-        function handleSaveAnnouncement(e) {
-            if (e) e.preventDefault();
-            const textInput = document.getElementById('admin-announcement-text');
-            const typeInput = document.getElementById('admin-announcement-type');
-            const chkInput = document.getElementById('admin-announcement-enabled');
-
-            if (!adminConfig.announcement) adminConfig.announcement = {};
-            adminConfig.announcement.text = (textInput ? textInput.value : '').trim();
-            adminConfig.announcement.type = typeInput ? typeInput.value : 'info';
-            adminConfig.announcement.enabled = chkInput ? !!chkInput.checked : false;
-
-            saveAdminConfig();
-            showToast("Global announcement saved!");
-        }
-
-        function dismissAnnouncement() {
-            const annStrip = document.getElementById('global-announcement-strip');
-            if (annStrip) annStrip.classList.add('hidden');
-        }
-
-        function handleSaveBrandDetails(e) {
-            if (e) e.preventDefault();
-            const nameInput = document.getElementById('admin-custom-app-name');
-            const name = nameInput ? nameInput.value.trim() : '';
-            if (!name) {
-                showToast("Please enter an app brand name", "error");
-                return;
-            }
-            adminConfig.appName = name;
-            saveAdminConfig();
-            showToast(`App title updated to: ${name}!`);
-        }
-
-        function handleSaveInvoiceTemplate(e) {
-            if (e) e.preventDefault();
-            const headerTag = (document.getElementById('admin-invoice-header-tag')?.value || '').trim();
-            const watermark = (document.getElementById('admin-invoice-watermark')?.value || '').trim();
-            const storeName = (document.getElementById('admin-invoice-store-name')?.value || '').trim();
-
-            adminConfig.invoiceTemplate = {
-                headerTag: headerTag || 'TAX INVOICE / CASH MEMO',
-                watermark: watermark || 'KHATAFLOW',
-                storeName: storeName || 'KhataFlow'
-            };
-
-            saveAdminConfig();
-            showToast("Receipt template saved!");
-        }
-
-        function setAdminHeaderIcon(iconKey) {
-            adminConfig.headerIcon = iconKey;
-            const logoBadge = document.getElementById('header-logo-badge');
-            if (logoBadge) {
-                const iconMap = {
-                    wallet: '<i class="fa-solid fa-wallet text-xl"></i>',
-                    shield: '<i class="fa-solid fa-shield-halved text-xl"></i>',
-                    coins: '<i class="fa-solid fa-coins text-xl"></i>',
-                    vault: '<i class="fa-solid fa-vault text-xl"></i>',
-                    bag: '<i class="fa-solid fa-bag-shopping text-xl"></i>',
-                    chart: '<i class="fa-solid fa-chart-pie text-xl"></i>'
-                };
-                logoBadge.innerHTML = iconMap[iconKey] || iconMap.wallet;
-            }
-            saveAdminConfig();
-            showToast(`Header icon set to ${iconKey}!`);
-        }
-
-        function setAdminHeaderSticky(isSticky) {
-            adminConfig.headerSticky = isSticky;
-            const header = document.querySelector('header');
-            if (header) {
-                if (isSticky) {
-                    header.classList.add('sticky');
-                    header.classList.remove('static');
-                } else {
-                    header.classList.remove('sticky');
-                    header.classList.add('static');
-                }
-            }
-            saveAdminConfig();
-            showToast(isSticky ? "Header is now Sticky" : "Header is now Static Top");
-        }
-
-        function setAdminCurrency(symbol) {
-            adminConfig.currencySymbol = symbol;
-            saveAdminConfig();
-            document.querySelectorAll('.currency-symbol').forEach(el => {
-                el.textContent = symbol;
-            });
-            showToast(`Currency set to ${symbol}!`);
-        }
-
-        function setAdminFont(fontName) {
-            adminConfig.fontFamily = fontName;
-            document.body.style.fontFamily = `'${fontName}', sans-serif`;
-            saveAdminConfig();
-            showToast(`Typography set to ${fontName}!`);
-        }
-
-        function setAdminBorderRadius(radiusVal, label) {
-            adminConfig.borderRadius = radiusVal;
-            document.documentElement.style.setProperty('--app-radius', radiusVal);
-            saveAdminConfig();
-            showToast(`Corner radius updated: ${label}!`);
-        }
-
-        function setAdminGlassStyle(styleKey) {
-            adminConfig.glassStyle = styleKey;
-            saveAdminConfig();
-            showToast(`Glass style set to ${styleKey}!`);
-        }
-
-        function setAdminAdSlideDuration(durationMs) {
-            adminConfig.adSlideDuration = durationMs;
-            saveAdminConfig();
-            startAdProgressTimer();
-            showToast(durationMs === 0 ? "Ad auto-rotation paused" : `Ad slide time set to ${durationMs / 1000}s!`);
-        }
-
-        function setAdminBudgetAlertThreshold(percent) {
-            adminConfig.budgetAlertThreshold = percent;
-            saveAdminConfig();
-            updateDashboard();
-            showToast(`Overspend warning threshold set to ${percent}%!`);
-        }
+        window.closeAdminUserInspector = closeAdminUserInspector;
 
         function toggleBlockUser(username) {
             let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
             const user = usersList.find(u => u.username === username || (u.uid && u.uid === username));
-            if (!user) return;
-
+            if (!user) {
+                showToast("User not found", "error");
+                return;
+            }
             user.isBlocked = !user.isBlocked;
             localStorage.setItem('khataflow_registered_users', JSON.stringify(usersList));
 
@@ -5025,30 +5265,34 @@
                 try {
                     const userRef = window.fbDoc(window.fbDb, 'public_users', user.uid);
                     window.fbSetDoc(userRef, { isBlocked: user.isBlocked }, { merge: true });
-                } catch(err) {
-                    console.warn("Could not sync block state to cloud:", err);
+                } catch(e) {
+                    console.warn("Cloud block sync error:", e);
                 }
             }
 
             renderAdminUsersList();
-            showToast(`User ${user.name || user.username} is now ${user.isBlocked ? 'BLOCKED' : 'UNBLOCKED'}!`);
+            showToast(`User ${user.name || username} ${user.isBlocked ? 'Blocked' : 'Unblocked'}`);
         }
+        window.toggleBlockUser = toggleBlockUser;
 
         function deleteAdminUser(username) {
             let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
             const user = usersList.find(u => u.username === username || (u.uid && u.uid === username));
-            if (!user) return;
+            if (!user) {
+                showToast("User not found", "error");
+                return;
+            }
 
             usersList = usersList.filter(u => u.username !== username && (!u.uid || u.uid !== username));
             localStorage.setItem('khataflow_registered_users', JSON.stringify(usersList));
 
-            // Remove from Firestore public_users
+            // Remove from Firestore if user has UID
             if (window.fbDoc && window.fbDb && window.fbDeleteDoc && user.uid) {
                 try {
                     const userRef = window.fbDoc(window.fbDb, 'public_users', user.uid);
                     window.fbDeleteDoc(userRef);
-                } catch(err) {
-                    console.warn("Cloud delete failed:", err);
+                } catch(e) {
+                    console.warn("Cloud delete user error:", e);
                 }
             }
 
@@ -5056,6 +5300,7 @@
             updateAdminDashboardMetrics();
             showToast(`User ${user.name || username} deleted successfully!`);
         }
+        window.deleteAdminUser = deleteAdminUser;
 
         function resetAdminCustomizationsToDefault() {
             localStorage.removeItem('khataflow_admin_config');
@@ -5120,6 +5365,39 @@
                 watermark: 'KHATAFLOW',
                 storeName: 'KhataFlow'
             },
+            navTitles: {
+                dashboard: 'Dashboard',
+                history: 'History',
+                shopping: 'Shopping',
+                friends: 'Friends',
+                reports: 'Reports'
+            },
+            metricCards: {
+                card1Title: "Today's Expense", card1Sub: "Spent today",
+                card2Title: "Yesterday", card2Sub: "Previous day outflow",
+                card3Title: "Last 7 Days", card3Sub: "Weekly outflow velocity",
+                card4Title: "Last 30 Days", card4Sub: "Monthly running outflow",
+                card5Title: "Total Lifetime", card5Sub: "All-time recorded spends"
+            },
+            customCategories: [
+                { id: 'cat-food', label: 'Food & Dining', emoji: '🍔' },
+                { id: 'cat-fastfood', label: 'Fast Food', emoji: '🍟' },
+                { id: 'cat-kirana', label: 'Kirana & Grocery', emoji: '🛒' },
+                { id: 'cat-rent', label: 'Rent & Stay', emoji: '🏠' },
+                { id: 'cat-bills', label: 'Utilities & Bills', emoji: '⚡' },
+                { id: 'cat-shopping', label: 'Shopping', emoji: '🛍️' },
+                { id: 'cat-travel', label: 'Travel & Fuel', emoji: '🚗' },
+                { id: 'cat-edu', label: 'Education & Books', emoji: '📚' },
+                { id: 'cat-med', label: 'Medical & Health', emoji: '💊' },
+                { id: 'cat-other', label: 'Other', emoji: '✨' }
+            ],
+            footer: {
+                tagline: 'Smart Daily Expense, Budget Splitter & Shopping OS',
+                copyright: '© 2026 KhataFlow Pro. All rights reserved.',
+                instagram: 'https://instagram.com/theamitmto',
+                twitter: 'https://x.com/theamitmto',
+                customCSS: ''
+            },
             showSponsoredSlider: true,
             showShoppingChecklist: true,
             showFriendsHub: true,
@@ -5135,6 +5413,47 @@
             sectionOrder: ['sponsored-ad-banner', 'dash-module-overview', 'dash-module-metrics', 'dash-module-budget', 'dash-module-quick-entry', 'dash-module-analytics']
         };
 
+        if (!adminConfig.navTitles) {
+            adminConfig.navTitles = {
+                dashboard: 'Dashboard',
+                history: 'History',
+                shopping: 'Shopping',
+                friends: 'Friends',
+                reports: 'Reports'
+            };
+        }
+        if (!adminConfig.metricCards) {
+            adminConfig.metricCards = {
+                card1Title: "Today's Expense", card1Sub: "Spent today",
+                card2Title: "Yesterday", card2Sub: "Previous day outflow",
+                card3Title: "Last 7 Days", card3Sub: "Weekly outflow velocity",
+                card4Title: "Last 30 Days", card4Sub: "Monthly running outflow",
+                card5Title: "Total Lifetime", card5Sub: "All-time recorded spends"
+            };
+        }
+        if (!adminConfig.customCategories || adminConfig.customCategories.length === 0) {
+            adminConfig.customCategories = [
+                { id: 'cat-food', label: 'Food & Dining', emoji: '🍔' },
+                { id: 'cat-fastfood', label: 'Fast Food', emoji: '🍟' },
+                { id: 'cat-kirana', label: 'Kirana & Grocery', emoji: '🛒' },
+                { id: 'cat-rent', label: 'Rent & Stay', emoji: '🏠' },
+                { id: 'cat-bills', label: 'Utilities & Bills', emoji: '⚡' },
+                { id: 'cat-shopping', label: 'Shopping', emoji: '🛍️' },
+                { id: 'cat-travel', label: 'Travel & Fuel', emoji: '🚗' },
+                { id: 'cat-edu', label: 'Education & Books', emoji: '📚' },
+                { id: 'cat-med', label: 'Medical & Health', emoji: '💊' },
+                { id: 'cat-other', label: 'Other', emoji: '✨' }
+            ];
+        }
+        if (!adminConfig.footer) {
+            adminConfig.footer = {
+                tagline: 'Smart Daily Expense, Budget Splitter & Shopping OS',
+                copyright: '© 2026 KhataFlow Pro. All rights reserved.',
+                instagram: 'https://instagram.com/theamitmto',
+                twitter: 'https://x.com/theamitmto',
+                customCSS: ''
+            };
+        }
         if (!adminConfig.admob) {
             adminConfig.admob = {
                 publisherId: 'ca-pub-9624198207640000',
@@ -5150,11 +5469,358 @@
             };
         }
         if (!adminConfig.adDeliveryMode) adminConfig.adDeliveryMode = 'hybrid';
+        // Admin Config UI Updaters
+        function applyAdminConfigToUI() {
+            const root = document.documentElement;
+            const theme = ADMIN_COLOR_THEMES.find(t => t.id === adminConfig.selectedThemeId) || ADMIN_COLOR_THEMES[0];
 
-        function saveAdminConfig() {
-            localStorage.setItem('khataflow_admin_config', JSON.stringify(adminConfig));
-            applyAdminConfigToUI();
-            renderAdmobSlots();
+            root.style.setProperty('--brand-primary', theme.primary);
+            root.style.setProperty('--brand-primary-light', theme.light);
+            root.style.setProperty('--app-radius', adminConfig.borderRadius || '24px');
+
+            if (adminConfig.fontFamily) {
+                document.body.style.fontFamily = `'${adminConfig.fontFamily}', sans-serif`;
+            }
+
+            // Brand display name update
+            const brandTitleEl = document.getElementById('app-brand-name-display');
+            const gateBrandTitle = document.getElementById('gate-brand-title');
+            if (brandTitleEl) brandTitleEl.textContent = adminConfig.appName || 'KhataFlow';
+            if (gateBrandTitle) gateBrandTitle.textContent = adminConfig.appName || 'KhataFlow';
+
+            // Announcement Banner
+            const annStrip = document.getElementById('global-announcement-strip');
+            const annText = document.getElementById('announcement-text-display');
+            if (annStrip && adminConfig.announcement) {
+                if (adminConfig.announcement.enabled && adminConfig.announcement.text) {
+                    annStrip.classList.remove('hidden');
+                    if (annText) annText.textContent = adminConfig.announcement.text;
+                } else {
+                    annStrip.classList.add('hidden');
+                }
+            }
+
+            // Apply Dynamic Navigation Bar Titles
+            if (adminConfig.navTitles) {
+                const navDashboard = document.querySelector('#nav-btn-dashboard .nav-label');
+                const navHistory = document.querySelector('#nav-btn-transactions .nav-label');
+                const navGrocery = document.querySelector('#nav-btn-grocery .nav-label');
+                const navHub = document.querySelector('#nav-btn-hub .nav-label');
+                const navReports = document.querySelector('#nav-btn-analytics .nav-label');
+
+                if (navDashboard && adminConfig.navTitles.dashboard) navDashboard.textContent = adminConfig.navTitles.dashboard;
+                if (navHistory && adminConfig.navTitles.history) navHistory.textContent = adminConfig.navTitles.history;
+                if (navGrocery && adminConfig.navTitles.shopping) navGrocery.textContent = adminConfig.navTitles.shopping;
+                if (navHub && adminConfig.navTitles.friends) navHub.textContent = adminConfig.navTitles.friends;
+                if (navReports && adminConfig.navTitles.reports) navReports.textContent = adminConfig.navTitles.reports;
+            }
+
+            // Apply Metric Cards Custom Titles & Subtitles
+            if (adminConfig.metricCards) {
+                const mc = adminConfig.metricCards;
+                const mContainer = document.getElementById('dash-module-metrics');
+                if (mContainer) {
+                    const cards = mContainer.children;
+                    if (cards[0]) {
+                        const titleEl = cards[0].querySelector('span');
+                        const subEl = cards[0].querySelector('p');
+                        if (titleEl && mc.card1Title) titleEl.textContent = mc.card1Title;
+                        if (subEl && mc.card1Sub) subEl.textContent = mc.card1Sub;
+                    }
+                    if (cards[1]) {
+                        const titleEl = cards[1].querySelector('span');
+                        const subEl = cards[1].querySelector('p');
+                        if (titleEl && mc.card2Title) titleEl.textContent = mc.card2Title;
+                        if (subEl && mc.card2Sub) subEl.textContent = mc.card2Sub;
+                    }
+                    if (cards[2]) {
+                        const titleEl = cards[2].querySelector('span');
+                        const subEl = cards[2].querySelector('p');
+                        if (titleEl && mc.card3Title) titleEl.textContent = mc.card3Title;
+                        if (subEl && mc.card3Sub) subEl.textContent = mc.card3Sub;
+                    }
+                    if (cards[3]) {
+                        const titleEl = cards[3].querySelector('span');
+                        const subEl = cards[3].querySelector('p');
+                        if (titleEl && mc.card4Title) titleEl.textContent = mc.card4Title;
+                        if (subEl && mc.card4Sub) subEl.textContent = mc.card4Sub;
+                    }
+                    if (cards[4]) {
+                        const titleEl = cards[4].querySelector('span');
+                        const subEl = cards[4].querySelector('p');
+                        if (titleEl && mc.card5Title) titleEl.textContent = mc.card5Title;
+                        if (subEl && mc.card5Sub) subEl.textContent = mc.card5Sub;
+                    }
+                }
+            }
+
+            // Apply Dynamic Footer & Socials
+            if (adminConfig.footer) {
+                const ft = adminConfig.footer;
+                const footerTagline = document.querySelector('footer p.text-\\[11px\\]');
+                const footerCopy = document.querySelector('footer div.text-center p');
+                const instaLink = document.querySelector('footer a[title="Instagram"]');
+                const twitterLink = document.querySelector('footer a[title="X (Twitter)"]');
+
+                if (footerTagline && ft.tagline) footerTagline.textContent = ft.tagline;
+                if (footerCopy && ft.copyright) footerCopy.textContent = ft.copyright;
+                if (instaLink && ft.instagram) instaLink.href = ft.instagram;
+                if (twitterLink && ft.twitter) twitterLink.href = ft.twitter;
+
+                // Live CSS Injection
+                let customCssTag = document.getElementById('admin-custom-injected-css');
+                if (!customCssTag) {
+                    customCssTag = document.createElement('style');
+                    customCssTag.id = 'admin-custom-injected-css';
+                    document.head.appendChild(customCssTag);
+                }
+                customCssTag.textContent = ft.customCSS || '';
+            }
+
+            // Synchronize Dynamic Categories into Entry Form & Filter Dropdowns
+            syncAdminCategoriesToForms();
+        }
+
+        // ================= DYNAMIC CATEGORIES ENGINE =================
+        function syncAdminCategoriesToForms() {
+            const categories = adminConfig.customCategories || [];
+            if (categories.length === 0) return;
+
+            // 1. Transaction Entry Category Dropdown
+            const txCatSelect = document.getElementById('tx-category');
+            if (txCatSelect) {
+                const currentVal = txCatSelect.value;
+                txCatSelect.innerHTML = '';
+                categories.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.label.split(' ')[0]; // Key representation
+                    opt.textContent = `${c.emoji} ${c.label}`;
+                    txCatSelect.appendChild(opt);
+                });
+                if (currentVal) txCatSelect.value = currentVal;
+            }
+
+            // 2. Filter Category Dropdown in Transactions History
+            const filterCatSelect = document.getElementById('filter-category');
+            if (filterCatSelect) {
+                const currentVal = filterCatSelect.value;
+                filterCatSelect.innerHTML = `<option value="ALL">All Categories</option>`;
+                categories.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.label.split(' ')[0];
+                    opt.textContent = `${c.emoji} ${c.label}`;
+                    filterCatSelect.appendChild(opt);
+                });
+                if (currentVal) filterCatSelect.value = currentVal;
+            }
+
+            // 3. Category Ceilings Limit Dropdown Modal
+            const modalCatSelect = document.getElementById('modal-cat-name');
+            if (modalCatSelect) {
+                const currentVal = modalCatSelect.value;
+                modalCatSelect.innerHTML = '';
+                categories.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.label.split(' ')[0];
+                    opt.textContent = `${c.emoji} ${c.label}`;
+                    modalCatSelect.appendChild(opt);
+                });
+                if (currentVal) modalCatSelect.value = currentVal;
+            }
+        }
+
+        function renderAdminCategoriesList() {
+            const container = document.getElementById('admin-categories-list');
+            if (!container) return;
+            const categories = adminConfig.customCategories || [];
+
+            container.innerHTML = '';
+            categories.forEach((cat, idx) => {
+                const div = document.createElement('div');
+                div.className = "p-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 flex items-center justify-between gap-2 shadow-sm";
+                div.innerHTML = `
+                    <div class="flex items-center gap-2 truncate min-w-0">
+                        <span class="text-base select-none">${cat.emoji}</span>
+                        <span class="text-xs font-bold text-neutral-800 dark:text-neutral-200 truncate">${cat.label}</span>
+                    </div>
+                    <button type="button" onclick="deleteAdminCategory(${idx})" class="w-6 h-6 rounded-lg bg-neutral-200 dark:bg-neutral-700 hover:bg-error-500 hover:text-white text-neutral-400 text-xs flex items-center justify-center transition active:scale-90" title="Delete Category">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function handleAddAdminCategory(e) {
+            e.preventDefault();
+            const emojiInput = document.getElementById('admin-new-cat-emoji');
+            const labelInput = document.getElementById('admin-new-cat-label');
+
+            const emoji = (emojiInput ? emojiInput.value.trim() : '') || '🏷️';
+            const label = (labelInput ? labelInput.value.trim() : '');
+
+            if (!label) {
+                showToast("Please enter category name", "error");
+                return;
+            }
+
+            if (!adminConfig.customCategories) adminConfig.customCategories = [];
+            adminConfig.customCategories.push({
+                id: `cat-${Date.now()}`,
+                label: label,
+                emoji: emoji
+            });
+
+            saveAdminConfig();
+            renderAdminCategoriesList();
+            syncAdminCategoriesToForms();
+
+            if (emojiInput) emojiInput.value = '';
+            if (labelInput) labelInput.value = '';
+            showToast(`Category "${label}" added live!`);
+        }
+
+        function deleteAdminCategory(idx) {
+            if (!adminConfig.customCategories) return;
+            if (adminConfig.customCategories.length <= 1) {
+                showToast("Must keep at least one category", "error");
+                return;
+            }
+            const deleted = adminConfig.customCategories.splice(idx, 1);
+            saveAdminConfig();
+            renderAdminCategoriesList();
+            syncAdminCategoriesToForms();
+            showToast(`Category "${deleted[0]?.label}" removed`);
+        }
+
+        function handleSaveNavTitles(e) {
+            e.preventDefault();
+            const tDash = (document.getElementById('admin-nav-title-dashboard')?.value || '').trim();
+            const tHist = (document.getElementById('admin-nav-title-history')?.value || '').trim();
+            const tShop = (document.getElementById('admin-nav-title-shopping')?.value || '').trim();
+            const tFrnd = (document.getElementById('admin-nav-title-friends')?.value || '').trim();
+            const tRep = (document.getElementById('admin-nav-title-reports')?.value || '').trim();
+
+            if (!adminConfig.navTitles) adminConfig.navTitles = {};
+            if (tDash) adminConfig.navTitles.dashboard = tDash;
+            if (tHist) adminConfig.navTitles.history = tHist;
+            if (tShop) adminConfig.navTitles.shopping = tShop;
+            if (tFrnd) adminConfig.navTitles.friends = tFrnd;
+            if (tRep) adminConfig.navTitles.reports = tRep;
+
+            saveAdminConfig();
+            showToast("Navigation Bar titles updated!");
+        }
+
+        function handleSaveMetricCards(e) {
+            e.preventDefault();
+            if (!adminConfig.metricCards) adminConfig.metricCards = {};
+
+            const c1t = (document.getElementById('admin-metric-card-1-title')?.value || '').trim();
+            const c1s = (document.getElementById('admin-metric-card-1-sub')?.value || '').trim();
+            const c2t = (document.getElementById('admin-metric-card-2-title')?.value || '').trim();
+            const c2s = (document.getElementById('admin-metric-card-2-sub')?.value || '').trim();
+            const c3t = (document.getElementById('admin-metric-card-3-title')?.value || '').trim();
+            const c3s = (document.getElementById('admin-metric-card-3-sub')?.value || '').trim();
+            const c4t = (document.getElementById('admin-metric-card-4-title')?.value || '').trim();
+            const c4s = (document.getElementById('admin-metric-card-4-sub')?.value || '').trim();
+            const c5t = (document.getElementById('admin-metric-card-5-title')?.value || '').trim();
+            const c5s = (document.getElementById('admin-metric-card-5-sub')?.value || '').trim();
+
+            if (c1t) adminConfig.metricCards.card1Title = c1t;
+            if (c1s) adminConfig.metricCards.card1Sub = c1s;
+            if (c2t) adminConfig.metricCards.card2Title = c2t;
+            if (c2s) adminConfig.metricCards.card2Sub = c2s;
+            if (c3t) adminConfig.metricCards.card3Title = c3t;
+            if (c3s) adminConfig.metricCards.card3Sub = c3s;
+            if (c4t) adminConfig.metricCards.card4Title = c4t;
+            if (c4s) adminConfig.metricCards.card4Sub = c4s;
+            if (c5t) adminConfig.metricCards.card5Title = c5t;
+            if (c5s) adminConfig.metricCards.card5Sub = c5s;
+
+            saveAdminConfig();
+            showToast("Financial metric cards customized!");
+        }
+
+        function handleSaveFooterAndCustomCSS(e) {
+            e.preventDefault();
+            const tagline = (document.getElementById('admin-footer-tagline')?.value || '').trim();
+            const copyright = (document.getElementById('admin-footer-copyright')?.value || '').trim();
+            const insta = (document.getElementById('admin-social-instagram')?.value || '').trim();
+            const twitter = (document.getElementById('admin-social-twitter')?.value || '').trim();
+            const css = (document.getElementById('admin-custom-css')?.value || '').trim();
+
+            if (!adminConfig.footer) adminConfig.footer = {};
+            if (tagline) adminConfig.footer.tagline = tagline;
+            if (copyright) adminConfig.footer.copyright = copyright;
+            if (insta) adminConfig.footer.instagram = insta;
+            if (twitter) adminConfig.footer.twitter = twitter;
+            adminConfig.footer.customCSS = css;
+
+            saveAdminConfig();
+            showToast("Footer brand details & Custom CSS applied!");
+        }
+
+        function populateExtendedAdminForms() {
+            // Populate Nav Titles
+            if (adminConfig.navTitles) {
+                const nt = adminConfig.navTitles;
+                const d = document.getElementById('admin-nav-title-dashboard');
+                const h = document.getElementById('admin-nav-title-history');
+                const s = document.getElementById('admin-nav-title-shopping');
+                const f = document.getElementById('admin-nav-title-friends');
+                const r = document.getElementById('admin-nav-title-reports');
+
+                if (d) d.value = nt.dashboard || 'Dashboard';
+                if (h) h.value = nt.history || 'History';
+                if (s) s.value = nt.shopping || 'Shopping';
+                if (f) f.value = nt.friends || 'Friends';
+                if (r) r.value = nt.reports || 'Reports';
+            }
+
+            // Populate Metric Cards
+            if (adminConfig.metricCards) {
+                const mc = adminConfig.metricCards;
+                const c1t = document.getElementById('admin-metric-card-1-title');
+                const c1s = document.getElementById('admin-metric-card-1-sub');
+                const c2t = document.getElementById('admin-metric-card-2-title');
+                const c2s = document.getElementById('admin-metric-card-2-sub');
+                const c3t = document.getElementById('admin-metric-card-3-title');
+                const c3s = document.getElementById('admin-metric-card-3-sub');
+                const c4t = document.getElementById('admin-metric-card-4-title');
+                const c4s = document.getElementById('admin-metric-card-4-sub');
+                const c5t = document.getElementById('admin-metric-card-5-title');
+                const c5s = document.getElementById('admin-metric-card-5-sub');
+
+                if (c1t) c1t.value = mc.card1Title || '';
+                if (c1s) c1s.value = mc.card1Sub || '';
+                if (c2t) c2t.value = mc.card2Title || '';
+                if (c2s) c2s.value = mc.card2Sub || '';
+                if (c3t) c3t.value = mc.card3Title || '';
+                if (c3s) c3s.value = mc.card3Sub || '';
+                if (c4t) c4t.value = mc.card4Title || '';
+                if (c4s) c4s.value = mc.card4Sub || '';
+                if (c5t) c5t.value = mc.card5Title || '';
+                if (c5s) c5s.value = mc.card5Sub || '';
+            }
+
+            // Populate Footer & Socials
+            if (adminConfig.footer) {
+                const ft = adminConfig.footer;
+                const tagEl = document.getElementById('admin-footer-tagline');
+                const copyEl = document.getElementById('admin-footer-copyright');
+                const instaEl = document.getElementById('admin-social-instagram');
+                const twitEl = document.getElementById('admin-social-twitter');
+                const cssEl = document.getElementById('admin-custom-css');
+
+                if (tagEl) tagEl.value = ft.tagline || '';
+                if (copyEl) copyEl.value = ft.copyright || '';
+                if (instaEl) instaEl.value = ft.instagram || '';
+                if (twitEl) twitEl.value = ft.twitter || '';
+                if (cssEl) cssEl.value = ft.customCSS || '';
+            }
+
+            renderAdminCategoriesList();
         }
 
         // ================= ADMOB & ADSENSE CONTROLLERS =================
@@ -5661,6 +6327,11 @@
             if(tabId === 'grocery') renderGrocery();
             if(tabId === 'hub') renderSplitter();
             if(tabId === 'admin') {
+                // Instantly trigger Firestore sync when opening Admin panel
+                if (typeof window.listenToAllUsersForAdmin === 'function') {
+                    window.listenToAllUsersForAdmin();
+                }
+
                 updateAdminDashboardMetrics();
                 renderAdminColorPresets();
                 renderAdminFeatureToggles();
@@ -5668,6 +6339,7 @@
                 renderAdminAdsList();
                 renderAdminUsersList();
                 populateAdMobAdminForm();
+                populateExtendedAdminForms();
 
                 const annInput = document.getElementById('admin-announcement-text');
                 const annType = document.getElementById('admin-announcement-type');
@@ -8720,9 +9392,16 @@
                 window.enforceAuthGate();
             }
 
-            // Always activate live cloud users sync so Admin is instantly updated on all platforms
-            if (typeof window.listenToAllUsersForAdmin === 'function') {
-                window.listenToAllUsersForAdmin();
+            // Start admin listener only if user is logged in with Firebase credentials
+            if (session && session.isLoggedIn && window.fbAuth && window.fbAuth.currentUser) {
+                const checkAndStartAdminListener = () => {
+                    if (typeof window.listenToAllUsersForAdmin === 'function') {
+                        window.listenToAllUsersForAdmin();
+                    } else {
+                        setTimeout(checkAndStartAdminListener, 250);
+                    }
+                };
+                checkAndStartAdminListener();
             }
         }
     </script>
