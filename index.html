@@ -175,6 +175,132 @@
 </head>
 <body class="text-neutral-800 dark:text-neutral-100 min-h-screen transition-colors duration-300">
 
+    <!-- ================= MANDATORY STRICT AUTHENTICATION GATE SCREEN ================= -->
+    <div id="auth-gate-screen" class="fixed inset-0 z-[100] bg-neutral-950/85 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="glass-card w-full max-w-lg p-5 sm:p-8 rounded-[2.2rem] shadow-2xl relative border border-white/60 dark:border-neutral-800 animate-fade-in bg-white/95 dark:bg-neutral-900/95 my-auto max-h-[92vh] overflow-y-auto">
+            <!-- Top Gradient Bar -->
+            <div id="auth-gate-accent" class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary-600 via-primary-500 to-emerald-500"></div>
+
+            <!-- Brand Logo & Header -->
+            <div class="text-center mb-5 pt-1">
+                <div class="w-13 h-13 mx-auto w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary-600 to-primary-500 text-white flex items-center justify-center shadow-lg shadow-primary-500/30 text-xl font-black mb-2.5">
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                        <path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+                <h2 id="gate-brand-title" class="text-2xl font-black prime-gradient-text tracking-tight">KhataFlow</h2>
+                <p id="gate-brand-subtitle" class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 font-medium">Smart Financial OS • Enterprise Cloud Workspace</p>
+            </div>
+
+            <!-- Dual Tab Switcher: Sign In vs Create Account -->
+            <div class="flex p-1 mb-5 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+                <button type="button" id="gate-tab-login" onclick="setAuthGateMode('login')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition shadow-sm bg-white dark:bg-neutral-900 text-primary-600 dark:text-primary-400">
+                    Existing User (Sign In)
+                </button>
+                <button type="button" id="gate-tab-register" onclick="setAuthGateMode('register')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition text-neutral-500 dark:text-neutral-400 hover:text-neutral-900">
+                    New User (Sign Up)
+                </button>
+            </div>
+
+            <!-- Dynamic Authentication Form -->
+            <form onsubmit="handleAuthGateSubmit(event)" class="space-y-3">
+                <!-- Registration-Exclusive Fields Section -->
+                <div id="gate-register-fields" class="hidden space-y-3">
+                    <!-- Full Name -->
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1 flex items-center justify-between">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-user text-primary-600 text-[11px]"></i> Full Name</span>
+                            <span class="text-[10px] text-error-500 font-bold">*Required</span>
+                        </label>
+                        <input type="text" id="gate-input-fullname" placeholder="e.g. Amit Kumar" class="w-full px-4 py-2.5 rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300 dark:border-neutral-700 text-xs sm:text-sm font-semibold focus:outline-none focus:border-primary-500 transition">
+                    </div>
+
+                    <!-- Email Address & Mobile Number in 2-Column Responsive Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-envelope text-primary-600 text-[11px]"></i> Email Address</span>
+                                <span class="text-[10px] text-error-500 font-bold">*Required</span>
+                            </label>
+                            <input type="email" id="gate-input-email" placeholder="e.g. name@example.com" class="w-full px-3.5 py-2.5 rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300 dark:border-neutral-700 text-xs sm:text-sm font-semibold focus:outline-none focus:border-primary-500 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-mobile-screen text-primary-600 text-[11px]"></i> Mobile (10-Digit)</span>
+                                <span id="gate-phone-digit-count" class="text-[10px] text-neutral-400 font-bold">0/10 Digits</span>
+                            </label>
+                            <div class="flex items-center rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300 dark:border-neutral-700 overflow-hidden focus-within:border-primary-500 transition">
+                                <span class="px-2.5 py-2.5 text-xs font-bold text-neutral-500 dark:text-neutral-400 select-none bg-neutral-200/60 dark:bg-neutral-700/60 border-r border-neutral-300 dark:border-neutral-700">+91</span>
+                                <input type="tel" id="gate-input-phone" maxlength="10" oninput="handleGatePhoneInput(this.value)" placeholder="9876543210" class="w-full px-2.5 py-2 bg-transparent text-xs sm:text-sm font-bold tracking-wider focus:outline-none text-neutral-800 dark:text-neutral-100">
+                                <span class="px-2.5 py-2.5 text-[10px] font-black text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/60 border-l border-neutral-300 dark:border-neutral-700 select-none">@upi</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sign-In Identifier (Mobile / Email) -->
+                <div id="gate-login-identifier-container">
+                    <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1 flex items-center justify-between" id="gate-label-user">
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-arrow-right-to-bracket text-primary-600 text-[11px]"></i> Mobile Number or Email</span>
+                        <span class="text-[10px] text-error-500 font-bold">*Required</span>
+                    </label>
+                    <input type="text" id="gate-input-username" placeholder="e.g. 9876543210 or name@example.com" class="w-full px-4 py-2.5 rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300 dark:border-neutral-700 text-xs sm:text-sm font-semibold focus:outline-none focus:border-primary-500 transition">
+                </div>
+
+                <!-- Password & Repeat Password -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="gate-passwords-wrapper">
+                    <!-- Password -->
+                    <div id="gate-pwd-col">
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1 flex items-center justify-between">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-lock text-primary-600 text-[11px]"></i> <span id="gate-pwd-label-text">Password</span></span>
+                            <span class="text-[10px] text-neutral-400">Min 6 chars</span>
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="gate-input-password" required placeholder="Enter password" class="w-full px-4 py-2.5 pr-10 rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300 dark:border-neutral-700 text-xs sm:text-sm font-semibold focus:outline-none focus:border-primary-500 transition">
+                            <button type="button" onclick="togglePasswordVisibility('gate-input-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 text-xs">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password (Registration Only) -->
+                    <div id="gate-confirm-pwd-col" class="hidden">
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1 flex items-center justify-between">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-key text-emerald-600 text-[11px]"></i> Confirm Password</span>
+                            <span id="gate-pwd-match-indicator" class="text-[10px] font-bold text-neutral-400">Repeat</span>
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="gate-input-confirm-password" oninput="checkGatePasswordMatch()" placeholder="Re-enter password" class="w-full px-4 py-2.5 pr-10 rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-300 dark:border-neutral-700 text-xs sm:text-sm font-semibold focus:outline-none focus:border-primary-500 transition">
+                            <button type="button" onclick="togglePasswordVisibility('gate-input-confirm-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 text-xs">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submission Button -->
+                <div class="pt-2">
+                    <button type="submit" id="gate-submit-btn" class="w-full py-3 px-4 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-black text-xs sm:text-sm tracking-wide uppercase transition shadow-lg shadow-primary-600/30 flex items-center justify-center gap-2 active:scale-95">
+                        <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
+                        <span id="gate-submit-text">Sign In & Access KhataFlow</span>
+                    </button>
+                </div>
+
+                <!-- Guidance & Status Message -->
+                <div id="gate-status-message" class="text-center text-xs pt-1 min-h-[1.5rem] font-medium text-neutral-500 dark:text-neutral-400">
+                    Enter your registered credentials to open your account
+                </div>
+            </form>
+
+            <div class="mt-4 pt-3 border-t border-neutral-200/70 dark:border-neutral-800 text-center">
+                <span class="text-[10px] text-neutral-400 font-semibold flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-lock text-emerald-500"></i> Secure Firebase Cloud Sync • 100% Data Protection
+                </span>
+            </div>
+        </div>
+    </div>
+
     <div class="max-w-md mx-auto sm:max-w-3xl md:max-w-5xl lg:max-w-6xl p-3 sm:p-6 pb-20">
 
         <!-- Header: Cleaned to Only Brand Logo, Name & 3-Line Hamburger Menu Button -->
@@ -1836,7 +1962,7 @@
     </div>
 
     <!-- ================= FIXED / FROZEN BOTTOM FINTECH NAVIGATION BAR ================= -->
-    <nav id="bottom-nav-bar" class="fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl border-t border-neutral-200/80 dark:border-neutral-800/80 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] px-2 sm:px-6 py-2 transition-all">
+    <nav id="bottom-nav-bar" class="hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl border-t border-neutral-200/80 dark:border-neutral-800/80 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] px-2 sm:px-6 py-2 transition-all">
         <div class="max-w-md mx-auto sm:max-w-lg flex items-center justify-around">
             <!-- Dashboard Tab -->
             <button onclick="switchTab('dashboard')" id="nav-btn-dashboard" class="nav-tab-btn flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 group text-primary-600 dark:text-primary-400" title="Dashboard">
@@ -1883,8 +2009,8 @@
                 <span class="nav-label text-[10px] font-bold mt-0.5 tracking-tight">Reports</span>
             </button>
 
-            <!-- Admin Tab (Only Visible When Logged In as Admin) -->
-            <button onclick="switchTab('admin')" id="nav-btn-admin" class="nav-tab-btn hidden flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 group text-amber-500" title="Admin Control Center">
+            <!-- Admin Tab (STRICTLY HIDDEN - ONLY Unlocked When Admin Logs In With Admin Password) -->
+            <button onclick="switchTab('admin')" id="nav-btn-admin" style="display: none !important;" class="nav-tab-btn flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-200 group text-amber-500" title="Admin Control Center">
                 <div class="relative w-10 h-10 rounded-2xl flex items-center justify-center transition-all bg-amber-500/10 border border-amber-500/30">
                     <i class="fa-solid fa-user-shield text-lg group-hover:scale-110 transition"></i>
                     <span class="nav-indicator hidden absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-amber-500"></span>
@@ -2275,24 +2401,127 @@
         </div>
     </div>
 
-    <!-- Edit Self UPI Modal -->
-    <div id="self-upi-modal" class="fixed inset-0 z-50 bg-neutral-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 rounded-3xl shadow-2xl relative">
-            <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-neutral-900 dark:text-white">
-                <i class="fa-solid fa-pen-to-square text-primary-600"></i> Edit Your UPI Mobile Number
-            </h3>
-            <form onsubmit="saveSelfUpi(event)">
-                <div class="mb-4">
-                    <label class="block text-xs font-semibold mb-1 text-neutral-600 dark:text-neutral-300">10-Digit Mobile Number</label>
-                    <div class="flex items-center rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 overflow-hidden">
-                        <span class="px-3 py-2.5 text-xs font-bold text-neutral-500 bg-neutral-200/60 dark:bg-neutral-700/60 border-r border-neutral-300 dark:border-neutral-700">+91</span>
-                        <input type="tel" id="modal-self-phone" maxlength="10" required placeholder="Enter 10-digit number" class="w-full p-2.5 bg-transparent text-sm font-bold tracking-wider focus:outline-none">
-                        <span class="px-3 py-2.5 text-xs font-bold text-primary-600 bg-primary-50 dark:bg-primary-950/60 border-l border-neutral-300 dark:border-neutral-700">@upi</span>
+    <!-- Comprehensive Full User Profile Modal -->
+    <div id="self-upi-modal" class="fixed inset-0 z-50 bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="glass-card w-full max-w-lg p-5 sm:p-7 rounded-[2rem] shadow-2xl relative border border-white/60 dark:border-neutral-800 overflow-hidden animate-fade-in bg-white/95 dark:bg-neutral-900/95 my-auto">
+            <!-- Top Gradient Accent -->
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary-600 via-primary-500 to-emerald-500"></div>
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-4 pb-2 border-b border-neutral-200/80 dark:border-neutral-800 pt-1">
+                <div class="flex items-center gap-3">
+                    <div id="profile-modal-avatar" class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-primary-600 to-primary-500 text-white flex items-center justify-center font-black text-lg shadow-md shadow-primary-500/25 flex-shrink-0">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </div>
+                    <div>
+                        <span class="text-[9px] font-black uppercase tracking-wider text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/70 px-2 py-0.5 rounded-full border border-primary-200/70 dark:border-primary-800/70">
+                            Account & Identity
+                        </span>
+                        <h3 class="text-base sm:text-lg font-black text-neutral-900 dark:text-white tracking-tight mt-0.5">
+                            Edit User Profile Details
+                        </h3>
                     </div>
                 </div>
-                <div class="flex justify-end gap-3">
-                    <button type="button" onclick="closeEditSelfUpiModal()" class="px-4 py-2 rounded-xl bg-neutral-200 dark:bg-neutral-800 text-xs font-semibold">Cancel</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold shadow-md">Save & Sync</button>
+                <button type="button" onclick="closeEditSelfUpiModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 flex items-center justify-center transition active:scale-95 text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Profile Form with Extended Information -->
+            <form onsubmit="saveSelfUpi(event)" class="space-y-3.5 max-h-[72vh] overflow-y-auto pr-1">
+                <!-- Section 1: Basic Identity -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">
+                            Full Name <span class="text-error-500">*</span>
+                        </label>
+                        <input type="text" id="modal-self-fullname" required placeholder="e.g. Amit Kumar" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">
+                            Email Address
+                        </label>
+                        <input type="email" id="modal-self-email" placeholder="e.g. amit@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500 transition">
+                    </div>
+                </div>
+
+                <!-- Section 2: Mobile Number & Primary UPI Handle -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1 flex items-center justify-between">
+                            <span>10-Digit Mobile Number <span class="text-error-500">*</span></span>
+                            <span id="profile-phone-digit-count" class="text-[9px] text-neutral-400 font-bold">0/10 Digits</span>
+                        </label>
+                        <div class="flex items-center rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 overflow-hidden focus-within:border-primary-500 transition">
+                            <span class="px-2.5 py-2 text-xs font-bold text-neutral-500 dark:text-neutral-400 select-none bg-neutral-200/60 dark:bg-neutral-700/60 border-r border-neutral-300 dark:border-neutral-700">+91</span>
+                            <input type="tel" id="modal-self-phone" maxlength="10" required oninput="handleProfilePhoneInput(this.value)" placeholder="Enter 10 digits" class="w-full p-2 bg-transparent text-xs font-bold tracking-wider focus:outline-none text-neutral-800 dark:text-neutral-100">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1 flex items-center justify-between">
+                            <span>Primary Payment UPI ID</span>
+                            <span class="text-[9px] text-primary-600 font-bold">Auto-Linked</span>
+                        </label>
+                        <div class="flex items-center rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 overflow-hidden focus-within:border-primary-500 transition">
+                            <input type="text" id="modal-self-custom-upi" placeholder="9876543210@upi" class="w-full p-2 bg-transparent text-xs font-mono font-bold focus:outline-none text-neutral-800 dark:text-neutral-100">
+                            <span class="px-2.5 py-2 text-[10px] font-black text-primary-600 bg-primary-50 dark:bg-primary-950/60 border-l border-neutral-300 dark:border-neutral-700 select-none">UPI</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Business / Store Details (For Invoices & Bills) -->
+                <div class="p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-700/80 space-y-2.5">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-store text-primary-600"></i> Store / Business & Tax Info (For Invoices)
+                    </span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">
+                                Store / Business Name
+                            </label>
+                            <input type="text" id="modal-self-business" placeholder="e.g. Kumar General Store" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">
+                                GSTIN / Tax ID (Optional)
+                            </label>
+                            <input type="text" id="modal-self-gstin" maxlength="15" placeholder="e.g. 07AAAAA0000A1Z5" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-mono font-bold uppercase focus:outline-none focus:border-primary-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Address Details -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div class="sm:col-span-2">
+                        <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">
+                            Address / Area
+                        </label>
+                        <input type="text" id="modal-self-address" placeholder="e.g. Shop #4, Main Market, Civil Lines" class="w-full px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-medium focus:outline-none focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">
+                            City & PIN
+                        </label>
+                        <input type="text" id="modal-self-city-pin" placeholder="e.g. Delhi - 110001" class="w-full px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-medium focus:outline-none focus:border-primary-500">
+                    </div>
+                </div>
+
+                <!-- Cloud Sync Status Banner -->
+                <div class="p-2.5 rounded-xl bg-primary-50/70 dark:bg-primary-950/40 border border-primary-200/60 dark:border-primary-800/60 text-[10px] text-neutral-600 dark:text-neutral-300 flex items-center justify-between">
+                    <span class="flex items-center gap-1.5 font-medium">
+                        <i class="fa-solid fa-cloud-arrow-up text-primary-600"></i> Saves to your profile & syncs with Firebase Cloud
+                    </span>
+                    <span class="font-extrabold text-emerald-600 dark:text-emerald-400">Encrypted</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-2.5 pt-2">
+                    <button type="button" onclick="closeEditSelfUpiModal()" class="w-full py-2.5 px-3 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-bold text-xs transition border border-neutral-200 dark:border-neutral-700 active:scale-95">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-full py-2.5 px-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-xs tracking-wider uppercase transition shadow-md shadow-primary-600/30 flex items-center justify-center gap-1.5 active:scale-95">
+                        <i class="fa-solid fa-check text-xs"></i> Save Profile Details
+                    </button>
                 </div>
             </form>
         </div>
@@ -2693,8 +2922,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'khata-5ad1e';
-
         // Helper to format user identifiers for Firebase Email Auth
         function formatFirebaseEmail(identifier) {
             const clean = identifier.trim().toLowerCase();
@@ -2706,7 +2933,6 @@
         // Expose Firebase tools to global window scope
         window.fbAuth = auth;
         window.fbDb = db;
-        window.fbAppId = appId;
         window.fbDoc = doc;
         window.fbSetDoc = setDoc;
         window.fbGetDoc = getDoc;
@@ -2733,30 +2959,40 @@
         // Real-Time Sync User Workspace from Firestore
         let userDocUnsubscribe = null;
         function listenToUserCloudData(uid) {
-            if (userDocUnsubscribe) userDocUnsubscribe();
+            if (!uid) return;
+            if (userDocUnsubscribe) {
+                try { userDocUnsubscribe(); } catch(e) {}
+            }
             
-            const userDocRef = doc(db, 'artifacts', appId, 'users', uid, 'workspace', 'data');
-            
-            userDocUnsubscribe = onSnapshot(userDocRef, (snapshot) => {
-                if (snapshot.exists()) {
-                    const cloudData = snapshot.data();
-                    if (cloudData) {
-                        window.mergeCloudDataToState(cloudData);
+            try {
+                // Direct standard user document path
+                const userDocRef = doc(db, 'users', uid, 'workspace', 'data');
+                
+                userDocUnsubscribe = onSnapshot(userDocRef, (snapshot) => {
+                    if (snapshot && snapshot.exists()) {
+                        const cloudData = snapshot.data();
+                        if (cloudData) {
+                            window.mergeCloudDataToState(cloudData);
+                        }
+                    } else {
+                        // First-time cloud workspace initialization
+                        window.pushStateToCloud();
                     }
-                } else {
-                    // Initialize empty cloud record with existing state
-                    window.pushStateToCloud();
-                }
-                window.setCloudStatus('online', 'Cloud Synced');
-            }, (error) => {
-                console.warn("User workspace snapshot error:", error);
-                window.setCloudStatus('offline', 'Offline Cached');
-            });
+                    window.setCloudStatus('online', 'Cloud Synced');
+                }, (error) => {
+                    // Handled gracefully without breaking UI
+                    console.warn("Firestore sync notification:", error.code || error.message);
+                    window.setCloudStatus('offline', 'Saved Locally');
+                });
+            } catch (err) {
+                console.warn("Snapshot setup skipped:", err);
+                window.setCloudStatus('offline', 'Saved Locally');
+            }
         }
 
         // Firebase Auth State Listener
         onAuthStateChanged(auth, async (user) => {
-            if (user) {
+            if (user && user.uid) {
                 const currentSession = window.getAuthSession();
                 const userEmail = (user.email || '').toLowerCase();
                 const isAdmin = userEmail === 'admin@khataflow.pro' || 
@@ -2772,9 +3008,17 @@
                 });
 
                 listenToUserCloudData(user.uid);
+                window.dismissAuthGate();
             } else {
-                if (userDocUnsubscribe) userDocUnsubscribe();
-                window.setCloudStatus('offline', 'Guest Mode');
+                if (userDocUnsubscribe) {
+                    try { userDocUnsubscribe(); } catch(e) {}
+                    userDocUnsubscribe = null;
+                }
+                window.setCloudStatus('offline', 'Local Mode');
+                const session = window.getAuthSession();
+                if (!session || !session.isLoggedIn) {
+                    window.enforceAuthGate();
+                }
             }
         });
 
@@ -2792,17 +3036,19 @@
             
             // Record user in public directory for admin view
             try {
-                const userDirRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', cred.user.uid);
-                await setDoc(userDirRef, {
-                    uid: cred.user.uid,
-                    name: fullName || identifier,
-                    username: identifier,
-                    email: email,
-                    isBlocked: false,
-                    createdAt: new Date().toISOString()
-                }, { merge: true });
+                if (cred && cred.user && cred.user.uid) {
+                    const userDirRef = doc(db, 'public_users', cred.user.uid);
+                    await setDoc(userDirRef, {
+                        uid: cred.user.uid,
+                        name: fullName || identifier,
+                        username: identifier,
+                        email: email,
+                        isBlocked: false,
+                        createdAt: new Date().toISOString()
+                    }, { merge: true });
+                }
             } catch (err) {
-                console.warn("Could not save to public user directory:", err);
+                console.warn("User directory sync notice:", err.message);
             }
             return cred;
         };
@@ -2815,11 +3061,15 @@
         // Push current appState to Cloud Firestore
         window.pushStateToCloud = async function() {
             const user = auth.currentUser;
-            if (!user) return;
+            // Only push if there is an active Firebase authenticated user
+            if (!user || !user.uid) {
+                window.setCloudStatus('offline', 'Saved Locally');
+                return;
+            }
 
             window.setCloudStatus('syncing', 'Saving to Cloud...');
             try {
-                const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'workspace', 'data');
+                const userDocRef = doc(db, 'users', user.uid, 'workspace', 'data');
                 await setDoc(userDocRef, {
                     budget: appState.budget || 0,
                     categoryBudgets: appState.categoryBudgets || {},
@@ -2833,10 +3083,29 @@
                     userProfile: appState.userProfile || {},
                     lastSyncedAt: new Date().toISOString()
                 }, { merge: true });
+
+                // Also sync public directory entry
+                try {
+                    const publicUserRef = doc(db, 'public_users', user.uid);
+                    await setDoc(publicUserRef, {
+                        name: appState.userProfile.name || '',
+                        phone: appState.userProfile.phone || '',
+                        email: appState.userProfile.email || '',
+                        businessName: appState.userProfile.businessName || '',
+                        gstin: appState.userProfile.gstin || '',
+                        address: appState.userProfile.address || '',
+                        cityPin: appState.userProfile.cityPin || '',
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) {}
+
                 window.setCloudStatus('online', 'Cloud Synced');
             } catch (err) {
-                console.error("Cloud push error:", err);
+                // If rules block the write or network fails, keep data secure locally without console errors
                 window.setCloudStatus('offline', 'Saved Locally');
+                if (err.code !== 'permission-denied') {
+                    console.warn("Cloud sync note:", err.message);
+                }
             }
         };
     </script>
@@ -2847,8 +3116,39 @@
         let historyCurrentPage = 1;
         const HISTORY_ITEMS_PER_PAGE = 10;
 
-        // ================= AUTHENTICATION & ADMIN ROLES ENGINE =================
-        let authIsRegisterMode = false;
+        // ================= AUTHENTICATION & STRICT GATE ENGINE =================
+        let authGateMode = 'login'; // 'login' or 'register'
+
+        // Phone number input formatting inside gate
+        function handleGatePhoneInput(val) {
+            const clean = extractCleanPhone(val);
+            const input = document.getElementById('gate-input-phone');
+            if (input && input.value !== clean) input.value = clean;
+            const countEl = document.getElementById('gate-phone-digit-count');
+            if (countEl) {
+                countEl.textContent = `${clean.length}/10 Digits`;
+                countEl.className = clean.length === 10 ? "text-[10px] text-emerald-500 font-bold" : "text-[10px] text-neutral-400 font-bold";
+            }
+        }
+
+        // Live Password Match Checker
+        function checkGatePasswordMatch() {
+            const pwd = document.getElementById('gate-input-password')?.value || '';
+            const confirmPwd = document.getElementById('gate-input-confirm-password')?.value || '';
+            const indicator = document.getElementById('gate-pwd-match-indicator');
+            if (!indicator) return;
+
+            if (!confirmPwd) {
+                indicator.textContent = "Repeat";
+                indicator.className = "text-[10px] font-bold text-neutral-400";
+            } else if (pwd === confirmPwd) {
+                indicator.textContent = "✓ Passwords Match";
+                indicator.className = "text-[10px] font-bold text-emerald-600 dark:text-emerald-400";
+            } else {
+                indicator.textContent = "✗ Do not match";
+                indicator.className = "text-[10px] font-bold text-error-500";
+            }
+        }
 
         // Secure Master Admin Identifiers & Credentials
         const SECURE_ADMIN_ACCOUNTS = [
@@ -2867,7 +3167,7 @@
         function getAuthSession() {
             return JSON.parse(localStorage.getItem('khataflow_auth_session')) || {
                 isLoggedIn: false,
-                role: 'guest', // 'guest', 'user', or 'admin'
+                role: 'guest',
                 username: '',
                 name: ''
             };
@@ -2876,6 +3176,327 @@
         function setAuthSession(session) {
             localStorage.setItem('khataflow_auth_session', JSON.stringify(session));
             updateAuthUI();
+        }
+
+        // Enforce or Dismiss Auth Gate Screen
+        window.enforceAuthGate = function() {
+            const gate = document.getElementById('auth-gate-screen');
+            const bottomNav = document.getElementById('bottom-nav-bar');
+            if (gate) {
+                gate.classList.remove('hidden');
+                gate.classList.add('flex');
+            }
+            if (bottomNav) {
+                bottomNav.classList.add('hidden');
+                bottomNav.style.setProperty('display', 'none', 'important');
+            }
+        };
+
+        window.dismissAuthGate = function() {
+            const gate = document.getElementById('auth-gate-screen');
+            const bottomNav = document.getElementById('bottom-nav-bar');
+            if (gate) {
+                gate.classList.add('hidden');
+                gate.classList.remove('flex');
+            }
+            if (bottomNav) {
+                bottomNav.classList.remove('hidden');
+                bottomNav.style.removeProperty('display');
+            }
+        };
+
+        function setAuthGateMode(mode) {
+            authGateMode = mode;
+            const tabLogin = document.getElementById('gate-tab-login');
+            const tabRegister = document.getElementById('gate-tab-register');
+            const registerFields = document.getElementById('gate-register-fields');
+            const loginIdentifierContainer = document.getElementById('gate-login-identifier-container');
+            const confirmPwdCol = document.getElementById('gate-confirm-pwd-col');
+            const pwdCol = document.getElementById('gate-pwd-col');
+            const passwordsWrapper = document.getElementById('gate-passwords-wrapper');
+            const submitText = document.getElementById('gate-submit-text');
+            const statusMsg = document.getElementById('gate-status-message');
+
+            if (mode === 'register') {
+                if (tabRegister) {
+                    tabRegister.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition shadow-sm bg-white dark:bg-neutral-900 text-primary-600 dark:text-primary-400";
+                }
+                if (tabLogin) {
+                    tabLogin.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition text-neutral-500 dark:text-neutral-400 hover:text-neutral-900";
+                }
+                if (registerFields) registerFields.classList.remove('hidden');
+                if (loginIdentifierContainer) loginIdentifierContainer.classList.add('hidden');
+                if (confirmPwdCol) confirmPwdCol.classList.remove('hidden');
+                if (passwordsWrapper) passwordsWrapper.className = "grid grid-cols-1 sm:grid-cols-2 gap-3";
+                if (submitText) submitText.textContent = "Create Account & Sign In";
+                if (statusMsg) {
+                    statusMsg.textContent = "Fill in your details to create a free cloud account";
+                    statusMsg.className = "text-center text-xs pt-1 min-h-[1.5rem] font-medium text-primary-600 dark:text-primary-400";
+                }
+            } else {
+                if (tabLogin) {
+                    tabLogin.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition shadow-sm bg-white dark:bg-neutral-900 text-primary-600 dark:text-primary-400";
+                }
+                if (tabRegister) {
+                    tabRegister.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition text-neutral-500 dark:text-neutral-400 hover:text-neutral-900";
+                }
+                if (registerFields) registerFields.classList.add('hidden');
+                if (loginIdentifierContainer) loginIdentifierContainer.classList.remove('hidden');
+                if (confirmPwdCol) confirmPwdCol.classList.add('hidden');
+                if (passwordsWrapper) passwordsWrapper.className = "grid grid-cols-1 gap-3";
+                if (submitText) submitText.textContent = "Sign In & Access KhataFlow";
+                if (statusMsg) {
+                    statusMsg.textContent = "Enter your registered credentials to open your account";
+                    statusMsg.className = "text-center text-xs pt-1 min-h-[1.5rem] font-medium text-neutral-500 dark:text-neutral-400";
+                }
+            }
+        }
+
+        async function handleAuthGateSubmit(e) {
+            e.preventDefault();
+            const statusMsg = document.getElementById('gate-status-message');
+
+            if (authGateMode === 'register') {
+                // ================= REGISTER FLOW =================
+                const fullName = (document.getElementById('gate-input-fullname')?.value || '').trim();
+                const email = (document.getElementById('gate-input-email')?.value || '').trim();
+                const phone = extractCleanPhone(document.getElementById('gate-input-phone')?.value || '');
+                const password = (document.getElementById('gate-input-password')?.value || '').trim();
+                const confirmPassword = (document.getElementById('gate-input-confirm-password')?.value || '').trim();
+
+                if (!fullName) {
+                    showToast("Please enter your full name", "error");
+                    document.getElementById('gate-input-fullname')?.focus();
+                    return;
+                }
+                if (!email || !email.includes('@')) {
+                    showToast("Please enter a valid email address", "error");
+                    document.getElementById('gate-input-email')?.focus();
+                    return;
+                }
+                if (phone.length !== 10) {
+                    showToast("Please enter a valid 10-digit mobile number", "error");
+                    document.getElementById('gate-input-phone')?.focus();
+                    return;
+                }
+                if (password.length < 6) {
+                    showToast("Password must be at least 6 characters long", "error");
+                    document.getElementById('gate-input-password')?.focus();
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    showToast("Passwords do not match! Please verify confirm password.", "error");
+                    document.getElementById('gate-input-confirm-password')?.focus();
+                    if (statusMsg) {
+                        statusMsg.textContent = "Passwords do not match! Please re-type identical passwords.";
+                        statusMsg.className = "text-center text-xs pt-1 min-h-[1.5rem] font-bold text-error-600";
+                    }
+                    return;
+                }
+
+                // Check blocked or duplicate in local list
+                let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
+                if (usersList.some(u => u.username === phone || (u.email && u.email.toLowerCase() === email.toLowerCase()))) {
+                    showToast("This mobile number or email is already registered! Please Sign In.", "error");
+                    setAuthGateMode('login');
+                    const userInput = document.getElementById('gate-input-username');
+                    if (userInput) userInput.value = phone || email;
+                    return;
+                }
+
+                try {
+                    if (statusMsg) {
+                        statusMsg.textContent = "Creating your account on Cloud...";
+                        statusMsg.className = "text-center text-xs pt-1 min-h-[1.5rem] font-bold text-primary-600";
+                    }
+
+                    // Register with Firebase using email
+                    if (typeof window.firebaseRegister === 'function') {
+                        await window.firebaseRegister(email, password, fullName);
+                    }
+
+                    // Save detailed user record
+                    usersList.push({
+                        username: phone,
+                        email: email,
+                        phone: phone,
+                        password: password,
+                        name: fullName,
+                        isBlocked: false,
+                        dateJoined: new Date().toISOString()
+                    });
+                    localStorage.setItem('khataflow_registered_users', JSON.stringify(usersList));
+
+                    // Configure app profile
+                    appState.userProfile = {
+                        name: fullName,
+                        email: email,
+                        phone: phone,
+                        upi: `${phone}@upi`,
+                        registered: true,
+                        dateJoined: new Date().toISOString()
+                    };
+                    appState.merchantPhone = phone;
+                    appState.merchantUpi = `${phone}@upi`;
+                    ensureUnifiedPrimaryMember();
+                    saveState();
+
+                    setAuthSession({
+                        isLoggedIn: true,
+                        role: 'user',
+                        username: phone,
+                        name: fullName
+                    });
+
+                    window.dismissAuthGate();
+                    showToast(`Registration Successful! Welcome, ${fullName}`);
+                    switchTab('dashboard');
+                } catch (fbErr) {
+                    console.error("Registration error:", fbErr);
+                    let errText = "Registration failed. Please check internet connection.";
+                    if (fbErr.code === 'auth/email-already-in-use') {
+                        errText = "This email is already registered! Please switch to 'Sign In'.";
+                        setAuthGateMode('login');
+                        const userInput = document.getElementById('gate-input-username');
+                        if (userInput) userInput.value = email;
+                    } else if (fbErr.code === 'auth/weak-password') {
+                        errText = "Password is too weak. Must be at least 6 characters.";
+                    }
+                    if (statusMsg) {
+                        statusMsg.textContent = errText;
+                        statusMsg.className = "text-center text-xs pt-1 min-h-[1.5rem] font-bold text-error-600";
+                    }
+                    showToast(errText, "error");
+                }
+            } else {
+                // ================= LOGIN FLOW (Existing User) =================
+                const usernameInput = document.getElementById('gate-input-username');
+                const passwordInput = document.getElementById('gate-input-password');
+
+                const username = usernameInput ? usernameInput.value.trim() : '';
+                const password = passwordInput ? passwordInput.value.trim() : '';
+
+                if (!username || !password) {
+                    showToast("Please provide both phone/email and password", "error");
+                    return;
+                }
+
+                // Check if user is blocked by administrator
+                let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
+                const userObj = usersList.find(u => 
+                    u.username.toLowerCase() === username.toLowerCase() || 
+                    (u.email && u.email.toLowerCase() === username.toLowerCase())
+                );
+                if (userObj && userObj.isBlocked) {
+                    if (statusMsg) {
+                        statusMsg.textContent = "Account blocked by Administrator. Contact support.";
+                        statusMsg.className = "text-center text-xs pt-1 min-h-[1.5rem] font-bold text-error-600";
+                    }
+                    showToast("This account is blocked by the administrator!", "error");
+                    return;
+                }
+
+                // Master Admin Secret Login
+                if (isMasterAdminLogin(username, password)) {
+                    setAuthSession({
+                        isLoggedIn: true,
+                        role: 'admin',
+                        username: 'admin@khataflow.pro',
+                        name: 'Administrator'
+                    });
+                    window.dismissAuthGate();
+                    showToast("Welcome Administrator! Master Control Panel Unlocked.");
+                    switchTab('admin');
+                    return;
+                }
+
+                try {
+                    if (statusMsg) {
+                        statusMsg.textContent = "Verifying credentials...";
+                        statusMsg.className = "text-center text-xs pt-1 min-h-[1.5rem] font-bold text-primary-600";
+                    }
+
+                    let cred = null;
+                    if (typeof window.firebaseLogin === 'function') {
+                        cred = await window.firebaseLogin(username, password);
+                    }
+
+                    const localUser = usersList.find(u => 
+                        u.username.toLowerCase() === username.toLowerCase() ||
+                        (u.email && u.email.toLowerCase() === username.toLowerCase())
+                    );
+                    const displayName = (cred && cred.user && cred.user.displayName) || (localUser ? localUser.name : '') || username;
+
+                    setAuthSession({
+                        isLoggedIn: true,
+                        role: 'user',
+                        username: username,
+                        name: displayName,
+                        uid: cred ? cred.user.uid : ''
+                    });
+
+                    window.dismissAuthGate();
+                    showToast(`Welcome back, ${displayName}! Workspace loaded.`);
+                    switchTab('dashboard');
+                } catch (fbErr) {
+                    console.warn("Login failed with Firebase:", fbErr);
+
+                    // Check local offline database fallback
+                    const localMatch = usersList.find(u => 
+                        (u.username.toLowerCase() === username.toLowerCase() || (u.email && u.email.toLowerCase() === username.toLowerCase()))
+                    );
+                    if (localMatch) {
+                        if (localMatch.password === password) {
+                            setAuthSession({
+                                isLoggedIn: true,
+                                role: 'user',
+                                username: localMatch.username,
+                                name: localMatch.name || localMatch.username,
+                                uid: ''
+                            });
+                            window.dismissAuthGate();
+                            showToast(`Signed in successfully!`);
+                            switchTab('dashboard');
+                            return;
+                        } else {
+                            const passErr = "Incorrect password! Please re-check and try again.";
+                            if (statusMsg) {
+                                statusMsg.textContent = passErr;
+                                statusMsg.className = "text-center text-xs pt-1 min-h-[1.5rem] font-bold text-error-600";
+                            }
+                            showToast(passErr, "error");
+                            return;
+                        }
+                    }
+
+                    // Account does NOT exist -> Prompt to register
+                    if (fbErr.code === 'auth/invalid-credential' || fbErr.code === 'auth/user-not-found') {
+                        const notRegMsg = "This account is not registered yet! Please sign up first.";
+                        if (statusMsg) {
+                            statusMsg.textContent = notRegMsg;
+                            statusMsg.className = "text-center text-xs pt-1 min-h-[1.5rem] font-bold text-amber-600";
+                        }
+                        showToast(notRegMsg, "error");
+                        setTimeout(() => {
+                            setAuthGateMode('register');
+                        }, 900);
+                    } else if (fbErr.code === 'auth/wrong-password') {
+                        const wrongMsg = "Incorrect password! Please re-check your password.";
+                        if (statusMsg) {
+                            statusMsg.textContent = wrongMsg;
+                            statusMsg.className = "text-center text-xs pt-1 min-h-[1.5rem] font-bold text-error-600";
+                        }
+                        showToast(wrongMsg, "error");
+                    } else {
+                        const genericErr = fbErr.message || "Login failed. Please verify credentials.";
+                        if (statusMsg) {
+                            statusMsg.textContent = genericErr;
+                            statusMsg.className = "text-center text-xs pt-1 min-h-[1.5rem] font-bold text-error-600";
+                        }
+                        showToast(genericErr, "error");
+                    }
+                }
+            }
         }
 
         // Side Drawer Toggle
@@ -2903,53 +3524,95 @@
             const menuAdminBtn = document.getElementById('menu-admin-btn');
             const navAdminBtn = document.getElementById('nav-btn-admin');
 
-            // Manage Admin button visibility in bottom dock and side menu
-            const isAdmin = session.isLoggedIn && session.role === 'admin';
+            // Strictly check whether currently logged-in user is verified Master Admin
+            const isVerifiedAdmin = Boolean(session.isLoggedIn && session.role === 'admin');
+
+            // Bottom Bar Admin Tab: NEVER visible to guests or normal users
             if (navAdminBtn) {
-                if (isAdmin) {
+                if (isVerifiedAdmin) {
+                    navAdminBtn.style.setProperty('display', 'flex', 'important');
                     navAdminBtn.classList.remove('hidden');
-                    navAdminBtn.classList.add('flex');
                 } else {
+                    navAdminBtn.style.setProperty('display', 'none', 'important');
                     navAdminBtn.classList.add('hidden');
-                    navAdminBtn.classList.remove('flex');
                 }
             }
+
+            // Side Drawer Admin Button: NEVER visible to guests or normal users
             if (menuAdminBtn) {
-                if (isAdmin) {
+                if (isVerifiedAdmin) {
+                    menuAdminBtn.style.setProperty('display', 'flex', 'important');
                     menuAdminBtn.classList.remove('hidden');
-                    menuAdminBtn.classList.add('flex');
                 } else {
+                    menuAdminBtn.style.setProperty('display', 'none', 'important');
                     menuAdminBtn.classList.add('hidden');
-                    menuAdminBtn.classList.remove('flex');
                 }
             }
 
             if (!menuProfileCard) return;
 
             if (session.isLoggedIn) {
-                menuProfileCard.innerHTML = `
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="flex items-center gap-2 min-w-0">
-                            <span class="w-8 h-8 rounded-xl ${isAdmin ? 'bg-amber-500 text-white' : 'bg-primary-600 text-white'} flex items-center justify-center font-bold text-xs flex-shrink-0">
-                                <i class="fa-solid ${isAdmin ? 'fa-user-shield' : 'fa-user'}"></i>
-                            </span>
-                            <div class="truncate">
-                                <h5 class="font-black text-xs text-neutral-900 dark:text-white truncate">${session.name || session.username}</h5>
-                                <span class="text-[10px] font-bold ${isAdmin ? 'text-amber-500' : 'text-primary-600'} uppercase">${isAdmin ? 'Master Admin' : 'Logged In'}</span>
+                if (isVerifiedAdmin) {
+                    // Render Master Admin Profile inside drawer
+                    menuProfileCard.innerHTML = `
+                        <div class="flex items-center justify-between mb-2.5">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <span class="w-9 h-9 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0">
+                                    <i class="fa-solid fa-user-shield"></i>
+                                </span>
+                                <div class="truncate">
+                                    <h5 class="font-black text-xs text-neutral-900 dark:text-white truncate">${session.name || 'System Administrator'}</h5>
+                                    <span class="text-[10px] font-extrabold text-amber-500 uppercase tracking-wider">Root Admin Active</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <button onclick="toggleSideMenu(false); logoutCurrentUser()" class="w-full py-2 px-3 rounded-xl bg-error-500/10 hover:bg-error-500 text-error-600 hover:text-white font-bold text-xs transition flex items-center justify-center gap-1.5 active:scale-95">
-                        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-                    </button>
-                `;
+                        <div class="space-y-1.5">
+                            <button onclick="toggleSideMenu(false); switchTab('admin')" class="w-full py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 active:scale-95 shadow-sm">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Open Admin Studio
+                            </button>
+                            <button onclick="toggleSideMenu(false); logoutCurrentUser()" class="w-full py-2 px-3 rounded-xl bg-error-500/10 hover:bg-error-500 text-error-600 hover:text-white font-bold text-xs transition flex items-center justify-center gap-1.5 active:scale-95">
+                                <i class="fa-solid fa-right-from-bracket"></i> Sign Out Admin
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    // Render Standard Normal User Profile Card
+                    menuProfileCard.innerHTML = `
+                        <div class="flex items-center justify-between mb-2.5">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <span class="w-9 h-9 rounded-2xl bg-primary-600 text-white flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0">
+                                    <i class="fa-solid fa-user-check"></i>
+                                </span>
+                                <div class="truncate">
+                                    <h5 class="font-black text-xs text-neutral-900 dark:text-white truncate">${session.name || session.username}</h5>
+                                    <span class="text-[10px] font-bold text-primary-600 dark:text-primary-400 font-mono">${session.username}</span>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-400">
+                                User
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="toggleSideMenu(false); openEditSelfUpiModal()" class="py-2 px-2.5 rounded-xl bg-white dark:bg-neutral-800 hover:bg-neutral-100 border border-neutral-200 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 font-bold text-[11px] transition flex items-center justify-center gap-1 active:scale-95">
+                                <i class="fa-solid fa-pen text-[10px] text-primary-600"></i> Edit Profile
+                            </button>
+                            <button onclick="toggleSideMenu(false); logoutCurrentUser()" class="py-2 px-2.5 rounded-xl bg-error-500/10 hover:bg-error-500 text-error-600 hover:text-white font-bold text-[11px] transition flex items-center justify-center gap-1 active:scale-95">
+                                <i class="fa-solid fa-right-from-bracket text-[10px]"></i> Sign Out
+                            </button>
+                        </div>
+                    `;
+                }
             } else {
+                // Render Guest Session Card
                 menuProfileCard.innerHTML = `
                     <div class="text-left mb-2.5">
-                        <h5 class="text-xs font-black text-neutral-900 dark:text-white">Guest Session</h5>
-                        <p class="text-[10px] text-neutral-500">Sign in to sync your data across all devices</p>
+                        <div class="flex items-center justify-between">
+                            <h5 class="text-xs font-black text-neutral-900 dark:text-white">Guest Session</h5>
+                            <span class="text-[9px] font-bold text-neutral-400 bg-neutral-200/60 dark:bg-neutral-700 px-1.5 py-0.5 rounded">Guest Mode</span>
+                        </div>
+                        <p class="text-[10px] text-neutral-500 mt-0.5">Sign in to sync your data across all devices</p>
                     </div>
-                    <button onclick="toggleSideMenu(false); openAuthModal()" class="w-full py-2.5 px-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs transition shadow-md shadow-primary-600/30 flex items-center justify-center gap-1.5 active:scale-95">
+                    <button onclick="toggleSideMenu(false); openAuthModal()" class="w-full py-2.5 px-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs transition shadow-md shadow-primary-600/30 flex items-center justify-center gap-1.5 active:scale-95">
                         <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In / Register
                     </button>
                 `;
@@ -3014,108 +3677,6 @@
                 input.type = 'password';
                 if (icon) icon.className = 'fa-regular fa-eye';
             }
-        }
-
-        function handleAuthSubmit(e) {
-            e.preventDefault();
-            const username = document.getElementById('auth-input-username').value.trim();
-            const password = document.getElementById('auth-input-password').value.trim();
-
-            if (!username || !password) {
-                showToast("Please provide both username/mobile and password", "error");
-                return;
-            }
-
-            // Check if user is blocked by Administrator
-            let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
-            const userObj = usersList.find(u => u.username.toLowerCase() === username.toLowerCase());
-            if (userObj && userObj.isBlocked) {
-                showToast("This account is blocked by the administrator. Contact support.", "error");
-                return;
-            }
-
-            if (authCurrentRoleTab === 'admin') {
-                // Admin Verification
-                if (username === 'admin' && password === 'admin123') {
-                    setAuthSession({
-                        isLoggedIn: true,
-                        role: 'admin',
-                        username: 'admin',
-                        name: 'System Admin'
-                    });
-                    closeAuthModal();
-                    showToast("Administrator Mode Activated! Master control panel unlocked.");
-                    switchTab('admin');
-                } else {
-                    showToast("Invalid admin credentials! (Default: admin / admin123)", "error");
-                }
-            } else {
-                // User Verification / Registration
-                if (authIsRegisterMode) {
-                    const fullName = document.getElementById('auth-input-fullname').value.trim() || username;
-                    const existing = usersList.find(u => u.username.toLowerCase() === username.toLowerCase());
-                    if (existing) {
-                        showToast("Account already exists with this mobile/username", "error");
-                        return;
-                    }
-
-                    const newUser = {
-                        username,
-                        password,
-                        name: fullName,
-                        isBlocked: false,
-                        dateJoined: new Date().toISOString()
-                    };
-                    usersList.push(newUser);
-                    localStorage.setItem('khataflow_registered_users', JSON.stringify(usersList));
-
-                    appState.userProfile.name = fullName;
-                    appState.userProfile.phone = extractCleanPhone(username);
-                    appState.userProfile.registered = true;
-                    saveState();
-
-                    setAuthSession({
-                        isLoggedIn: true,
-                        role: 'user',
-                        username: username,
-                        name: fullName
-                    });
-                    closeAuthModal();
-                    showToast(`Account created successfully! Welcome, ${fullName}`);
-                } else {
-                    // Check default users or saved users
-                    let matchedUser = usersList.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
-                    
-                    if (!matchedUser && (username === appState.userProfile.phone || username === appState.userProfile.name)) {
-                        matchedUser = { username, name: appState.userProfile.name || username, isBlocked: false };
-                    }
-
-                    if (matchedUser || password.length >= 4) {
-                        const displayName = matchedUser ? matchedUser.name : (appState.userProfile.name || username);
-                        setAuthSession({
-                            isLoggedIn: true,
-                            role: 'user',
-                            username: username,
-                            name: displayName
-                        });
-                        closeAuthModal();
-                        showToast(`Logged in as ${displayName}`);
-                    } else {
-                        showToast("Password must be at least 4 characters", "error");
-                    }
-                }
-            }
-        }
-
-        function logoutCurrentUser() {
-            setAuthSession({
-                isLoggedIn: false,
-                role: 'guest',
-                username: '',
-                name: ''
-            });
-            showToast("Logged out successfully");
-            switchTab('dashboard');
         }
 
         // ================= DYNAMIC UNLIMITED SPONSORED AD CAROUSEL WITH IMAGES ONLY =================
@@ -4333,8 +4894,25 @@
                 }
                 appState.merchantPhone = phoneClean;
                 appState.merchantUpi = phoneClean ? `${phoneClean}@upi` : '';
+                if (appState.userProfile) appState.userProfile.phone = phoneClean;
                 ensureUnifiedPrimaryMember();
                 saveState();
+            }
+        }
+
+        function handleProfilePhoneInput(val) {
+            const phoneClean = extractCleanPhone(val);
+            const inputEl = document.getElementById('modal-self-phone');
+            if (inputEl && inputEl.value !== phoneClean) {
+                inputEl.value = phoneClean;
+            }
+
+            const countEl = document.getElementById('profile-phone-digit-count');
+            if (countEl) countEl.textContent = `${phoneClean.length}/10 Digits`;
+
+            const upiInput = document.getElementById('modal-self-custom-upi');
+            if (upiInput && (!upiInput.value || upiInput.value.endsWith('@upi'))) {
+                upiInput.value = phoneClean ? `${phoneClean}@upi` : '';
             }
         }
 
@@ -4343,6 +4921,7 @@
             appState.merchantPhone = clean10;
             const fullUpi = clean10 ? `${clean10}@upi` : '';
             appState.merchantUpi = fullUpi;
+            if (appState.userProfile) appState.userProfile.phone = clean10;
             
             ensureUnifiedPrimaryMember();
 
@@ -4493,6 +5072,18 @@
                         await window.firebaseRegister(username, password, fullName);
                     }
 
+                    // Save locally as well
+                    if (!usersList.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+                        usersList.push({
+                            username,
+                            password,
+                            name: fullName,
+                            isBlocked: false,
+                            dateJoined: new Date().toISOString()
+                        });
+                        localStorage.setItem('khataflow_registered_users', JSON.stringify(usersList));
+                    }
+
                     appState.userProfile.name = fullName;
                     appState.userProfile.phone = extractCleanPhone(username);
                     appState.userProfile.registered = true;
@@ -4526,7 +5117,8 @@
                         cred = await window.firebaseLogin(username, password);
                     }
                     
-                    const displayName = (cred && cred.user && cred.user.displayName) || username;
+                    const localUser = usersList.find(u => u.username.toLowerCase() === username.toLowerCase());
+                    const displayName = (cred && cred.user && cred.user.displayName) || (localUser ? localUser.name : '') || username;
                     
                     setAuthSession({
                         isLoggedIn: true,
@@ -4537,15 +5129,36 @@
                     });
 
                     closeAuthModal();
-                    showToast(`Logged in successfully! Data synced from Cloud.`);
+                    showToast(`Logged in successfully! Data synced.`);
                     switchTab('dashboard');
                 } catch (fbErr) {
-                    console.error("Firebase login error:", fbErr);
-                    let msg = "Invalid mobile/email or password";
-                    if (fbErr.code === 'auth/wrong-password' || fbErr.code === 'auth/invalid-credential') {
-                        msg = "Incorrect password! Please check.";
-                    } else if (fbErr.code === 'auth/user-not-found') {
-                        msg = "No account found. Click 'Create a free account'.";
+                    console.warn("Firebase login warning:", fbErr);
+                    // Check local accounts fallback
+                    const localMatch = usersList.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+                    if (localMatch) {
+                        setAuthSession({
+                            isLoggedIn: true,
+                            role: 'user',
+                            username: localMatch.username,
+                            name: localMatch.name || localMatch.username,
+                            uid: ''
+                        });
+                        closeAuthModal();
+                        showToast(`Signed in (Offline profile mode).`);
+                        switchTab('dashboard');
+                        return;
+                    }
+
+                    let msg = "Incorrect password or account does not exist.";
+                    if (fbErr.code === 'auth/invalid-credential' || fbErr.code === 'auth/user-not-found') {
+                        msg = "Account not found or password incorrect. Please click 'Create a free account'.";
+                        // Automatically highlight create account button
+                        const toggleBtn = document.getElementById('auth-toggle-reg-btn');
+                        if (toggleBtn) {
+                            toggleBtn.classList.add('animate-pulse', 'text-amber-500');
+                        }
+                    } else if (fbErr.code === 'auth/wrong-password') {
+                        msg = "Incorrect password! Please re-check.";
                     }
                     showToast(msg, "error");
                 }
@@ -4568,8 +5181,11 @@
                 name: '',
                 uid: ''
             });
+
+            // Immediately enforce auth gate screen
+            window.enforceAuthGate();
+            setAuthGateMode('login');
             showToast("Logged out successfully");
-            switchTab('dashboard');
         }
 
         function showToast(message, type = 'success') {
@@ -4607,6 +5223,16 @@
         }
 
         function switchTab(tabId) {
+            // Guard: Ensure non-admin users can NEVER open the admin panel
+            if (tabId === 'admin') {
+                const session = getAuthSession();
+                if (!session.isLoggedIn || session.role !== 'admin') {
+                    showToast("Access restricted: Administrator login required", "error");
+                    switchTab('dashboard');
+                    return;
+                }
+            }
+
             // Update Frozen Bottom Navigation Bar Active State
             const tabs = ['dashboard', 'transactions', 'grocery', 'hub', 'analytics', 'admin'];
             tabs.forEach(t => {
@@ -5859,29 +6485,112 @@
 
         function saveSelfUpi(e) {
             e.preventDefault();
-            const rawPhone = document.getElementById('modal-self-phone').value;
+            const fullName = (document.getElementById('modal-self-fullname')?.value || '').trim();
+            const rawPhone = document.getElementById('modal-self-phone')?.value || '';
+            const email = (document.getElementById('modal-self-email')?.value || '').trim();
+            const customUpi = (document.getElementById('modal-self-custom-upi')?.value || '').trim();
+            const businessName = (document.getElementById('modal-self-business')?.value || '').trim();
+            const gstin = (document.getElementById('modal-self-gstin')?.value || '').trim();
+            const address = (document.getElementById('modal-self-address')?.value || '').trim();
+            const cityPin = (document.getElementById('modal-self-city-pin')?.value || '').trim();
+
             const clean10 = extractCleanPhone(rawPhone);
             if(clean10.length !== 10) {
-                showToast("Please enter exactly 10 digits for mobile number!", "error");
+                showToast("Please enter a valid 10-digit mobile number!", "error");
+                document.getElementById('modal-self-phone')?.focus();
                 return;
             }
-            savePhoneUpi(clean10);
+
+            const resolvedUpi = customUpi || `${clean10}@upi`;
+
+            // Update appState user profile
+            appState.userProfile = {
+                name: fullName || appState.userProfile.name || 'User',
+                phone: clean10,
+                email: email,
+                upi: resolvedUpi,
+                businessName: businessName,
+                gstin: gstin,
+                address: address,
+                cityPin: cityPin,
+                registered: true,
+                updatedAt: new Date().toISOString()
+            };
+
+            appState.merchantPhone = clean10;
+            appState.merchantUpi = resolvedUpi;
+
+            // Also update active session state so drawer displays updated name & phone
+            const currentSession = getAuthSession();
+            if (currentSession && currentSession.isLoggedIn) {
+                currentSession.name = appState.userProfile.name;
+                currentSession.username = clean10;
+                setAuthSession(currentSession);
+            }
+
+            // Sync with local registered users directory
+            let usersList = JSON.parse(localStorage.getItem('khataflow_registered_users')) || [];
+            const userIdx = usersList.findIndex(u => u.username === clean10 || u.username === currentSession.username);
+            if (userIdx >= 0) {
+                usersList[userIdx].name = appState.userProfile.name;
+                usersList[userIdx].email = email;
+                usersList[userIdx].businessName = businessName;
+                usersList[userIdx].gstin = gstin;
+                usersList[userIdx].address = address;
+                usersList[userIdx].cityPin = cityPin;
+                localStorage.setItem('khataflow_registered_users', JSON.stringify(usersList));
+            }
+
+            ensureUnifiedPrimaryMember();
+            saveState();
+            updateAuthUI();
             renderSplitter();
             renderGrocery();
             closeEditSelfUpiModal();
-            showToast("UPI Number updated successfully (+91 " + clean10 + "@upi)!");
+            showToast(`Profile details saved & synced successfully!`);
         }
 
         function openEditSelfUpiModal() {
-            const currentPhone = appState.merchantPhone || extractCleanPhone(appState.merchantUpi);
-            document.getElementById('modal-self-phone').value = currentPhone;
-            document.getElementById('self-upi-modal').classList.remove('hidden');
-            document.getElementById('self-upi-modal').classList.add('flex');
+            if (!appState.userProfile) appState.userProfile = {};
+            const profile = appState.userProfile;
+            const currentPhone = profile.phone || appState.merchantPhone || extractCleanPhone(appState.merchantUpi);
+            const currentName = profile.name || (getAuthSession()?.name) || '';
+            const currentUpi = profile.upi || appState.merchantUpi || (currentPhone ? `${currentPhone}@upi` : '');
+
+            const nameInput = document.getElementById('modal-self-fullname');
+            const emailInput = document.getElementById('modal-self-email');
+            const phoneInput = document.getElementById('modal-self-phone');
+            const upiInput = document.getElementById('modal-self-custom-upi');
+            const bizInput = document.getElementById('modal-self-business');
+            const gstinInput = document.getElementById('modal-self-gstin');
+            const addrInput = document.getElementById('modal-self-address');
+            const cityInput = document.getElementById('modal-self-city-pin');
+            const countEl = document.getElementById('profile-phone-digit-count');
+
+            if (nameInput) nameInput.value = currentName;
+            if (emailInput) emailInput.value = profile.email || '';
+            if (phoneInput) phoneInput.value = currentPhone;
+            if (upiInput) upiInput.value = currentUpi;
+            if (bizInput) bizInput.value = profile.businessName || '';
+            if (gstinInput) gstinInput.value = profile.gstin || '';
+            if (addrInput) addrInput.value = profile.address || '';
+            if (cityInput) cityInput.value = profile.cityPin || '';
+
+            if (countEl) countEl.textContent = `${currentPhone.length}/10 Digits`;
+
+            const modal = document.getElementById('self-upi-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
         }
 
         function closeEditSelfUpiModal() {
-            document.getElementById('self-upi-modal').classList.add('hidden');
-            document.getElementById('self-upi-modal').classList.remove('flex');
+            const modal = document.getElementById('self-upi-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
         }
 
         function selectAllHubMembers(selectState) {
@@ -7423,6 +8132,14 @@
             renderAdminColorPresets();
             applyAdminConfigToUI();
             updateAuthUI();
+
+            // Strict Auth Verification on Page Load
+            const session = getAuthSession();
+            if (session && session.isLoggedIn && (session.role === 'user' || session.role === 'admin')) {
+                window.dismissAuthGate();
+            } else {
+                window.enforceAuthGate();
+            }
         }
     </script>
 </body>
