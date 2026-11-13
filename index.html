@@ -448,8 +448,6 @@
                 <div id="ad-progress-bar" class="h-full bg-gradient-to-r from-primary-600 via-sky-400 to-emerald-400 w-0 transition-all duration-100 ease-linear"></div>
             </div>
             <div id="ad-slides-track" class="relative w-full h-[185px] sm:h-[220px] md:h-[245px] overflow-hidden select-none"></div>
-            <button type="button" onclick="changeAdSlide(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/55 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition opacity-80 sm:opacity-0 group-hover:opacity-100 active:scale-90 z-30 text-xs border border-white/20 shadow-lg" title="Previous Slide"><i class="fa-solid fa-chevron-left"></i></button>
-            <button type="button" onclick="changeAdSlide(1)" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/55 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition opacity-80 sm:opacity-0 group-hover:opacity-100 active:scale-90 z-30 text-xs border border-white/20 shadow-lg" title="Next Slide"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
 
         <div id="admob-slot-top" class="hidden mb-6 rounded-3xl overflow-hidden text-center"></div>
@@ -5295,16 +5293,8 @@
                             </div>
                             <span class="self-start px-3.5 py-1 rounded-xl bg-white text-neutral-900 font-extrabold text-xs">${slide.ctaText || 'Open'}</span>
                         </div>
-                        <!-- Actual Custom Banner Image Overlay -->
+                        <!-- Clean Full-Bleed Custom Banner Image Overlay -->
                         <img src="${primaryImg}" data-fallback="${fallbackImg}" alt="${slide.title || 'Sponsored Banner'}" class="relative z-10 w-full h-full object-cover object-center block" onerror="if(this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}else{this.style.display='none';}">
-                        <!-- Slide Counter Badge -->
-                        <div class="absolute top-3 right-3 z-20 px-2.5 py-0.5 rounded-full bg-black/55 backdrop-blur-md text-white text-[10px] font-bold">
-                            ${currentAdSlideIndex + 1} / ${SPONSORED_ADS_LIST.length}
-                        </div>
-                        <!-- Interactive Dots -->
-                        <div class="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/50 backdrop-blur-md z-20">
-                            ${SPONSORED_ADS_LIST.map((_, idx) => `<button type="button" onclick="event.stopPropagation(); currentAdSlideIndex=${idx}; renderSponsoredAdCarousel();" class="h-1.5 rounded-full transition-all ${idx === currentAdSlideIndex ? 'w-5 bg-white' : 'w-1.5 bg-white/50'}"></button>`).join('')}
-                        </div>
                     </div>
                 `;
                 return;
