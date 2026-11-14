@@ -286,7 +286,34 @@
                     </div>
                 </div>
 
-                <div class="pt-2">
+                <!-- Forgot Password Link (Visible in Login Mode) -->
+                <div id="gate-forgot-password-row" class="flex items-center justify-between text-xs pt-0.5">
+                    <span class="text-[11px] text-neutral-400 font-medium">Forgot login credentials?</span>
+                    <button type="button" onclick="openForgotPasswordModal()" class="text-primary-600 dark:text-primary-400 hover:underline font-extrabold flex items-center gap-1">
+                        <i class="fa-solid fa-key text-[10px]"></i> Forgot / Reset Password?
+                    </button>
+                </div>
+
+                <!-- Mandatory Security Captcha Verification (Login & Registration) -->
+                <div class="p-3 rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/80 border border-neutral-300/90 dark:border-neutral-700 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label for="gate-input-captcha" class="text-[11px] font-extrabold text-neutral-700 dark:text-neutral-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved text-primary-600"></i> Security Captcha Verification
+                        </label>
+                        <span class="text-[10px] font-bold text-error-500">*Mandatory</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="gate-captcha-display" onclick="refreshAuthCaptcha()" title="Click to refresh captcha" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-slate-900 via-primary-900 to-slate-800 text-white font-mono font-black text-sm sm:text-base tracking-[0.28em] select-none cursor-pointer shadow-inner border border-primary-500/30 flex-shrink-0">
+                            A7K9P
+                        </div>
+                        <button type="button" onclick="refreshAuthCaptcha()" class="w-9 h-9 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 hover:border-primary-500 text-primary-600 flex items-center justify-center flex-shrink-0 transition active:scale-90" title="Refresh Captcha Code">
+                            <i class="fa-solid fa-arrows-rotate text-xs"></i>
+                        </button>
+                        <input type="text" id="gate-input-captcha" required maxlength="6" autocomplete="off" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')" placeholder="Enter code" class="w-full min-w-0 px-3 py-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs sm:text-sm font-mono font-black uppercase tracking-widest focus:outline-none focus:border-primary-500">
+                    </div>
+                </div>
+
+                <div class="pt-1">
                     <button type="submit" id="gate-submit-btn" class="w-full py-3 px-4 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-black text-xs sm:text-sm tracking-wide uppercase transition shadow-lg shadow-primary-600/30 flex items-center justify-center gap-2 active:scale-95">
                         <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
                         <span id="gate-submit-text">Sign In & Access KhataFlow</span>
@@ -303,6 +330,54 @@
                     <i class="fa-solid fa-lock text-emerald-500"></i> Secure Firebase Cloud Sync • 100% Data Protection
                 </span>
             </div>
+        </div>
+    </div>
+
+    <!-- ================= FORGOT / RESET PASSWORD MODAL ================= -->
+    <div id="forgot-password-modal" class="fixed inset-0 z-[120] bg-neutral-950/85 backdrop-blur-xl hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-[2rem] shadow-2xl relative bg-white/95 dark:bg-neutral-900/95 border border-neutral-200 dark:border-neutral-800 animate-fade-in">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-neutral-200 dark:border-neutral-800">
+                <h4 class="text-sm sm:text-base font-black flex items-center gap-2 text-neutral-900 dark:text-white">
+                    <i class="fa-solid fa-key text-primary-600"></i> Reset Forgotten Password
+                </h4>
+                <button type="button" onclick="closeForgotPasswordModal()" class="w-8 h-8 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-400 hover:text-neutral-700 text-xs flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="handleForgotPasswordSubmit(event)" class="space-y-3 text-xs">
+                <p class="text-[11px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                    Enter your registered <strong>10-digit Mobile Number</strong> or <strong>Email Address</strong> along with a new password and captcha verification.
+                </p>
+                <div>
+                    <label class="block font-bold text-neutral-700 dark:text-neutral-300 mb-1">Registered Mobile Number or Email *</label>
+                    <input type="text" id="fp-identifier" required placeholder="e.g. 9876543210 or name@example.com" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 font-semibold focus:outline-none focus:border-primary-500">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-neutral-700 dark:text-neutral-300 mb-1">New Password (Min 6) *</label>
+                        <input type="password" id="fp-new-password" required minlength="6" placeholder="New password" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 font-semibold focus:outline-none focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-neutral-700 dark:text-neutral-300 mb-1">Confirm New Password *</label>
+                        <input type="password" id="fp-confirm-password" required minlength="6" placeholder="Repeat password" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 font-semibold focus:outline-none focus:border-primary-500">
+                    </div>
+                </div>
+                <div class="p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 space-y-2">
+                    <label class="block text-[11px] font-extrabold text-neutral-700 dark:text-neutral-200">Verify Captcha Code *</label>
+                    <div class="flex items-center gap-2">
+                        <div id="fp-captcha-display" onclick="refreshForgotCaptcha()" class="px-3 py-2 rounded-xl bg-slate-900 text-white font-mono font-black text-sm tracking-[0.25em] select-none cursor-pointer flex-shrink-0">X8M2Q</div>
+                        <button type="button" onclick="refreshForgotCaptcha()" class="w-9 h-9 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-primary-600 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-arrows-rotate text-xs"></i>
+                        </button>
+                        <input type="text" id="fp-input-captcha" required maxlength="6" autocomplete="off" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')" placeholder="Enter code" class="w-full min-w-0 px-3 py-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 font-mono font-black uppercase tracking-widest focus:outline-none focus:border-primary-500">
+                    </div>
+                </div>
+                <div id="fp-status-msg" class="text-[11px] font-bold text-center min-h-[1.25rem] text-neutral-500"></div>
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <button type="button" onclick="closeForgotPasswordModal()" class="py-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 font-bold">Cancel</button>
+                    <button type="submit" id="fp-submit-btn" class="py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-black shadow-md">Update Password</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -2508,26 +2583,128 @@
 
         // ================= AUTHENTICATION & SESSION MANAGEMENT =================
         let currentAuthGateMode = 'login';
+        let currentAuthCaptchaCode = '';
+        let currentForgotCaptchaCode = '';
         let currentHistorySegment = 'all';
         let historyCurrentPage = 1;
         const HISTORY_ITEMS_PER_PAGE = 10;
 
+        function generateCaptchaString(len = 5) {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let out = '';
+            for (let i = 0; i < len; i++) {
+                out += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return out;
+        }
+
+        function refreshAuthCaptcha() {
+            currentAuthCaptchaCode = generateCaptchaString(5);
+            const disp = document.getElementById('gate-captcha-display');
+            const inp = document.getElementById('gate-input-captcha');
+            if (disp) disp.textContent = currentAuthCaptchaCode;
+            if (inp) inp.value = '';
+        }
+
+        function refreshForgotCaptcha() {
+            currentForgotCaptchaCode = generateCaptchaString(5);
+            const disp = document.getElementById('fp-captcha-display');
+            const inp = document.getElementById('fp-input-captcha');
+            if (disp) disp.textContent = currentForgotCaptchaCode;
+            if (inp) inp.value = '';
+        }
+
+        function openForgotPasswordModal() {
+            const modal = document.getElementById('forgot-password-modal');
+            if (!modal) return;
+            const loginVal = document.getElementById('gate-input-username')?.value.trim() || '';
+            const idInp = document.getElementById('fp-identifier');
+            if (idInp) idInp.value = loginVal;
+            ['fp-new-password', 'fp-confirm-password'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            const status = document.getElementById('fp-status-msg');
+            if (status) { status.textContent = ''; status.className = 'text-[11px] font-bold text-center min-h-[1.25rem] text-neutral-500'; }
+            refreshForgotCaptcha();
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeForgotPasswordModal() {
+            const modal = document.getElementById('forgot-password-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        async function handleForgotPasswordSubmit(e) {
+            e.preventDefault();
+            const identifier = document.getElementById('fp-identifier')?.value.trim() || '';
+            const newPwd = document.getElementById('fp-new-password')?.value || '';
+            const confirmPwd = document.getElementById('fp-confirm-password')?.value || '';
+            const captchaVal = (document.getElementById('fp-input-captcha')?.value || '').trim().toUpperCase();
+            const statusEl = document.getElementById('fp-status-msg');
+            const btn = document.getElementById('fp-submit-btn');
+
+            if (!captchaVal || captchaVal !== currentForgotCaptchaCode) {
+                refreshForgotCaptcha();
+                if (statusEl) { statusEl.textContent = 'Invalid Captcha code. Please re-enter.'; statusEl.className = 'text-[11px] font-bold text-center min-h-[1.25rem] text-error-500'; }
+                return;
+            }
+            if (newPwd.length < 6) {
+                if (statusEl) { statusEl.textContent = 'New password must be at least 6 characters.'; statusEl.className = 'text-[11px] font-bold text-center min-h-[1.25rem] text-error-500'; }
+                return;
+            }
+            if (newPwd !== confirmPwd) {
+                if (statusEl) { statusEl.textContent = 'New password and Confirm password do not match.'; statusEl.className = 'text-[11px] font-bold text-center min-h-[1.25rem] text-error-500'; }
+                return;
+            }
+
+            if (btn) btn.disabled = true;
+            if (statusEl) { statusEl.textContent = 'Verifying account & updating password...'; statusEl.className = 'text-[11px] font-bold text-center min-h-[1.25rem] text-primary-600'; }
+
+            try {
+                if (typeof window.firebaseResetUserPassword === 'function') {
+                    await window.firebaseResetUserPassword(identifier, newPwd);
+                }
+                const loginInp = document.getElementById('gate-input-username');
+                if (loginInp) loginInp.value = identifier;
+                closeForgotPasswordModal();
+                refreshAuthCaptcha();
+                showToast('Password reset successfully! Please Sign In with your new password.');
+            } catch (err) {
+                refreshForgotCaptcha();
+                if (statusEl) {
+                    statusEl.textContent = err?.message || 'Account not found. Check your mobile number or email.';
+                    statusEl.className = 'text-[11px] font-bold text-center min-h-[1.25rem] text-error-500';
+                }
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
         function getAuthSession() {
             try {
-                return JSON.parse(localStorage.getItem('khataflow_auth_session')) || { isLoggedIn: false };
+                return JSON.parse(localStorage.getItem('khataflow_auth_session') || 'null');
             } catch (e) {
-                return { isLoggedIn: false };
+                return null;
             }
         }
 
         function setAuthSession(sessionObj) {
+            if (!sessionObj) {
+                localStorage.removeItem('khataflow_auth_session');
+                return;
+            }
             localStorage.setItem('khataflow_auth_session', JSON.stringify(sessionObj));
-            updateAuthUI();
         }
 
         function enforceAuthGate() {
             const gate = document.getElementById('auth-gate-screen');
             const nav = document.getElementById('bottom-nav-bar');
+            refreshAuthCaptcha();
             if (gate) {
                 gate.classList.remove('hidden');
                 gate.classList.add('flex');
@@ -2544,7 +2721,6 @@
             }
             if (nav) nav.classList.remove('hidden');
             updateAuthUI();
-            renderAdmobSlots();
         }
 
         function setAuthGateMode(mode) {
@@ -2555,6 +2731,7 @@
             const regFields = document.getElementById('gate-register-fields');
             const loginIdBox = document.getElementById('gate-login-identifier-container');
             const confirmCol = document.getElementById('gate-confirm-pwd-col');
+            const forgotRow = document.getElementById('gate-forgot-password-row');
             const submitText = document.getElementById('gate-submit-text');
 
             if (loginTab) loginTab.className = !isReg ? "flex-1 py-2.5 rounded-xl text-xs font-bold transition shadow-sm bg-white dark:bg-neutral-900 text-primary-600 dark:text-primary-400" : "flex-1 py-2.5 rounded-xl text-xs font-bold transition text-neutral-500 dark:text-neutral-400";
@@ -2562,7 +2739,9 @@
             if (regFields) regFields.classList.toggle('hidden', !isReg);
             if (loginIdBox) loginIdBox.classList.toggle('hidden', isReg);
             if (confirmCol) confirmCol.classList.toggle('hidden', !isReg);
+            if (forgotRow) forgotRow.classList.toggle('hidden', isReg);
             if (submitText) submitText.textContent = isReg ? 'Create Account & Access KhataFlow' : 'Sign In & Access KhataFlow';
+            refreshAuthCaptcha();
         }
 
         function handleGatePhoneInput(val) {
@@ -2570,7 +2749,10 @@
             const inp = document.getElementById('gate-input-phone');
             if (inp && inp.value !== clean) inp.value = clean;
             const cnt = document.getElementById('gate-phone-digit-count');
-            if (cnt) cnt.textContent = `${clean.length}/10 Digits`;
+            if (cnt) {
+                cnt.textContent = `${clean.length}/10 Digits`;
+                cnt.className = clean.length === 10 ? 'text-[10px] text-emerald-600 font-bold' : 'text-[10px] text-neutral-400 font-bold';
+            }
         }
 
         function checkGatePasswordMatch() {
@@ -2578,48 +2760,51 @@
             const p2 = document.getElementById('gate-input-confirm-password')?.value || '';
             const ind = document.getElementById('gate-pwd-match-indicator');
             if (!ind) return;
-            if (!p2) { ind.textContent = 'Repeat'; ind.className = 'text-[10px] font-bold text-neutral-400'; return; }
-            if (p1 === p2) { ind.textContent = '✓ Matched'; ind.className = 'text-[10px] font-bold text-emerald-600'; }
-            else { ind.textContent = 'Mismatch'; ind.className = 'text-[10px] font-bold text-error-500'; }
+            if (!p2) {
+                ind.textContent = 'Repeat';
+                ind.className = 'text-[10px] font-bold text-neutral-400';
+            } else if (p1 === p2) {
+                ind.textContent = '✓ Matched';
+                ind.className = 'text-[10px] font-bold text-emerald-600';
+            } else {
+                ind.textContent = 'Mismatch';
+                ind.className = 'text-[10px] font-bold text-error-500';
+            }
         }
 
-        function togglePasswordVisibility(inputId, btn) {
+        function togglePasswordVisibility(inputId, btnEl) {
             const inp = document.getElementById(inputId);
             if (!inp) return;
             const isPwd = inp.type === 'password';
             inp.type = isPwd ? 'text' : 'password';
-            if (btn) btn.innerHTML = isPwd ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
+            if (btnEl) {
+                btnEl.innerHTML = isPwd ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
+            }
         }
 
         function propagateUserProfileAcrossApp() {
             const session = getAuthSession();
             if (!session || !session.isLoggedIn) return;
-            const p = appState.userProfile || {};
-            const sessionPhone = extractCleanPhone(session.phone || session.username || '');
-            const cleanPhone = sessionPhone || extractCleanPhone(p.phone || appState.merchantPhone || '');
-            const displayName = (session.name && session.name.trim() && session.name !== sessionPhone)
-                ? session.name.trim()
-                : ((p.name && p.name.trim()) ? p.name.trim() : (session.name || cleanPhone || 'User'));
-            const resolvedEmail = (session.email || p.email || '').trim();
-            const resolvedUpi = p.upi || (cleanPhone ? `${cleanPhone}@upi` : '');
+            const cleanPhone = extractCleanPhone(session.phone || appState.userProfile?.phone || session.username || '');
+            const resolvedName = (appState.userProfile?.name && appState.userProfile.name.trim())
+                ? appState.userProfile.name.trim()
+                : (session.name || 'User');
+            const resolvedEmail = appState.userProfile?.email || session.email || '';
+            const resolvedUpi = appState.userProfile?.upi || (cleanPhone.length === 10 ? `${cleanPhone}@upi` : 'user@upi');
 
             appState.userProfile = {
-                ...p,
-                name: displayName,
-                phone: cleanPhone,
+                ...(appState.userProfile || {}),
+                name: resolvedName,
+                phone: cleanPhone || appState.userProfile?.phone || '',
                 email: resolvedEmail,
-                upi: resolvedUpi
+                upi: resolvedUpi,
+                registered: true
             };
-            appState.merchantPhone = cleanPhone;
-            appState.merchantUpi = resolvedUpi;
-
-            const phoneInp = document.getElementById('grocery-merchant-phone');
-            if (phoneInp && cleanPhone) {
-                phoneInp.value = cleanPhone;
-                handlePhoneUpiInput(cleanPhone);
+            if (cleanPhone.length === 10) {
+                appState.merchantPhone = cleanPhone;
+                appState.merchantUpi = resolvedUpi;
             }
             ensureUnifiedPrimaryMember();
-            updateAuthUI();
         }
 
         async function handleAuthGateSubmit(e) {
@@ -2627,13 +2812,31 @@
             const statusEl = document.getElementById('gate-status-message');
             const submitBtn = document.getElementById('gate-submit-btn');
             const password = document.getElementById('gate-input-password')?.value || '';
+            const captchaEntered = (document.getElementById('gate-input-captcha')?.value || '').trim().toUpperCase();
+
+            if (!currentAuthCaptchaCode) refreshAuthCaptcha();
+            if (!captchaEntered || captchaEntered !== currentAuthCaptchaCode) {
+                refreshAuthCaptcha();
+                if (statusEl) {
+                    statusEl.textContent = 'Invalid Security Captcha! Please enter the exact code shown.';
+                    statusEl.className = 'text-center text-xs pt-1 min-h-[1.5rem] font-bold text-error-500';
+                }
+                return;
+            }
 
             if (password.length < 6) {
-                if (statusEl) { statusEl.textContent = 'Password must be at least 6 characters.'; statusEl.className = 'text-center text-xs pt-1 min-h-[1.5rem] font-bold text-error-500'; }
+                if (statusEl) {
+                    statusEl.textContent = 'Password must be at least 6 characters.';
+                    statusEl.className = 'text-center text-xs pt-1 min-h-[1.5rem] font-bold text-error-500';
+                }
                 return;
             }
 
             if (submitBtn) submitBtn.disabled = true;
+            if (statusEl) {
+                statusEl.textContent = 'Verifying credentials & connecting cloud...';
+                statusEl.className = 'text-center text-xs pt-1 min-h-[1.5rem] font-bold text-primary-600';
+            }
 
             try {
                 if (currentAuthGateMode === 'register') {
@@ -2643,20 +2846,17 @@
                     const confirmPwd = document.getElementById('gate-input-confirm-password')?.value || '';
 
                     if (!fullName || !email || phone.length !== 10) {
-                        throw new Error('Please enter Full Name, valid Email, and 10-digit Mobile Number.');
+                        throw new Error('Please enter Full Name, Email, and 10-digit Mobile Number.');
                     }
                     if (password !== confirmPwd) {
-                        throw new Error('Passwords do not match.');
+                        throw new Error('Password and Confirm Password do not match.');
                     }
 
-                    if (statusEl) { statusEl.textContent = 'Creating cloud account...'; statusEl.className = 'text-center text-xs pt-1 min-h-[1.5rem] font-bold text-primary-600'; }
+                    const regRes = typeof window.firebaseRegister === 'function'
+                        ? await window.firebaseRegister(email, password, fullName, phone)
+                        : { user: { uid: `phone_${phone}`, email, displayName: fullName } };
 
-                    let uid = `user_${Date.now()}`;
-                    if (typeof window.firebaseRegister === 'function') {
-                        const cred = await window.firebaseRegister(email, password, fullName, phone);
-                        if (cred?.user?.uid) uid = cred.user.uid;
-                    }
-
+                    appState = createEmptyAppState();
                     appState.userProfile = {
                         name: fullName,
                         phone,
@@ -2667,92 +2867,73 @@
                     };
                     appState.merchantPhone = phone;
                     appState.merchantUpi = `${phone}@upi`;
-                    appState.transactions = [];
-                    appState.groceryItems = [];
-                    appState.splitBills = [];
-                    appState.udharCustomers = [];
-                    appState.splitMembers = [{ name: fullName, upi: `${phone}@upi` }];
-                    appState.updatedAt = Date.now();
-
-                    setAuthSession({ isLoggedIn: true, role: 'user', username: phone, email, name: fullName, uid });
-                    saveState();
-                    propagateUserProfileAcrossApp();
-                    updateAll();
-                    dismissAuthGate();
-                    showToast(`Welcome ${fullName}! Account created & synced.`);
-                } else {
-                    const identifier = document.getElementById('gate-input-username')?.value.trim() || '';
-                    if (!identifier) throw new Error('Please enter your Mobile Number or Email.');
-
-                    const cleanId = identifier.toLowerCase();
-                    const cleanDigits = extractCleanPhone(identifier);
-
-                    // Master Admin Login Check
-                    if ((cleanDigits === '6393954985' || cleanId === 'theamitmto' || cleanId === 'admin@khataflow.pro') && password === 'Khata@Amit') {
-                        setAuthSession({ isLoggedIn: true, role: 'admin', username: '6393954985', email: 'admin@khataflow.pro', name: 'Master Admin', uid: 'admin_master' });
-                        dismissAuthGate();
-                        switchTab('admin');
-                        showToast('Master Admin Studio Unlocked!');
-                        return;
-                    }
-
-                    if (statusEl) { statusEl.textContent = 'Signing in & syncing cloud ledger...'; statusEl.className = 'text-center text-xs pt-1 min-h-[1.5rem] font-bold text-primary-600'; }
-
-                    let uid = `user_${Date.now()}`;
-                    let userEmail = cleanId.includes('@') ? cleanId : '';
-                    let displayName = cleanDigits || identifier;
-                    let resolvedPhone = cleanDigits.length === 10 ? cleanDigits : '';
-
-                    if (typeof window.firebaseLogin === 'function') {
-                        const cred = await window.firebaseLogin(identifier, password);
-                        if (cred?.user) {
-                            uid = cred.user.uid;
-                            userEmail = cred.user.email || userEmail;
-                            displayName = cred.user.displayName || displayName;
-                            if (cred.user.phone) resolvedPhone = extractCleanPhone(cred.user.phone);
-                        }
-                    }
-
-                    // Completely reset local state to the newly signed-in user before cloud fetch
-                    appState = createEmptyAppState();
-                    appState.userProfile = {
-                        name: displayName,
-                        phone: resolvedPhone,
-                        email: userEmail,
-                        upi: resolvedPhone ? `${resolvedPhone}@upi` : '',
-                        registered: true,
-                        dateJoined: new Date().toISOString()
-                    };
-                    appState.merchantPhone = resolvedPhone;
-                    appState.merchantUpi = resolvedPhone ? `${resolvedPhone}@upi` : '';
-                    appState.splitMembers = [{ name: displayName, upi: resolvedPhone ? `${resolvedPhone}@upi` : '' }];
-                    appState.updatedAt = 0;
 
                     setAuthSession({
                         isLoggedIn: true,
                         role: 'user',
-                        username: resolvedPhone || userEmail || identifier,
-                        phone: resolvedPhone,
-                        email: userEmail,
-                        name: displayName,
-                        uid
+                        uid: regRes.user.uid,
+                        name: fullName,
+                        phone,
+                        email,
+                        username: phone
                     });
 
-                    if (typeof window.syncCurrentUserFromCloud === 'function') {
-                        await window.syncCurrentUserFromCloud(true, true);
+                    propagateUserProfileAcrossApp();
+                    saveState();
+                    updateAll();
+                    dismissAuthGate();
+                    if (typeof window.attachMultiDeviceListeners === 'function') window.attachMultiDeviceListeners();
+                    showToast(`Welcome ${fullName}! Account created & synced.`);
+                } else {
+                    const identifier = document.getElementById('gate-input-username')?.value.trim() || '';
+                    if (!identifier) {
+                        throw new Error('Please enter your registered Mobile Number or Email.');
                     }
-                    if (typeof window.attachMultiDeviceListeners === 'function') {
-                        window.attachMultiDeviceListeners();
+
+                    // Admin master credential check
+                    if ((identifier.toLowerCase() === 'admin' || identifier.toLowerCase() === 'admin@khataflow.app') && password === 'admin123') {
+                        setAuthSession({
+                            isLoggedIn: true,
+                            role: 'admin',
+                            uid: 'master_admin',
+                            name: 'Master Admin',
+                            email: 'admin@khataflow.app',
+                            username: 'admin'
+                        });
+                        dismissAuthGate();
+                        switchTab('admin');
+                        showToast('Master Admin Studio unlocked!');
+                        return;
                     }
+
+                    const loginRes = typeof window.firebaseLogin === 'function'
+                        ? await window.firebaseLogin(identifier, password)
+                        : { user: { uid: `user_${Date.now()}`, email: identifier, displayName: identifier, phone: extractCleanPhone(identifier) } };
+
+                    const u = loginRes.user;
+                    const cleanPhone = extractCleanPhone(u.phone || identifier);
+                    setAuthSession({
+                        isLoggedIn: true,
+                        role: 'user',
+                        uid: u.uid,
+                        name: u.displayName || cleanPhone || identifier,
+                        phone: cleanPhone,
+                        email: u.email || '',
+                        username: cleanPhone || identifier
+                    });
+
+                    appState = createEmptyAppState();
                     propagateUserProfileAcrossApp();
                     updateAll();
                     dismissAuthGate();
+                    if (typeof window.attachMultiDeviceListeners === 'function') window.attachMultiDeviceListeners();
+                    if (typeof window.syncCurrentUserFromCloud === 'function') await window.syncCurrentUserFromCloud(false, true);
                     showToast(`Welcome back, ${getPrimaryUserName()}!`);
                 }
             } catch (err) {
-                const msg = err?.message ? err.message.replace('Firebase:', '').trim() : 'Authentication failed. Check credentials.';
+                refreshAuthCaptcha();
                 if (statusEl) {
-                    statusEl.textContent = msg;
+                    statusEl.textContent = err?.message || 'Authentication failed. Please check your details.';
                     statusEl.className = 'text-center text-xs pt-1 min-h-[1.5rem] font-bold text-error-500';
                 }
             } finally {
@@ -2760,106 +2941,86 @@
             }
         }
 
-        function forcePullUserCloudData() {
-            if (typeof window.syncCurrentUserFromCloud === 'function') {
-                window.syncCurrentUserFromCloud(true, true);
-            } else {
-                showToast('Cloud sync engine ready');
-            }
-        }
-
         async function logoutCurrentUser() {
+            toggleSideMenu(false);
             if (typeof window.firebaseLogout === 'function') {
                 await window.firebaseLogout().catch(() => {});
             }
-            localStorage.removeItem('khataflow_auth_session');
+            setAuthSession(null);
             localStorage.removeItem('khataflow_state');
             appState = createEmptyAppState();
-            const phoneInp = document.getElementById('grocery-merchant-phone');
-            if (phoneInp) phoneInp.value = '';
-            toggleSideMenu(false);
+            const navAdmin = document.getElementById('nav-btn-admin');
+            const menuAdmin = document.getElementById('menu-admin-btn');
+            if (navAdmin) navAdmin.style.setProperty('display', 'none', 'important');
+            if (menuAdmin) menuAdmin.classList.add('hidden');
+            switchTab('dashboard');
             enforceAuthGate();
             showToast('Signed out safely');
         }
 
         function openDeleteSelfAccountModal() {
             const session = getAuthSession();
-            if (!session || !session.isLoggedIn) return;
-            if (session.role === 'admin') {
-                showToast('Master Admin account cannot be self-deleted', 'error');
-                return;
-            }
             const idEl = document.getElementById('delete-self-account-identity');
-            if (idEl) {
-                const phone = appState.userProfile?.phone || session.phone || session.username || '';
-                idEl.textContent = `${getPrimaryUserName()}${phone ? ' (+91 ' + phone + ')' : ''}`;
-            }
+            if (idEl) idEl.textContent = `${getPrimaryUserName()} (${session?.phone || session?.email || 'Account'})`;
             const inp = document.getElementById('delete-self-confirm-input');
             if (inp) inp.value = '';
-            const modal = document.getElementById('delete-self-account-modal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            }
+            document.getElementById('delete-self-account-modal')?.classList.replace('hidden', 'flex');
         }
 
         function closeDeleteSelfAccountModal() {
-            const modal = document.getElementById('delete-self-account-modal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
+            document.getElementById('delete-self-account-modal')?.classList.replace('flex', 'hidden');
         }
 
         async function confirmDeleteSelfAccount(e) {
             e.preventDefault();
             const val = (document.getElementById('delete-self-confirm-input')?.value || '').trim().toUpperCase();
             if (val !== 'DELETE') {
-                showToast('Please type DELETE to confirm permanent deletion', 'error');
+                showToast('Please type DELETE to confirm', 'error');
                 return;
             }
+            const session = getAuthSession() || {};
             const btn = document.getElementById('confirm-delete-self-btn');
             if (btn) btn.disabled = true;
-
             try {
-                const session = getAuthSession();
-                const phone = extractCleanPhone(appState.userProfile?.phone || session?.phone || session?.username || '');
-                const email = (appState.userProfile?.email || session?.email || '').trim().toLowerCase();
-                const uid = session?.uid || '';
-
                 if (typeof window.deleteSelfCloudAccount === 'function') {
-                    await window.deleteSelfCloudAccount({ phone, email, uid });
+                    await window.deleteSelfCloudAccount({
+                        phone: session.phone || appState.userProfile?.phone || '',
+                        email: session.email || appState.userProfile?.email || '',
+                        uid: session.uid || ''
+                    });
                 }
-
-                const rawUsers = JSON.parse(localStorage.getItem('khataflow_registered_users') || '[]');
-                const remaining = rawUsers.filter(u => extractCleanPhone(u.phone || '') !== phone && (u.email || '').toLowerCase() !== email);
-                localStorage.setItem('khataflow_registered_users', JSON.stringify(remaining));
-
                 closeDeleteSelfAccountModal();
                 await logoutCurrentUser();
-                showToast('Your account and cloud data have been permanently deleted.');
+                showToast('Account & all cloud data permanently deleted.');
             } catch (err) {
-                showToast(err?.message || 'Could not delete account right now', 'error');
+                showToast(err?.message || 'Could not delete account', 'error');
             } finally {
                 if (btn) btn.disabled = false;
             }
         }
 
+        async function forcePullUserCloudData() {
+            if (typeof window.syncCurrentUserFromCloud === 'function') {
+                await window.syncCurrentUserFromCloud(true, true);
+            } else {
+                showToast('Local data is up to date');
+            }
+        }
+
         function updateAuthUI() {
             const session = getAuthSession();
+            const isAdmin = session && session.role === 'admin';
+            const navAdmin = document.getElementById('nav-btn-admin');
+            const menuAdmin = document.getElementById('menu-admin-btn');
+            if (navAdmin) {
+                navAdmin.style.setProperty('display', isAdmin ? 'flex' : 'none', 'important');
+            }
+            if (menuAdmin) {
+                menuAdmin.classList.toggle('hidden', !isAdmin);
+                menuAdmin.classList.toggle('flex', !!isAdmin);
+            }
+
             const card = document.getElementById('menu-profile-card');
-            const adminMenuBtn = document.getElementById('menu-admin-btn');
-            const adminNavBtn = document.getElementById('nav-btn-admin');
-            const isAdmin = session && session.isLoggedIn && session.role === 'admin';
-
-            if (adminMenuBtn) {
-                adminMenuBtn.classList.toggle('hidden', !isAdmin);
-                adminMenuBtn.classList.toggle('flex', isAdmin);
-            }
-            if (adminNavBtn) {
-                adminNavBtn.style.setProperty('display', isAdmin ? 'flex' : 'none', 'important');
-            }
-
             if (!card) return;
             if (session && session.isLoggedIn) {
                 const name = getPrimaryUserName();
@@ -3077,20 +3238,20 @@
                     category: 'Other',
                     mode: 'UPI',
                     section: 'udhar',
-                    note: type === 'got' ? `[Udhar Jama - ${cust.name}] ${note}` : `[Udhar Given - ${cust.name}] ${note}`,
+                    note: `[Udhar ${type === 'got' ? 'Jama' : 'Given'} - ${cust.name}] ${note}`,
                     date: entryDateIso
                 });
             }
 
             document.getElementById('udhar-entry-amount').value = '';
             document.getElementById('udhar-entry-note').value = '';
-            document.getElementById('udhar-entry-due-date').value = '';
             saveState();
             updateAll();
-            showToast(type === 'gave' ? `₹${amount.toLocaleString('en-IN')} Udhar recorded & added to History` : `₹${amount.toLocaleString('en-IN')} Payment received & added to History`);
+            showToast(`${type === 'got' ? 'Payment received' : 'Udhar recorded'} for ${cust.name}!`);
         }
 
         function quickSettleUdharCustomer() {
+            if (!selectedUdharCustomerId) return;
             const cust = (appState.udharCustomers || []).find(c => c.id === selectedUdharCustomerId);
             if (!cust) return;
             const { net } = getUdharCustomerBalance(cust);
@@ -3234,7 +3395,7 @@
             const shopUpi = appState.merchantUpi || appState.userProfile?.upi || 'store@upi';
 
             document.getElementById('udhar-pdf-shop-name').textContent = `${shopName} • Digital Bahi-Khata Statement`;
-            document.getElementById('udhar-pdf-date').textContent = `Generated: ${formatFullPdfDateTime(new Date())}`;
+            document.getElementById('udhar-pdf-date').textContent = `Generated: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`;
             document.getElementById('udhar-pdf-cust-name').textContent = cust.name;
             document.getElementById('udhar-pdf-cust-phone').textContent = cust.phone ? `+91 ${cust.phone}` : 'No mobile linked';
             document.getElementById('udhar-pdf-cust-address').textContent = cust.address || '';
@@ -3253,10 +3414,10 @@
 
             document.getElementById('udhar-pdf-items-body').innerHTML = (cust.entries || []).map((ent, idx) => {
                 const isGave = ent.type === 'gave';
-                const dStr = formatFullPdfDateTime(ent.date || Date.now());
+                const dStr = new Date(ent.date || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
                 return `<tr style="border-bottom: 1px solid #f1f5f9;">
                     <td style="padding: 10px 12px;">${idx + 1}</td>
-                    <td style="padding: 10px 12px; white-space: nowrap; font-size: 10.5px;">${dStr}</td>
+                    <td style="padding: 10px 12px;">${dStr}</td>
                     <td style="padding: 10px 12px; font-weight: 700;">${ent.note}</td>
                     <td style="padding: 10px 12px; font-weight: 700; color: ${isGave ? '#dc2626' : '#16a34a'};">${isGave ? 'Udhar Given' : 'Payment Got'}</td>
                     <td style="padding: 10px 12px; text-align: right; font-weight: 800; color: ${isGave ? '#dc2626' : '#16a34a'};">${isGave ? '+' : '-'}₹${Number(ent.amount).toLocaleString('en-IN')}</td>
@@ -3285,7 +3446,7 @@
             });
 
             document.getElementById('udhar-pdf-shop-name').textContent = `${shopName} • Master Udhar Khata Summary`;
-            document.getElementById('udhar-pdf-date').textContent = `Generated: ${formatFullPdfDateTime(new Date())}`;
+            document.getElementById('udhar-pdf-date').textContent = `Generated: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`;
             document.getElementById('udhar-pdf-cust-name').textContent = `All Customers (${customers.length})`;
             document.getElementById('udhar-pdf-cust-phone').textContent = 'Consolidated Credit Register';
             document.getElementById('udhar-pdf-cust-address').textContent = '';
@@ -4532,7 +4693,7 @@
             const upi = appState.merchantUpi || 'store@upi';
 
             document.getElementById('invoice-bill-no').textContent = invId;
-            document.getElementById('invoice-bill-date').textContent = `Date: ${formatFullPdfDateTime(new Date())}`;
+            document.getElementById('invoice-bill-date').textContent = `Date: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`;
             document.getElementById('invoice-billed-user-name').textContent = getPrimaryUserName();
             document.getElementById('invoice-billed-user-phone').textContent = appState.userProfile?.phone ? `+91 ${appState.userProfile.phone}` : '';
             document.getElementById('invoice-merchant-upi-display').textContent = upi;
@@ -5225,14 +5386,6 @@
             });
         }
 
-        function formatFullPdfDateTime(inputDate) {
-            const d = inputDate ? new Date(inputDate) : new Date();
-            const validDate = isNaN(d.getTime()) ? new Date() : d;
-            const datePart = validDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-            const timePart = validDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).toUpperCase();
-            return `${datePart}, ${timePart}`;
-        }
-
         async function exportElementToFile(elementId, filename, format = 'pdf') {
             try {
                 await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
@@ -5270,7 +5423,10 @@
             });
             const net = income - expense;
             const stmtId = `STMT-${Math.floor(100000 + Math.random() * 900000)}`;
-            const genDateStr = `Generated: ${formatFullPdfDateTime(new Date())}`;
+            const genNow = new Date();
+            const genDatePart = genNow.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+            const genTimePart = genNow.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).toUpperCase();
+            const genDateStr = `Generated: ${genDatePart}, ${genTimePart}`;
             const userName = getPrimaryUserName();
             const userPhone = appState.userProfile?.phone ? `+91 ${appState.userProfile.phone}` : '';
             const scopeLabel = currentHistorySegment === 'all' ? 'All Transactions' : currentHistorySegment.toUpperCase();
@@ -5330,13 +5486,11 @@
                         let rowsHtml = pageRows.map((tx, idx) => {
                             const srNo = startSr + idx + 1;
                             const isInc = tx.type === 'income';
-                            const dtObj = new Date(tx.date || Date.now());
-                            const dPart = dtObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-                            const tPart = dtObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).toUpperCase();
+                            const dStr = new Date(tx.date || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
                             const rawNote = String(tx.note || tx.category || '-').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                             return `<tr style="border-bottom: 1px solid #f1f5f9; height: 42px;">
                                 <td style="padding: 6px 8px; font-weight: 700; color: #64748b; vertical-align: middle;">${srNo}</td>
-                                <td style="padding: 6px 8px; white-space: nowrap; vertical-align: middle; line-height: 1.25;"><div style="font-weight: 700; font-size: 9.5px; color: #1e293b;">${dPart}</div><div style="font-size: 8.5px; color: #64748b; font-family: monospace;">${tPart}</div></td>
+                                <td style="padding: 6px 8px; white-space: nowrap; vertical-align: middle;">${dStr}</td>
                                 <td style="padding: 6px 8px; text-transform: lowercase; vertical-align: middle;">${tx.section || 'dashboard'}</td>
                                 <td style="padding: 6px 8px; font-weight: 700; vertical-align: middle;">${tx.category || 'Other'}</td>
                                 <td style="padding: 6px 8px; vertical-align: middle;"><div style="white-space: normal; word-break: break-word; overflow-wrap: anywhere; max-width: 244px; line-height: 1.35; font-size: 9.8px; color: #1e293b;">${rawNote}</div></td>
@@ -6477,6 +6631,7 @@
         // Expose all functions globally on window
         Object.assign(window, {
             getAuthSession, setAuthSession, enforceAuthGate, dismissAuthGate, setAuthGateMode,
+            refreshAuthCaptcha, refreshForgotCaptcha, openForgotPasswordModal, closeForgotPasswordModal, handleForgotPasswordSubmit,
             handleGatePhoneInput, checkGatePasswordMatch, togglePasswordVisibility, handleAuthGateSubmit,
             logoutCurrentUser, openDeleteSelfAccountModal, closeDeleteSelfAccountModal, confirmDeleteSelfAccount,
             forcePullUserCloudData, toggleSideMenu, updateAuthUI,
@@ -6822,6 +6977,74 @@
             }
 
             throw new Error("Account not found. Please switch to 'New User (Sign Up)' to register.");
+        };
+
+        window.firebaseResetUserPassword = async function(identifier, newPassword) {
+            const raw = (identifier || "").trim();
+            const cleanPhone = window.extractCleanPhone ? window.extractCleanPhone(raw) : "";
+            const isPhone = cleanPhone.length === 10 && !raw.includes("@");
+            let targetProfile = null;
+
+            if (isPhone) {
+                if (rtdb) {
+                    const snap = await get(ref(rtdb, `user_directory/${cleanPhone}`)).catch(() => null);
+                    if (snap && snap.exists()) targetProfile = snap.val();
+                }
+                if (!targetProfile) targetProfile = await rtdbRestGet(`user_directory/${cleanPhone}`);
+                if (!targetProfile && db) {
+                    const fsDirect = await getDoc(doc(db, "public_users", `phone_${cleanPhone}`)).catch(() => null);
+                    if (fsDirect && fsDirect.exists()) targetProfile = fsDirect.data();
+                }
+            } else {
+                const emailKey = raw.toLowerCase();
+                const dir = await rtdbRestGet("user_directory");
+                if (dir && typeof dir === "object") {
+                    Object.values(dir).forEach(val => {
+                        if (val && (val.email || "").toLowerCase() === emailKey) targetProfile = val;
+                    });
+                }
+                if (!targetProfile && db) {
+                    const allDirect = await getDocs(collection(db, "public_users")).catch(() => null);
+                    if (allDirect) {
+                        allDirect.forEach(d => {
+                            const val = d.data();
+                            if (val && (val.email || "").toLowerCase() === emailKey) targetProfile = val;
+                        });
+                    }
+                }
+            }
+
+            if (!targetProfile) {
+                throw new Error("No registered account found with this Mobile Number or Email.");
+            }
+
+            const newHash = btoa(unescape(encodeURIComponent(newPassword)));
+            const updatedRecord = {
+                ...targetProfile,
+                passwordHash: newHash,
+                passwordResetAt: new Date().toISOString()
+            };
+            const phoneKey = window.extractCleanPhone ? window.extractCleanPhone(targetProfile.phone || cleanPhone) : cleanPhone;
+
+            if (rtdb && phoneKey.length === 10) {
+                await set(ref(rtdb, `user_directory/${phoneKey}`), updatedRecord).catch(() => {});
+            }
+            if (phoneKey.length === 10) {
+                await rtdbRestPut(`user_directory/${phoneKey}`, updatedRecord);
+            }
+            if (targetProfile.uid) {
+                await rtdbRestPut(`users_by_uid/${targetProfile.uid}`, updatedRecord);
+            }
+            if (db) {
+                if (phoneKey.length === 10) {
+                    await setDoc(doc(db, "public_users", `phone_${phoneKey}`), updatedRecord, { merge: true }).catch(() => {});
+                    await setDoc(doc(db, "artifacts", appId, "public", "data", "public_users", `phone_${phoneKey}`), updatedRecord, { merge: true }).catch(() => {});
+                }
+                if (targetProfile.uid) {
+                    await setDoc(doc(db, "public_users", targetProfile.uid), updatedRecord, { merge: true }).catch(() => {});
+                }
+            }
+            return true;
         };
 
         window.firebaseLogout = async function() {
