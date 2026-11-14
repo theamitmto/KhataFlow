@@ -320,356 +320,510 @@
                 </div>
             </div>
 
-            <button onclick="toggleSideMenu(true)" class="w-11 h-11 rounded-2xl bg-white/90 hover:bg-white dark:bg-neutral-800/90 dark:hover:bg-neutral-700 transition flex items-center justify-center text-neutral-800 dark:text-neutral-100 shadow-sm border border-neutral-200/80 dark:border-neutral-700/80 active:scale-95 group" title="Open Main Menu">
-                <i class="fa-solid fa-bars text-lg group-hover:scale-110 transition"></i>
-            </button>
+            <div class="flex items-center gap-2">
+                <button onclick="toggleSideMenu(true)" class="w-11 h-11 rounded-2xl bg-white/90 hover:bg-white dark:bg-neutral-800/90 dark:hover:bg-neutral-700 transition flex items-center justify-center text-neutral-800 dark:text-neutral-100 shadow-sm border border-neutral-200/80 dark:border-neutral-700/80 active:scale-95 group" title="Open Main Menu">
+                    <i class="fa-solid fa-bars text-lg group-hover:scale-110 transition"></i>
+                </button>
+            </div>
         </header>
 
         <!-- Slide-out Side Menu Drawer & Backdrop Overlay -->
-        <div id="side-menu-overlay" onclick="toggleSideMenu(false)" class="fixed inset-0 z-50 bg-neutral-950/70 backdrop-blur-sm hidden transition-opacity duration-300"></div>
-        <div id="side-menu-drawer" class="fixed top-0 right-0 bottom-0 w-full max-w-xs sm:max-w-sm z-50 bg-white dark:bg-neutral-900 border-l border-neutral-200/80 dark:border-neutral-800 shadow-2xl p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto">
-            <div>
-                <div class="flex items-center justify-between pb-4 mb-4 border-b border-neutral-200 dark:border-neutral-800">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-xl bg-primary-600 text-white flex items-center justify-center text-sm font-bold shadow-sm">
-                            <i class="fa-solid fa-shapes"></i>
-                        </div>
-                        <span class="font-black text-sm text-neutral-900 dark:text-white uppercase tracking-wider">KhataFlow Menu</span>
+        <div id="side-menu-overlay" onclick="toggleSideMenu(false)" class="fixed inset-0 z-50 bg-neutral-950/60 backdrop-blur-md hidden transition-opacity duration-300"></div>
+        <aside id="side-menu-drawer" class="fixed top-0 right-0 bottom-0 w-full max-w-[330px] sm:max-w-[370px] z-50 bg-neutral-50/95 dark:bg-neutral-950/95 backdrop-blur-2xl border-l border-neutral-200/80 dark:border-neutral-800/80 shadow-[-20px_0_50px_rgba(0,0,0,0.18)] flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-out overflow-hidden">
+            <!-- Top Brand Header -->
+            <div class="px-5 pt-5 pb-4 bg-white/80 dark:bg-neutral-900/80 border-b border-neutral-200/70 dark:border-neutral-800/80 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-primary-600 via-primary-500 to-emerald-500 text-white flex items-center justify-center shadow-md shadow-primary-500/25">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                            <path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                        </svg>
                     </div>
-                    <button onclick="toggleSideMenu(false)" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-400 flex items-center justify-center transition active:scale-95 text-xs">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
+                    <div>
+                        <div class="font-black text-sm tracking-tight text-neutral-900 dark:text-white leading-none">KhataFlow <span class="text-primary-600 dark:text-primary-400">Pro</span></div>
+                        <span class="text-[10px] font-semibold text-neutral-400 tracking-wide">Control Center & Workspace</span>
+                    </div>
+                </div>
+                <button type="button" onclick="toggleSideMenu(false)" class="w-8 h-8 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-500 dark:text-neutral-400 flex items-center justify-center transition active:scale-90" title="Close Menu">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Menu Body -->
+            <div class="flex-1 overflow-y-auto px-5 py-4 space-y-5">
+                <!-- Premium Account Profile Card -->
+                <div id="menu-profile-card"></div>
+
+                <!-- Master Admin Studio Banner Button (Admin Only) -->
+                <button id="menu-admin-btn" type="button" onclick="toggleSideMenu(false); switchTab('admin')" class="hidden w-full items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-amber-500/5 hover:from-amber-500/25 border border-amber-500/35 text-xs font-black text-amber-700 dark:text-amber-300 transition shadow-sm active:scale-[0.99]">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-sm"><i class="fa-solid fa-wand-magic-sparkles text-xs"></i></span>
+                        <div class="text-left">
+                            <div class="leading-tight">Master Admin Studio</div>
+                            <div class="text-[10px] font-semibold text-amber-600/80 dark:text-amber-400/80">Users, Banners & Live Controls</div>
+                        </div>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full bg-amber-500 text-white text-[9px] font-black uppercase tracking-wider">Admin</span>
+                </button>
+
+                <!-- Workspace Navigation Section -->
+                <div>
+                    <div class="flex items-center justify-between px-1 mb-2">
+                        <span class="text-[10px] font-black uppercase tracking-widest text-neutral-400">Workspace Navigation</span>
+                        <span class="text-[10px] font-bold text-primary-600 dark:text-primary-400">6 Modules</span>
+                    </div>
+                    <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 p-1.5 shadow-sm space-y-1">
+                        <button type="button" data-menu-tab="dashboard" onclick="toggleSideMenu(false); switchTab('dashboard')" class="menu-nav-item w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-primary-50/70 dark:hover:bg-primary-950/40 text-xs font-bold text-neutral-700 dark:text-neutral-200 transition group">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-400 group-hover:bg-primary-600 group-hover:text-white flex items-center justify-center transition"><i class="fa-solid fa-chart-pie text-xs"></i></span>
+                                <div class="text-left">
+                                    <div>Dashboard Overview</div>
+                                    <div class="text-[10px] font-medium text-neutral-400">Budget, KPIs & quick entry</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-neutral-300 group-hover:text-primary-600 group-hover:translate-x-0.5 transition"></i>
+                        </button>
+
+                        <button type="button" data-menu-tab="transactions" onclick="toggleSideMenu(false); switchTab('transactions')" class="menu-nav-item w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-sky-50/70 dark:hover:bg-sky-950/40 text-xs font-bold text-neutral-700 dark:text-neutral-200 transition group">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 group-hover:bg-sky-600 group-hover:text-white flex items-center justify-center transition"><i class="fa-solid fa-clock-rotate-left text-xs"></i></span>
+                                <div class="text-left">
+                                    <div>All Transactions</div>
+                                    <div class="text-[10px] font-medium text-neutral-400">Passbook logs & PDF statement</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-neutral-300 group-hover:text-sky-600 group-hover:translate-x-0.5 transition"></i>
+                        </button>
+
+                        <button type="button" data-menu-tab="grocery" onclick="toggleSideMenu(false); switchTab('grocery')" class="menu-nav-item w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-emerald-50/70 dark:hover:bg-emerald-950/40 text-xs font-bold text-neutral-700 dark:text-neutral-200 transition group">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center transition"><i class="fa-solid fa-cart-shopping text-xs"></i></span>
+                                <div class="text-left">
+                                    <div>Shopping Checklist</div>
+                                    <div class="text-[10px] font-medium text-neutral-400">1,300+ Kirana items & QR bills</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-neutral-300 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition"></i>
+                        </button>
+
+                        <button type="button" data-menu-tab="udhar" onclick="toggleSideMenu(false); switchTab('udhar')" class="menu-nav-item w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-rose-50/70 dark:hover:bg-rose-950/40 text-xs font-bold text-neutral-700 dark:text-neutral-200 transition group">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 group-hover:bg-rose-600 group-hover:text-white flex items-center justify-center transition"><i class="fa-solid fa-book-open text-xs"></i></span>
+                                <div class="text-left">
+                                    <div>Udhar Khata (उधार खाता)</div>
+                                    <div class="text-[10px] font-medium text-neutral-400">Customer credit & WhatsApp alerts</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-neutral-300 group-hover:text-rose-600 group-hover:translate-x-0.5 transition"></i>
+                        </button>
+
+                        <button type="button" data-menu-tab="hub" onclick="toggleSideMenu(false); switchTab('hub')" class="menu-nav-item w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-purple-50/70 dark:hover:bg-purple-950/40 text-xs font-bold text-neutral-700 dark:text-neutral-200 transition group">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 group-hover:bg-purple-600 group-hover:text-white flex items-center justify-center transition"><i class="fa-solid fa-users text-xs"></i></span>
+                                <div class="text-left">
+                                    <div>Friends Hub Split</div>
+                                    <div class="text-[10px] font-medium text-neutral-400">Group bills & instant UPI split</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-neutral-300 group-hover:text-purple-600 group-hover:translate-x-0.5 transition"></i>
+                        </button>
+
+                        <button type="button" data-menu-tab="analytics" onclick="toggleSideMenu(false); switchTab('analytics')" class="menu-nav-item w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-amber-50/70 dark:hover:bg-amber-950/40 text-xs font-bold text-neutral-700 dark:text-neutral-200 transition group">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-600 group-hover:text-white flex items-center justify-center transition"><i class="fa-solid fa-chart-line text-xs"></i></span>
+                                <div class="text-left">
+                                    <div>Analytics & Reports</div>
+                                    <div class="text-[10px] font-medium text-neutral-400">Charts, custom ranges & CSV</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-neutral-300 group-hover:text-amber-600 group-hover:translate-x-0.5 transition"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <div id="menu-profile-card" class="mb-4 p-3.5 rounded-2xl bg-neutral-100/80 dark:bg-neutral-800/70 border border-neutral-200 dark:border-neutral-700"></div>
-
-                <div class="space-y-2">
-                    <div class="flex items-center justify-between p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-800/40 border border-neutral-200/70 dark:border-neutral-800 text-xs">
-                        <div class="flex items-center gap-2.5 text-neutral-700 dark:text-neutral-300 font-bold">
-                            <i class="fa-solid fa-cloud text-primary-600"></i>
-                            <span>Cloud Sync</span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-[10px] font-bold text-neutral-600 dark:text-neutral-300">
-                                <span id="cloud-sync-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                <span id="cloud-sync-text">Cloud Synced</span>
+                <!-- System, Sync & Preferences Section -->
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-neutral-400 block px-1 mb-2">System & Preferences</span>
+                    <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200/80 dark:border-neutral-800 p-1.5 shadow-sm space-y-1">
+                        <!-- Cloud Sync Row -->
+                        <div class="flex items-center justify-between p-2.5 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-800/50 text-xs">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center"><i class="fa-solid fa-cloud text-xs"></i></span>
+                                <div>
+                                    <div class="font-bold text-neutral-800 dark:text-neutral-100">Firebase Cloud</div>
+                                    <div class="flex items-center gap-1.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+                                        <span id="cloud-sync-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        <span id="cloud-sync-text">Cloud Synced</span>
+                                    </div>
+                                </div>
                             </div>
-                            <button type="button" onclick="forcePullUserCloudData()" class="px-2 py-1 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-[10px] font-bold transition active:scale-95" title="Sync Previous Data Now">
-                                <i class="fa-solid fa-rotate"></i>
+                            <button type="button" onclick="forcePullUserCloudData()" class="px-2.5 py-1.5 rounded-xl bg-primary-50 hover:bg-primary-600 text-primary-600 hover:text-white dark:bg-primary-950/60 dark:text-primary-300 text-[10px] font-extrabold transition flex items-center gap-1 active:scale-95" title="Sync Cloud Data Now">
+                                <i class="fa-solid fa-rotate"></i> Sync
                             </button>
                         </div>
-                    </div>
 
-                    <button onclick="toggleTheme()" class="w-full flex items-center justify-between p-3 rounded-2xl bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800/40 dark:hover:bg-neutral-800 border border-neutral-200/70 dark:border-neutral-800 text-xs font-bold text-neutral-800 dark:text-neutral-200 transition active:scale-98">
-                        <div class="flex items-center gap-2.5">
-                            <i id="theme-icon" class="fa-solid fa-moon text-amber-500 text-sm"></i>
-                            <span>Appearance Mode</span>
-                        </div>
-                        <span id="theme-mode-label" class="text-[10px] text-neutral-400 font-semibold">Toggle Dark / Light</span>
-                    </button>
+                        <!-- Appearance Mode Row -->
+                        <button type="button" onclick="toggleTheme()" class="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-800/50 text-xs font-bold text-neutral-800 dark:text-neutral-200 transition active:scale-[0.99]">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center"><i id="theme-icon" class="fa-solid fa-moon text-xs"></i></span>
+                                <div class="text-left">
+                                    <div>Appearance Theme</div>
+                                    <div id="theme-mode-label" class="text-[10px] font-medium text-neutral-400">Switch Light / Dark Mode</div>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-[10px] font-bold text-neutral-600 dark:text-neutral-300">Toggle</span>
+                        </button>
 
-                    <button onclick="toggleSideMenu(false); openBackupRestoreModal()" class="w-full flex items-center justify-between p-3 rounded-2xl bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800/40 dark:hover:bg-neutral-800 border border-neutral-200/70 dark:border-neutral-800 text-xs font-bold text-neutral-800 dark:text-neutral-200 transition active:scale-98">
-                        <div class="flex items-center gap-2.5">
-                            <i class="fa-solid fa-arrows-rotate text-primary-600 text-sm"></i>
-                            <span>Backup & Restore Data</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-[10px] text-neutral-400"></i>
-                    </button>
+                        <!-- Backup & Restore Row -->
+                        <button type="button" onclick="toggleSideMenu(false); openBackupRestoreModal()" class="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-800/50 text-xs font-bold text-neutral-800 dark:text-neutral-200 transition active:scale-[0.99]">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center"><i class="fa-solid fa-database text-xs"></i></span>
+                                <div class="text-left">
+                                    <div>Backup & Restore</div>
+                                    <div class="text-[10px] font-medium text-neutral-400">Export or import JSON vault</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-neutral-400"></i>
+                        </button>
 
-                    <button id="menu-admin-btn" onclick="toggleSideMenu(false); switchTab('admin')" class="hidden w-full items-center justify-between p-3 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-xs font-black text-amber-600 dark:text-amber-400 transition active:scale-98">
-                        <div class="flex items-center gap-2.5">
-                            <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
-                            <span>Master Admin Studio</span>
-                        </div>
-                        <span class="px-2 py-0.5 rounded-full bg-amber-500 text-white text-[9px] font-black uppercase">Unlocked</span>
-                    </button>
-                </div>
+                        <!-- Delete Account Row -->
+                        <button type="button" id="menu-delete-account-btn" onclick="toggleSideMenu(false); openDeleteSelfAccountModal()" class="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-bold text-rose-600 dark:text-rose-400 transition active:scale-[0.99]">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center"><i class="fa-solid fa-user-xmark text-xs"></i></span>
+                                <div class="text-left">
+                                    <div>Delete Account</div>
+                                    <div class="text-[10px] font-medium text-rose-500/80">Permanently erase my data</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-rose-400"></i>
+                        </button>
 
-                <div class="mt-5 pt-4 border-t border-neutral-200 dark:border-neutral-800">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-neutral-400 block mb-2 px-1">Navigation Shortcuts</span>
-                    <div class="space-y-1.5">
-                        <button onclick="toggleSideMenu(false); switchTab('dashboard')" class="w-full flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-bold text-neutral-700 dark:text-neutral-300 transition text-left">
-                            <i class="fa-solid fa-chart-pie w-4 text-primary-600"></i> Dashboard
-                        </button>
-                        <button onclick="toggleSideMenu(false); switchTab('transactions')" class="w-full flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-bold text-neutral-700 dark:text-neutral-300 transition text-left">
-                            <i class="fa-solid fa-clock-rotate-left w-4 text-primary-600"></i> All Transactions
-                        </button>
-                        <button onclick="toggleSideMenu(false); switchTab('grocery')" class="w-full flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-bold text-neutral-700 dark:text-neutral-300 transition text-left">
-                            <i class="fa-solid fa-cart-shopping w-4 text-emerald-500"></i> Shopping Checklist
-                        </button>
-                        <button onclick="toggleSideMenu(false); switchTab('udhar')" class="w-full flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-bold text-neutral-700 dark:text-neutral-300 transition text-left">
-                            <i class="fa-solid fa-book-open w-4 text-rose-500"></i> Udhar Khata (उधार खाता)
-                        </button>
-                        <button onclick="toggleSideMenu(false); switchTab('hub')" class="w-full flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-bold text-neutral-700 dark:text-neutral-300 transition text-left">
-                            <i class="fa-solid fa-users w-4 text-purple-500"></i> Friends Hub Split
-                        </button>
-                        <button onclick="toggleSideMenu(false); switchTab('analytics')" class="w-full flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-bold text-neutral-700 dark:text-neutral-300 transition text-left">
-                            <i class="fa-solid fa-chart-line w-4 text-amber-500"></i> Analytics & Reports
+                        <!-- Logout Row -->
+                        <button type="button" onclick="logoutCurrentUser()" class="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950/40 text-xs font-bold text-amber-700 dark:text-amber-400 transition active:scale-[0.99]">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center"><i class="fa-solid fa-right-from-bracket text-xs"></i></span>
+                                <div class="text-left">
+                                    <div>Logout</div>
+                                    <div class="text-[10px] font-medium text-neutral-400">Sign out of this account</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-amber-400"></i>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="pt-4 border-t border-neutral-200 dark:border-neutral-800 text-center">
-                <p class="text-[10px] text-neutral-400 font-medium">KhataFlow Pro • v3.0 Ultra</p>
-            </div>
-        </div>
-
-        <!-- Toast Notification -->
-        <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 px-4 py-3 rounded-2xl shadow-2xl text-sm font-semibold flex items-center gap-2 pointer-events-none"></div>
-
-        <!-- System Feedback Popup Modal -->
-        <div id="system-feedback-modal" class="fixed inset-0 z-[200] bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-4">
-            <div id="feedback-card" class="glass-card w-full max-w-sm p-6 rounded-[2.2rem] shadow-2xl relative border border-white/80 dark:border-neutral-800 text-center bg-white/95 dark:bg-neutral-900/95 animate-pop-bounce">
-                <div id="feedback-accent-bar" class="absolute top-0 left-0 right-0 h-2 bg-emerald-500 rounded-t-[2.2rem]"></div>
-                <div class="my-3 pt-2 flex justify-center">
-                    <div id="feedback-icon-box" class="w-16 h-16 rounded-3xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 flex items-center justify-center text-3xl shadow-lg shadow-emerald-500/20">
-                        <i id="feedback-icon" class="fa-solid fa-circle-check"></i>
-                    </div>
+            <!-- Sticky Drawer Footer with Sign Out & Version -->
+            <div class="px-5 py-3.5 bg-white/90 dark:bg-neutral-900/90 border-t border-neutral-200/80 dark:border-neutral-800 space-y-2.5">
+                <button type="button" onclick="logoutCurrentUser()" class="w-full py-2.5 px-4 rounded-xl bg-rose-500/10 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-500/20 text-xs font-extrabold transition flex items-center justify-center gap-2 active:scale-95">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out Safely
+                </button>
+                <div class="flex items-center justify-between text-[10px] text-neutral-400 font-semibold px-1">
+                    <span>KhataFlow Pro • v3.0 Ultra</span>
+                    <span class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-shield-halved"></i> Encrypted</span>
                 </div>
-                <h3 id="feedback-title" class="text-lg font-black text-neutral-900 dark:text-white tracking-tight mb-1">सफलतापूर्वक सुरक्षित हुआ!</h3>
-                <p id="feedback-message" class="text-xs text-neutral-600 dark:text-neutral-300 font-medium mb-5 px-2 leading-relaxed">Changes saved successfully and synced live to cloud.</p>
-                <button type="button" onclick="closeFeedbackModal()" id="feedback-btn" class="w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs uppercase tracking-wide transition shadow-lg shadow-emerald-600/30 active:scale-95">ठीक है (OK)</button>
             </div>
-        </div>
+        </aside>
 
         <!-- Global Broadcast Announcement Strip -->
-        <div id="global-announcement-strip" class="mb-4 hidden p-3.5 px-4 rounded-2xl text-xs font-bold transition flex items-start justify-between gap-2.5 border shadow-sm bg-primary-50/90 dark:bg-primary-950/60 border-primary-200 dark:border-primary-800 text-primary-900 dark:text-primary-100">
+        <div id="global-announcement-strip" class="hidden mb-4 p-3.5 px-4 rounded-2xl text-xs font-bold transition flex items-start justify-between gap-2.5 border shadow-sm bg-primary-50 dark:bg-primary-950/70 border-primary-200 dark:border-primary-800 text-primary-950 dark:text-primary-100">
             <div class="flex items-start gap-2.5 min-w-0 flex-1">
-                <span id="announcement-icon-badge" class="w-6 h-6 rounded-lg bg-primary-600 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5"><i class="fa-solid fa-bullhorn"></i></span>
-                <span id="announcement-text-display" class="whitespace-normal break-words leading-relaxed text-neutral-900 dark:text-white font-bold">Welcome to KhataFlow!</span>
+                <span id="announcement-icon-badge" class="w-6 h-6 rounded-lg flex items-center justify-center text-xs flex-shrink-0 mt-0.5 bg-primary-600 text-white"><i class="fa-solid fa-bullhorn"></i></span>
+                <p id="announcement-text-display" class="whitespace-normal break-words leading-relaxed flex-1"></p>
             </div>
-            <button type="button" onclick="dismissAnnouncement()" class="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 ml-1 mt-0.5 text-xs flex-shrink-0"><i class="fa-solid fa-xmark"></i></button>
+            <button type="button" onclick="dismissAnnouncement()" class="text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 text-sm px-1 flex-shrink-0" title="Dismiss"><i class="fa-solid fa-xmark"></i></button>
         </div>
 
-        <!-- Top Sponsored Ad Carousel -->
-        <div id="sponsored-ad-banner" class="mb-6 relative rounded-3xl overflow-hidden glass-card border border-neutral-200/90 dark:border-neutral-800/90 shadow-md group">
-            <div class="absolute top-0 left-0 right-0 h-1 bg-neutral-200/50 dark:bg-neutral-800/50 z-30">
-                <div id="ad-progress-bar" class="h-full bg-gradient-to-r from-primary-600 via-sky-400 to-emerald-400 w-0 transition-all duration-100 ease-linear"></div>
+        <!-- Clean Full-Bleed Sponsored Banner Carousel -->
+        <div id="sponsored-ad-banner" class="mb-6 rounded-3xl overflow-hidden shadow-md border border-neutral-200/80 dark:border-neutral-800/80 relative h-44 sm:h-56 md:h-64 select-none">
+            <div id="ad-slides-track" class="w-full h-full"></div>
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-black/15 z-20">
+                <div id="ad-progress-bar" class="h-full bg-white/80 transition-all duration-150" style="width: 0%"></div>
             </div>
-            <div id="ad-slides-track" class="relative w-full h-[185px] sm:h-[220px] md:h-[245px] overflow-hidden select-none"></div>
         </div>
 
         <div id="admob-slot-top" class="hidden mb-6 rounded-3xl overflow-hidden text-center"></div>
 
-        <!-- ================= SECTION 1: DASHBOARD ================= -->
-        <div id="dynamic-dashboard-layout" class="space-y-6">
+        <!-- ================= SECTION 1: DASHBOARD OVERVIEW ================= -->
+        <div id="dashboard-wrapper">
         <section id="section-dashboard" class="space-y-6">
-            <div id="dash-module-overview" data-layout-id="dash-module-overview" class="glass-card p-4 sm:p-7 rounded-3xl shadow-sm bg-gradient-to-r from-primary-500/10 via-primary-500/5 to-success-500/10 border border-primary-500/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <div class="w-full md:w-auto">
-                    <h2 class="text-lg sm:text-2xl font-black tracking-tight text-neutral-900 dark:text-white flex items-center gap-2">Financial Pulse Overview 🎯</h2>
-                    <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 mt-1">Calibrated systematically with full WCAG 4.5:1 contrast compliance.</p>
-                </div>
-                <div class="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full md:w-auto justify-end">
-                    <button onclick="openBudgetModal()" class="w-full sm:w-auto px-3.5 sm:px-4 py-2.5 rounded-2xl bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:hover:bg-white dark:text-neutral-900 text-white font-bold text-xs transition shadow-md flex items-center justify-center gap-1.5 active:scale-95 text-center">
-                        <i class="fa-solid fa-sliders text-xs"></i> <span>Set Budget</span>
-                    </button>
-                    <button onclick="openCategoryBudgetModal()" class="w-full sm:w-auto px-3.5 sm:px-4 py-2.5 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs transition shadow-md shadow-primary-600/25 flex items-center justify-center gap-1.5 active:scale-95 text-center">
-                        <i class="fa-solid fa-bullseye text-xs"></i> <span>Category Limits</span>
-                    </button>
-                </div>
-            </div>
+            <!-- 1. Executive Mobile-First Net Cashflow & Monthly Budget Hero Card -->
+            <div class="relative overflow-hidden rounded-[2rem] bg-white/95 dark:bg-gradient-to-br dark:from-slate-950 dark:via-[#0f2354] dark:to-[#0c1428] text-neutral-900 dark:text-white p-4 sm:p-7 shadow-[0_20px_50px_-15px_rgba(23,46,102,0.14)] dark:shadow-[0_24px_60px_-15px_rgba(10,22,60,0.65)] border border-neutral-200/90 dark:border-white/15 transition-colors">
+                <div class="hidden dark:block absolute -right-16 -top-16 w-64 h-64 rounded-full bg-primary-500/20 blur-3xl pointer-events-none"></div>
+                <div class="hidden dark:block absolute left-1/4 -bottom-24 w-64 h-64 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none"></div>
+                <div class="block dark:hidden absolute -right-16 -top-16 w-64 h-64 rounded-full bg-primary-500/10 blur-3xl pointer-events-none"></div>
 
-            <!-- Time-Bound 5 Metric Cards -->
-            <div id="dash-module-metrics" data-layout-id="dash-module-metrics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                <div class="glass-card interactive-card p-5 rounded-3xl shadow-sm">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-500">Today's Expense</span>
-                        <div class="w-8 h-8 rounded-xl bg-success-100 dark:bg-success-700/20 flex items-center justify-center text-success-700 dark:text-success-500 text-sm"><i class="fa-solid fa-sun"></i></div>
-                    </div>
-                    <div class="text-2xl font-black tracking-tight text-success-700 dark:text-success-500" id="dash-today">₹0</div>
-                    <p class="text-[10px] text-neutral-500 mt-1">Spent today</p>
-                </div>
-
-                <div class="glass-card interactive-card p-5 rounded-3xl shadow-sm">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-500">Yesterday</span>
-                        <div class="w-8 h-8 rounded-xl bg-primary-100 dark:bg-primary-700/20 flex items-center justify-center text-primary-700 dark:text-primary-400 text-sm"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                    </div>
-                    <div class="text-2xl font-black tracking-tight text-primary-700 dark:text-primary-400" id="dash-yesterday">₹0</div>
-                    <p class="text-[10px] text-neutral-500 mt-1">Previous day outflow</p>
-                </div>
-
-                <div class="glass-card interactive-card p-5 rounded-3xl shadow-sm">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-500">Last 7 Days</span>
-                        <div class="w-8 h-8 rounded-xl bg-primary-100 dark:bg-primary-700/20 flex items-center justify-center text-primary-600 dark:text-primary-300 text-sm"><i class="fa-solid fa-calendar-week"></i></div>
-                    </div>
-                    <div class="text-2xl font-black tracking-tight text-primary-600 dark:text-primary-300" id="dash-7days">₹0</div>
-                    <p class="text-[10px] text-neutral-500 mt-1">Weekly outflow velocity</p>
-                </div>
-
-                <div class="glass-card interactive-card p-5 rounded-3xl shadow-sm">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-500">Last 30 Days</span>
-                        <div class="w-8 h-8 rounded-xl bg-warning-100 dark:bg-warning-700/20 flex items-center justify-center text-warning-700 dark:text-warning-500 text-sm"><i class="fa-solid fa-calendar-days"></i></div>
-                    </div>
-                    <div class="text-2xl font-black tracking-tight text-warning-700 dark:text-warning-500" id="dash-30days">₹0</div>
-                    <p class="text-[10px] text-neutral-500 mt-1">Monthly running outflow</p>
-                </div>
-
-                <div class="glass-card interactive-card p-5 rounded-3xl shadow-sm sm:col-span-2 lg:col-span-1">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-500">Total Lifetime</span>
-                        <div class="w-8 h-8 rounded-xl bg-error-100 dark:bg-error-700/20 flex items-center justify-center text-error-700 dark:text-error-500 text-sm"><i class="fa-solid fa-wallet"></i></div>
-                    </div>
-                    <div class="text-2xl font-black tracking-tight text-error-700 dark:text-error-500" id="dash-total">₹0</div>
-                    <p class="text-[10px] text-neutral-500 mt-1">All-time recorded spends</p>
-                </div>
-            </div>
-
-            <!-- Budget Progress -->
-            <div id="dash-module-budget" data-layout-id="dash-module-budget" class="glass-card p-6 sm:p-7 rounded-3xl shadow-sm">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Allocated Monthly Budget</span>
-                        <div class="text-3xl font-black tracking-tight mt-1 text-neutral-900 dark:text-white" id="display-budget">₹0</div>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-xs text-neutral-500">Remaining Balance:</span>
-                        <div class="text-2xl font-black text-primary-600 dark:text-primary-400" id="display-balance">₹0</div>
-                    </div>
-                </div>
-                <div class="w-full bg-neutral-200 dark:bg-neutral-800 h-3.5 rounded-full overflow-hidden p-0.5 mb-2 shadow-inner">
-                    <div id="budget-progress-bar" class="bg-primary-600 h-full transition-all duration-700 rounded-full" style="width: 0%"></div>
-                </div>
-                <div class="flex justify-between items-center text-xs">
-                    <span id="budget-status-text" class="font-semibold text-neutral-600 dark:text-neutral-400">Budget on track</span>
-                    <span id="budget-percent" class="font-bold text-primary-600 dark:text-primary-400">0%</span>
-                </div>
-            </div>
-
-            <!-- Udhar Khata Live Summary Card on Dashboard -->
-            <div id="dash-module-udhar" data-layout-id="dash-module-udhar" class="glass-card p-5 sm:p-6 rounded-3xl shadow-sm border border-rose-500/20 bg-gradient-to-br from-rose-500/5 via-transparent to-emerald-500/5">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-                    <div>
-                        <span class="text-[10px] font-black uppercase tracking-wider text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
-                            <i class="fa-solid fa-book-open"></i> Udhar Khata Live Overview (उधार वसूली हिसाब)
+                <div class="relative space-y-4">
+                    <!-- Top Status Row -->
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                        <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 dark:bg-emerald-500/15 text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-300 border border-emerald-500/25 flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Live Financial Command
                         </span>
-                        <h3 class="text-base sm:text-lg font-black text-neutral-900 dark:text-white mt-0.5">Customer Credit & Collection Summary</h3>
+                        <span id="dash-live-date-badge" class="text-[11px] font-bold text-neutral-500 dark:text-slate-300 bg-neutral-100 dark:bg-white/10 px-2.5 py-1 rounded-full border border-neutral-200/80 dark:border-white/10"></span>
                     </div>
-                    <button type="button" onclick="switchTab('udhar')" class="w-full sm:w-auto px-4 py-2 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition shadow-md shadow-rose-600/20 flex items-center justify-center gap-1.5 active:scale-95">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Udhar Khata
-                    </button>
+
+                    <!-- Greeting & Hero Net Balance -->
+                    <div>
+                        <h2 id="dash-welcome-heading" class="text-lg sm:text-2xl font-black tracking-tight text-neutral-900 dark:text-white leading-snug">Welcome back!</h2>
+                        <div class="mt-2 p-3.5 sm:p-4 rounded-2xl bg-neutral-50/90 dark:bg-white/[0.05] border border-neutral-200/80 dark:border-white/10 flex items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-neutral-500 dark:text-slate-400 block">Net Cashflow Balance (आय − खर्च)</span>
+                                <div id="dash-net-cashflow" class="text-2xl sm:text-4xl font-black tracking-tight text-neutral-900 dark:text-white tabular-nums mt-0.5 truncate">₹0</div>
+                            </div>
+                            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-primary-600 to-indigo-600 text-white flex items-center justify-center text-base sm:text-lg shadow-lg shadow-primary-600/25 flex-shrink-0">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3 Mobile-Optimized KPI Boxes (Zero Text Clipping, Crisp Icons, Responsive Scale) -->
+                    <div class="grid grid-cols-1 min-[360px]:grid-cols-3 gap-2.5 sm:gap-3.5">
+                        <!-- Income Box -->
+                        <div class="p-3 sm:p-4 rounded-2xl bg-emerald-50/80 dark:bg-emerald-500/10 border border-emerald-200/80 dark:border-emerald-400/25 flex flex-col justify-between min-w-0">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-300 truncate">Income</span>
+                                <span class="w-6 h-6 rounded-lg bg-emerald-500/15 dark:bg-emerald-500/25 text-emerald-700 dark:text-emerald-300 flex items-center justify-center text-[11px] flex-shrink-0">
+                                    <i class="fa-solid fa-arrow-trend-up"></i>
+                                </span>
+                            </div>
+                            <div id="dash-total-inflow-pill" class="text-sm sm:text-lg md:text-xl font-black text-emerald-800 dark:text-white tabular-nums mt-2 truncate">₹0</div>
+                            <span class="text-[10px] font-semibold text-emerald-700/75 dark:text-emerald-200/70 mt-0.5 truncate">Total inflow</span>
+                        </div>
+
+                        <!-- Spend Box -->
+                        <div class="p-3 sm:p-4 rounded-2xl bg-rose-50/80 dark:bg-rose-500/10 border border-rose-200/80 dark:border-rose-400/25 flex flex-col justify-between min-w-0">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-rose-700 dark:text-rose-300 truncate">Spend</span>
+                                <span class="w-6 h-6 rounded-lg bg-rose-500/15 dark:bg-rose-500/25 text-rose-700 dark:text-rose-300 flex items-center justify-center text-[11px] flex-shrink-0">
+                                    <i class="fa-solid fa-arrow-trend-down"></i>
+                                </span>
+                            </div>
+                            <div id="dash-total" class="text-sm sm:text-lg md:text-xl font-black text-rose-800 dark:text-white tabular-nums mt-2 truncate">₹0</div>
+                            <span class="text-[10px] font-semibold text-rose-700/75 dark:text-rose-200/70 mt-0.5 truncate">Total outflow</span>
+                        </div>
+
+                        <!-- Budget Left Box -->
+                        <div class="p-3 sm:p-4 rounded-2xl bg-sky-50/80 dark:bg-sky-500/10 border border-sky-200/80 dark:border-sky-400/25 flex flex-col justify-between min-w-0">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-sky-700 dark:text-sky-300 truncate">Left</span>
+                                <span class="w-6 h-6 rounded-lg bg-sky-500/15 dark:bg-sky-500/25 text-sky-700 dark:text-sky-300 flex items-center justify-center text-[11px] flex-shrink-0">
+                                    <i class="fa-solid fa-wallet"></i>
+                                </span>
+                            </div>
+                            <div id="display-balance" class="text-sm sm:text-lg md:text-xl font-black text-sky-900 dark:text-white tabular-nums mt-2 truncate">₹0</div>
+                            <span class="text-[10px] font-semibold text-sky-700/75 dark:text-sky-200/70 mt-0.5 truncate">Budget left</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                    <!-- 1. Total Udhar Given -->
-                    <div class="p-4 rounded-2xl bg-white/80 dark:bg-neutral-900/70 border border-neutral-200/80 dark:border-neutral-800">
-                        <div class="flex items-center justify-between mb-1.5">
-                            <span class="text-[11px] font-extrabold uppercase tracking-wider text-neutral-500">कुल उधार दिया (Total Given)</span>
-                            <span class="w-7 h-7 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 flex items-center justify-center text-xs"><i class="fa-solid fa-hand-holding-dollar"></i></span>
+                <!-- Integrated Monthly Budget Bar + Full-Width Mobile Action Buttons -->
+                <div id="dash-module-budget" data-layout-id="dash-module-budget" class="relative mt-5 pt-4 border-t border-neutral-200/80 dark:border-white/10 space-y-3">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                        <div class="flex items-center gap-2 flex-wrap text-xs">
+                            <span class="font-bold text-neutral-500 dark:text-slate-300">Monthly Budget:</span>
+                            <strong id="display-budget" class="text-sm sm:text-base font-black text-neutral-900 dark:text-white tabular-nums">₹0</strong>
+                            <span class="px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-[10px] font-black text-amber-700 dark:text-amber-300" id="budget-percent">0% Used</span>
                         </div>
-                        <div id="dash-udhar-given" class="text-2xl font-black text-neutral-900 dark:text-white">₹0</div>
-                        <p class="text-[10px] text-neutral-500 mt-1">ग्राहकों को दिया गया कुल उधार</p>
+                        <span id="budget-status-text" class="text-[11px] font-semibold text-neutral-500 dark:text-slate-300/80">• Budget on track</span>
                     </div>
 
-                    <!-- 2. Total Received -->
-                    <div class="p-4 rounded-2xl bg-success-100/50 dark:bg-success-700/20 border border-success-500/25">
-                        <div class="flex items-center justify-between mb-1.5">
-                            <span class="text-[11px] font-extrabold uppercase tracking-wider text-success-700 dark:text-success-500">इतने पैसे मिल गए (Received)</span>
-                            <span class="w-7 h-7 rounded-xl bg-success-100 dark:bg-success-700/30 text-success-700 dark:text-success-400 flex items-center justify-center text-xs"><i class="fa-solid fa-circle-check"></i></span>
-                        </div>
-                        <div id="dash-udhar-received" class="text-2xl font-black text-success-700 dark:text-success-500">₹0</div>
-                        <p class="text-[10px] text-neutral-500 mt-1">ग्राहकों से जमा हुई कुल रकम</p>
+                    <div class="w-full bg-neutral-200/80 dark:bg-black/40 h-2.5 rounded-full overflow-hidden p-0.5 border border-neutral-300/60 dark:border-white/10">
+                        <div id="budget-progress-bar" class="bg-emerald-500 dark:bg-emerald-400 h-full transition-all duration-700 rounded-full" style="width: 0%"></div>
                     </div>
 
-                    <!-- 3. Remaining Bakaya to Collect -->
-                    <div class="p-4 rounded-2xl bg-error-100/50 dark:bg-error-700/20 border border-error-500/25">
-                        <div class="flex items-center justify-between mb-1.5">
-                            <span class="text-[11px] font-extrabold uppercase tracking-wider text-error-700 dark:text-error-500">अभी और लेने हैं (Net Bakaya)</span>
-                            <span class="w-7 h-7 rounded-xl bg-error-100 dark:bg-error-700/30 text-error-700 dark:text-error-400 flex items-center justify-center text-xs"><i class="fa-solid fa-clock"></i></span>
+                    <div class="grid grid-cols-2 gap-2.5 pt-1">
+                        <button type="button" onclick="openBudgetModal()" class="w-full py-2.5 px-3 rounded-xl bg-primary-600 hover:bg-primary-700 dark:bg-white dark:hover:bg-sky-50 text-white dark:text-slate-950 font-black text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+                            <i class="fa-solid fa-sliders"></i> Edit Budget
+                        </button>
+                        <button type="button" onclick="openCategoryBudgetModal()" class="w-full py-2.5 px-3 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-white/10 dark:hover:bg-white/20 text-neutral-800 dark:text-white border border-neutral-200 dark:border-white/15 font-bold text-xs transition flex items-center justify-center gap-1.5 active:scale-95">
+                            <i class="fa-solid fa-bullseye text-primary-600 dark:text-sky-300"></i> Category Limits
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Expense Velocity & Spend Summary (Today, Yesterday, 7 Days, 30 Days & Lifetime) -->
+            <div id="dash-module-velocity" data-layout-id="dash-module-velocity" class="space-y-3">
+                <div class="flex items-center justify-between px-1">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-primary-600"></span>
+                        <h3 class="text-xs font-black uppercase tracking-wider text-neutral-600 dark:text-neutral-300">Expense Velocity & Spend Summary</h3>
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-primary-50 dark:bg-primary-950/60 border border-primary-200/70 dark:border-primary-800/70 text-[10px] font-bold text-primary-700 dark:text-primary-300">Live Metrics</span>
+                </div>
+
+                <!-- 2x2 Grid for Today, Yesterday, 7 Days, 30 Days -->
+                <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+                    <!-- Today -->
+                    <div class="p-3.5 sm:p-4 rounded-3xl bg-gradient-to-br from-blue-50 via-blue-100/70 to-sky-100/80 dark:from-blue-950/75 dark:via-blue-900/45 dark:to-sky-950/60 border border-blue-200/90 dark:border-blue-700/60 shadow-sm hover:shadow-md transition flex flex-col justify-between min-w-0">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full bg-blue-500/15 dark:bg-blue-500/25 text-blue-700 dark:text-blue-300 text-[10px] font-black uppercase tracking-wider">Today</span>
+                            <span class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-primary-500 text-white flex items-center justify-center text-xs shadow-sm flex-shrink-0">
+                                <i class="fa-solid fa-bolt"></i>
+                            </span>
                         </div>
-                        <div id="dash-udhar-remaining" class="text-2xl font-black text-error-700 dark:text-error-500">₹0</div>
-                        <p id="dash-udhar-pending-customers" class="text-[10px] text-neutral-500 mt-1">0 ग्राहकों पर बकाया शेष</p>
+                        <div id="dash-today" class="text-[26px] sm:text-3xl md:text-4xl font-black text-blue-700 dark:text-blue-300 tabular-nums tracking-tight mt-2.5 leading-tight">₹0</div>
+                    </div>
+
+                    <!-- Yesterday -->
+                    <div class="p-3.5 sm:p-4 rounded-3xl bg-gradient-to-br from-slate-100 via-indigo-50/80 to-slate-200/70 dark:from-slate-900/90 dark:via-indigo-950/50 dark:to-slate-800/80 border border-slate-300/85 dark:border-slate-700/65 shadow-sm hover:shadow-md transition flex flex-col justify-between min-w-0">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full bg-slate-500/15 dark:bg-slate-500/25 text-slate-700 dark:text-slate-300 text-[10px] font-black uppercase tracking-wider">Yesterday</span>
+                            <span class="w-8 h-8 rounded-full bg-gradient-to-tr from-slate-700 to-indigo-600 text-white flex items-center justify-center text-xs shadow-sm flex-shrink-0">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </span>
+                        </div>
+                        <div id="dash-yesterday" class="text-[26px] sm:text-3xl md:text-4xl font-black text-slate-800 dark:text-slate-200 tabular-nums tracking-tight mt-2.5 leading-tight">₹0</div>
+                    </div>
+
+                    <!-- Last 7 Days -->
+                    <div class="p-3.5 sm:p-4 rounded-3xl bg-gradient-to-br from-emerald-50 via-teal-50/90 to-green-100/80 dark:from-emerald-950/75 dark:via-teal-900/45 dark:to-green-950/60 border border-emerald-200/90 dark:border-emerald-700/60 shadow-sm hover:shadow-md transition flex flex-col justify-between min-w-0">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/25 text-emerald-700 dark:text-emerald-300 text-[10px] font-black uppercase tracking-wider">7 Days</span>
+                            <span class="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center text-xs shadow-sm flex-shrink-0">
+                                <i class="fa-solid fa-calendar-week"></i>
+                            </span>
+                        </div>
+                        <div id="dash-7days" class="text-[26px] sm:text-3xl md:text-4xl font-black text-emerald-700 dark:text-emerald-300 tabular-nums tracking-tight mt-2.5 leading-tight">₹0</div>
+                    </div>
+
+                    <!-- Last 30 Days -->
+                    <div class="p-3.5 sm:p-4 rounded-3xl bg-gradient-to-br from-amber-50 via-orange-50/90 to-yellow-100/80 dark:from-amber-950/75 dark:via-orange-900/45 dark:to-yellow-950/60 border border-amber-200/90 dark:border-amber-700/60 shadow-sm hover:shadow-md transition flex flex-col justify-between min-w-0">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full bg-amber-500/15 dark:bg-amber-500/25 text-amber-700 dark:text-amber-300 text-[10px] font-black uppercase tracking-wider">30 Days</span>
+                            <span class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center text-xs shadow-sm flex-shrink-0">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </span>
+                        </div>
+                        <div id="dash-30days" class="text-[26px] sm:text-3xl md:text-4xl font-black text-amber-700 dark:text-amber-300 tabular-nums tracking-tight mt-2.5 leading-tight">₹0</div>
+                    </div>
+                </div>
+
+                <!-- Full-Width Lifetime Cumulative Spend Card -->
+                <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-purple-100/90 via-indigo-50/90 to-violet-100/90 dark:from-purple-950/75 dark:via-indigo-950/55 dark:to-violet-950/65 border border-purple-200/90 dark:border-purple-700/60 shadow-sm hover:shadow-md transition flex items-start justify-between gap-3">
+                    <div class="flex items-start gap-3 min-w-0">
+                        <span class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center text-base shadow-md flex-shrink-0 mt-0.5">
+                            <i class="fa-solid fa-infinity"></i>
+                        </span>
+                        <div class="min-w-0">
+                            <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-purple-700 dark:text-purple-300 block leading-snug">Lifetime Cumulative Spend</span>
+                            <span class="inline-block mt-1.5 px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-700 dark:text-purple-300 text-[10px] font-black uppercase">All-Time</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end text-right flex-shrink-0 min-w-0">
+                        <button type="button" onclick="switchTab('transactions')" class="text-[11px] sm:text-xs font-extrabold text-purple-700 dark:text-purple-300 hover:underline">View Passbook →</button>
+                        <div id="dash-lifetime" class="text-3xl sm:text-4xl md:text-5xl font-black text-purple-700 dark:text-purple-300 tabular-nums tracking-tight mt-1.5 leading-none">₹0</div>
                     </div>
                 </div>
             </div>
 
             <div id="admob-slot-dashboard" class="hidden rounded-3xl overflow-hidden text-center"></div>
 
-            <!-- Quick Transaction Input Form -->
-            <div id="dash-module-quick-entry" data-layout-id="dash-module-quick-entry" class="glass-card p-6 sm:p-8 rounded-3xl shadow-sm border border-neutral-200/80 dark:border-neutral-800/80">
-                <div class="mb-5">
-                    <h3 class="text-lg font-black tracking-tight flex items-center gap-2">
-                        <span class="w-6 h-6 rounded-lg bg-primary-600 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-plus"></i></span>
+            <!-- 5. Quick Transaction Entry Card (Directly Above Recent Activity) -->
+            <div id="dash-module-quick-entry" data-layout-id="dash-module-quick-entry" class="glass-card p-5 sm:p-6 rounded-3xl shadow-sm border border-neutral-200/80 dark:border-neutral-800/80">
+                <div class="mb-4">
+                    <h3 class="text-base sm:text-lg font-black flex items-center gap-2 text-neutral-900 dark:text-white">
+                        <span class="w-6 h-6 rounded-lg bg-primary-600 text-white flex items-center justify-center text-xs shadow-sm"><i class="fa-solid fa-plus"></i></span>
                         Quick Transaction Entry
                     </h3>
-                    <p class="text-xs text-neutral-500 dark:text-neutral-400">Record your income or expense into local memory</p>
+                    <p class="text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">Record your income or expense into cloud & local memory</p>
                 </div>
 
-                <form id="transaction-form" onsubmit="addTransaction(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold mb-1.5 text-neutral-700 dark:text-neutral-300">Type</label>
-                        <select id="tx-type" class="w-full p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500 transition">
-                            <option value="expense">Expense (-)</option>
-                            <option value="income">Income (+)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold mb-1.5 text-neutral-700 dark:text-neutral-300">Amount (<span class="currency-symbol">₹</span>)</label>
-                        <input type="number" id="tx-amount" step="any" required placeholder="e.g. 450" class="w-full p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500 transition">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold mb-1.5 text-neutral-700 dark:text-neutral-300">Category</label>
-                        <select id="tx-category" class="w-full p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500 transition">
-                            <option value="Food">🍔 Food & Dining</option>
-                            <option value="Fast Food">🍟 Fast Food</option>
-                            <option value="Kirana">🛒 Kirana & Grocery</option>
-                            <option value="Rent">🏠 Rent & Stay</option>
-                            <option value="Bills">⚡ Utilities & Bills</option>
-                            <option value="Shopping">🛍️ Shopping</option>
-                            <option value="Travel">🚗 Travel & Fuel</option>
-                            <option value="Education">📚 Education & Books</option>
-                            <option value="Medical">💊 Medical & Health</option>
-                            <option value="Other">✨ Other</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold mb-1.5 text-neutral-700 dark:text-neutral-300">Payment Mode</label>
-                        <select id="tx-mode" class="w-full p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500 transition">
-                            <option value="UPI">📱 UPI / GPay</option>
-                            <option value="Cash">💵 Cash</option>
-                            <option value="Bank">🏦 Bank Transfer</option>
-                        </select>
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label class="block text-xs font-bold mb-1.5 text-neutral-700 dark:text-neutral-300">Date</label>
-                        <input type="date" id="tx-date" class="w-full p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-xs font-medium focus:outline-none focus:border-primary-500 transition text-neutral-700 dark:text-neutral-300">
-                    </div>
-                    <div class="sm:col-span-2 lg:col-span-6 flex flex-col sm:flex-row gap-3 items-center justify-between pt-2">
-                        <div class="w-full">
-                            <input type="text" id="tx-note" placeholder="Add custom note or merchant description..." class="w-full p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-xs font-medium focus:outline-none focus:border-primary-500 transition">
+                <form onsubmit="addTransaction(event)" class="space-y-3">
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">Type</label>
+                            <select id="tx-type" class="w-full p-2.5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-primary-500">
+                                <option value="expense">Expense (-)</option>
+                                <option value="income">Income (+)</option>
+                            </select>
                         </div>
-                        <button type="submit" class="w-full sm:w-auto px-8 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs transition shadow-lg shadow-primary-600/25 flex items-center justify-center gap-2 whitespace-nowrap active:scale-95">
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">Amount (₹)</label>
+                            <input type="number" id="tx-amount" step="any" min="0.01" required placeholder="e.g. 450" class="w-full p-2.5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-black focus:outline-none focus:border-primary-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">Category</label>
+                            <select id="tx-category" class="w-full p-2.5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-primary-500">
+                                <option value="Food">🍔 Food & Dining</option>
+                                <option value="Fast Food">🍟 Fast Food</option>
+                                <option value="Kirana">🛒 Kirana & Grocery</option>
+                                <option value="Rent">🏠 Rent & Stay</option>
+                                <option value="Bills">⚡ Utilities & Bills</option>
+                                <option value="Shopping">🛍️ Shopping</option>
+                                <option value="Travel">🚗 Travel & Fuel</option>
+                                <option value="Education">📚 Education & Books</option>
+                                <option value="Medical">💊 Medical & Health</option>
+                                <option value="Other">✨ Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">Payment Mode</label>
+                            <select id="tx-mode" class="w-full p-2.5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-primary-500">
+                                <option value="UPI">📱 UPI / GPay</option>
+                                <option value="Cash">💵 Cash</option>
+                                <option value="Bank">🏦 Bank / Card</option>
+                            </select>
+                        </div>
+
+                        <div class="col-span-2 sm:col-span-1">
+                            <label class="block text-[11px] font-bold text-neutral-600 dark:text-neutral-300 mb-1">Date</label>
+                            <input type="date" id="tx-date" class="w-full p-2.5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500">
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1">
+                        <input type="text" id="tx-note" placeholder="Add custom note or merchant description..." class="flex-1 px-4 py-2.5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-medium focus:outline-none focus:border-primary-500">
+                        <button type="submit" class="px-6 py-2.5 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-black text-xs transition shadow-md shadow-primary-600/25 flex items-center justify-center gap-1.5 active:scale-95 whitespace-nowrap">
                             <i class="fa-solid fa-check"></i> Add Entry
                         </button>
                     </div>
                 </form>
             </div>
 
-            <!-- Charts / AI Card -->
-            <div id="dash-module-analytics" data-layout-id="dash-module-analytics" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- 6. Bottom Insights Row: Recent Activity, Category Breakdown & Smart Guidance -->
+            <div id="dash-module-analytics" data-layout-id="dash-module-analytics" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Live Recent Activity Feed -->
+                <div class="glass-card p-6 rounded-3xl shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-base font-bold flex items-center gap-2 text-neutral-900 dark:text-white">
+                                <i class="fa-solid fa-bolt-lightning text-sky-600"></i> Recent Activity
+                            </h3>
+                            <button type="button" onclick="switchTab('transactions')" class="text-[11px] font-extrabold text-primary-600 hover:underline">Full History →</button>
+                        </div>
+                        <div id="dash-recent-activity-list" class="space-y-2.5"></div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-neutral-200/70 dark:border-neutral-800 flex items-center justify-between text-[11px] text-neutral-500">
+                        <span>Total Passbook Logs</span>
+                        <strong id="dash-total-logs-badge" class="text-neutral-800 dark:text-neutral-200">0 Entries</strong>
+                    </div>
+                </div>
+
+                <!-- Category Breakdown Chart -->
                 <div class="glass-card p-6 rounded-3xl shadow-sm">
                     <h3 class="text-base font-bold mb-4 flex items-center justify-between">
                         <span class="flex items-center gap-2 text-neutral-900 dark:text-white"><i class="fa-solid fa-chart-pie text-primary-600"></i> Category Breakdown</span>
                         <span class="text-xs bg-neutral-200 dark:bg-neutral-800 px-2.5 py-1 rounded-full font-semibold text-neutral-600 dark:text-neutral-300">Current</span>
                     </h3>
-                    <div class="h-64 flex items-center justify-center">
+                    <div class="h-60 flex items-center justify-center">
                         <canvas id="categoryPieChart"></canvas>
                     </div>
                 </div>
 
+                <!-- Smart Financial Guidance -->
                 <div class="glass-card p-6 rounded-3xl shadow-sm flex flex-col justify-between">
                     <div>
-                        <h3 class="text-base font-bold mb-2 flex items-center gap-2 text-neutral-900 dark:text-white"><i class="fa-solid fa-brain text-warning-500"></i> Local Financial Intelligence</h3>
+                        <h3 class="text-base font-bold mb-2 flex items-center gap-2 text-neutral-900 dark:text-white"><i class="fa-solid fa-brain text-warning-500"></i> Smart Financial Guidance</h3>
                         <p id="ai-insight-text" class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mt-3 p-4 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/60">
                             Analyzing your spending parameters... Add transactions to see adaptive guidance here.
                         </p>
                     </div>
                     <div class="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-800 flex justify-between items-center text-xs">
-                        <span class="text-neutral-500">Color Contrast WCAG:</span>
-                        <span class="font-bold text-success-700 dark:text-success-500"><i class="fa-solid fa-circle-check"></i> Compliant 4.5:1</span>
+                        <span class="text-neutral-500">Cloud Encryption & Sync:</span>
+                        <span class="font-bold text-success-700 dark:text-success-500"><i class="fa-solid fa-shield-halved"></i> Active & Verified</span>
                     </div>
                 </div>
             </div>
@@ -1018,8 +1172,8 @@
 
         <!-- Hidden Professional History / Passbook Statement Template -->
         <div id="history-export-canvas-container" style="position: fixed; left: -9999px; top: -9999px; width: 794px; z-index: -1;">
-            <div id="history-statement-slip" style="width: 794px; min-height: 1123px; background-color: #ffffff; color: #0f172a; font-family: 'Inter', sans-serif; padding: 40px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 2.5%; bottom: 2.5%; left: 2.5%; right: 2.5%; border: 6px solid rgba(36, 83, 214, 0.5); border-radius: 20px; pointer-events: none; z-index: 20; box-sizing: border-box;"></div>
+            <div id="history-statement-slip" style="width: 794px; height: 1123px; background-color: #ffffff; color: #0f172a; font-family: 'Inter', sans-serif; padding: 36px 40px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 2.2%; bottom: 2.2%; left: 2.2%; right: 2.2%; border: 6px solid rgba(36, 83, 214, 0.5); border-radius: 20px; pointer-events: none; z-index: 20; box-sizing: border-box;"></div>
                 <div style="position: absolute; inset: -60px; pointer-events: none; z-index: 10; opacity: 0.025; overflow: hidden; display: flex; flex-direction: column; justify-content: space-around;">
                     <div style="display: flex; justify-content: space-between; align-items: center; white-space: nowrap; transform: rotate(-21deg); margin-left: 20px;">
                         <span style="font-size: 20px; font-weight: 900; color: #000000; letter-spacing: 2.5px;">KHATAFLOW</span>
@@ -1031,67 +1185,67 @@
                         <span style="font-size: 20px; font-weight: 900; color: #000000; letter-spacing: 2px; margin-left: 170px;">KHATAFLOW</span>
                     </div>
                 </div>
-                <div style="position: relative; z-index: 1; padding: 24px 28px 0 28px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 22px; border-bottom: 2px solid #f1f5f9;">
-                        <svg width="220" height="44" viewBox="0 0 220 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div style="position: relative; z-index: 1; padding: 14px 24px 0 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 2px solid #f1f5f9;">
+                        <svg width="210" height="40" viewBox="0 0 220 44" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect width="44" height="44" rx="12" fill="#2453d6"/>
                             <g transform="translate(10, 10)"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a2 2 0 0 0 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3a3 3 0 0 1 0-6h3zM5 5h14v.28c-.59.35-1 .99-1 1.72v.5H5a1 1 0 0 1-1-1c0-.55.45-1 1-1zm14 14H5a1 1 0 0 1-1-1V9.26A2.96 2.96 0 0 0 5 9.5h12v.5a3 3 0 0 1 0 4v.5h3v2zm-2-5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="#ffffff"/></g>
                             <text x="56" y="29" fill="#1d42ad" font-family="'Inter', sans-serif" font-size="25" font-weight="900">KhataFlow</text>
                         </svg>
                         <div style="text-align: right;">
-                            <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; background: #eef4ff; color: #2453d6; padding: 6px 14px; border-radius: 8px; border: 1px solid #dce7ff;">ACCOUNT STATEMENT / PASSBOOK</span>
-                            <div id="statement-doc-no" style="font-size: 12px; font-weight: 800; color: #334155; margin-top: 6px; font-family: monospace;">STMT-2026-001</div>
-                            <div id="statement-gen-date" style="font-size: 10px; color: #94a3b8; margin-top: 2px;">Generated: 06 Nov 2026</div>
+                            <span style="font-size: 9.5px; font-weight: 800; text-transform: uppercase; background: #eef4ff; color: #2453d6; padding: 5px 12px; border-radius: 8px; border: 1px solid #dce7ff;">ACCOUNT STATEMENT / PASSBOOK</span>
+                            <div id="statement-doc-no" style="font-size: 11.5px; font-weight: 800; color: #334155; margin-top: 5px; font-family: monospace;">STMT-2026-001</div>
+                            <div id="statement-gen-date" style="font-size: 9.5px; color: #94a3b8; margin-top: 1px;">Generated: 06 Nov 2026</div>
                         </div>
                     </div>
 
-                    <div id="statement-user-info-section" style="display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 16px; padding: 20px 0; border-bottom: 1px solid #f1f5f9; font-size: 12px;">
+                    <div id="statement-user-info-section" style="display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: 12px;">
                         <div>
-                            <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: 800;">Account Holder / User</div>
-                            <div id="statement-user-name" style="font-weight: 900; color: #0f172a; margin-top: 3px; font-size: 17px;">Amit Kumar</div>
-                            <div id="statement-user-phone" style="font-size: 12px; color: #2453d6; margin-top: 2px; font-weight: 700; font-family: monospace;">+91 9876543210</div>
+                            <div style="font-size: 9.5px; color: #94a3b8; text-transform: uppercase; font-weight: 800;">Account Holder / User</div>
+                            <div id="statement-user-name" style="font-weight: 900; color: #0f172a; margin-top: 2px; font-size: 16px;">Amit Kumar</div>
+                            <div id="statement-user-phone" style="font-size: 11px; color: #2453d6; margin-top: 1px; font-weight: 700; font-family: monospace;">+91 9876543210</div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: 800;">Segment Scope</div>
-                            <div id="statement-scope-tag" style="font-weight: 800; color: #16a34a; margin-top: 3px; font-size: 13px;">All Transactions</div>
-                            <div id="statement-records-count" style="font-size: 10px; color: #64748b;">0 Records Computed</div>
+                            <div style="font-size: 9.5px; color: #94a3b8; text-transform: uppercase; font-weight: 800;">Segment Scope</div>
+                            <div id="statement-scope-tag" style="font-weight: 800; color: #16a34a; margin-top: 2px; font-size: 12.5px;">All Transactions</div>
+                            <div id="statement-records-count" style="font-size: 9.5px; color: #64748b;">0 Records Computed</div>
                         </div>
                     </div>
 
-                    <div id="statement-kpi-summary-section" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px;">
-                        <div style="padding: 10px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px;"><span style="font-size: 9px; font-weight: 800; color: #15803d;">Total Inflow (+)</span><div id="stmt-kpi-income" style="font-size: 15px; font-weight: 900; color: #166534;">₹0</div></div>
-                        <div style="padding: 10px 14px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px;"><span style="font-size: 9px; font-weight: 800; color: #b91c1c;">Total Outflow (-)</span><div id="stmt-kpi-expense" style="font-size: 15px; font-weight: 900; color: #991b1b;">₹0</div></div>
-                        <div style="padding: 10px 14px; background: #eef4ff; border: 1px solid #c7d9fe; border-radius: 10px;"><span style="font-size: 9px; font-weight: 800; color: #1d42ad;">Net Balance</span><div id="stmt-kpi-balance" style="font-size: 15px; font-weight: 900; color: #1e40af;">₹0</div></div>
+                    <div id="statement-kpi-summary-section" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 12px;">
+                        <div style="padding: 8px 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px;"><span style="font-size: 8.5px; font-weight: 800; color: #15803d;">Total Inflow (+)</span><div id="stmt-kpi-income" style="font-size: 14px; font-weight: 900; color: #166534;">₹0</div></div>
+                        <div style="padding: 8px 12px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px;"><span style="font-size: 8.5px; font-weight: 800; color: #b91c1c;">Total Outflow (-)</span><div id="stmt-kpi-expense" style="font-size: 14px; font-weight: 900; color: #991b1b;">₹0</div></div>
+                        <div style="padding: 8px 12px; background: #eef4ff; border: 1px solid #c7d9fe; border-radius: 10px;"><span style="font-size: 8.5px; font-weight: 800; color: #1d42ad;">Net Balance</span><div id="stmt-kpi-balance" style="font-size: 14px; font-weight: 900; color: #1e40af;">₹0</div></div>
                     </div>
 
-                    <table style="width: 100%; margin-top: 16px; border-collapse: separate; border-spacing: 0; text-align: left; font-size: 10px; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <table style="width: 100%; table-layout: fixed; margin-top: 12px; border-collapse: separate; border-spacing: 0; text-align: left; font-size: 10.5px; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0;">
                         <thead>
-                            <tr style="background: #f8fafc; color: #475569; font-size: 8.5px; font-weight: 800;">
-                                <th style="padding: 9px 10px; width: 32px; border-bottom: 2px solid #e2e8f0;">#</th>
-                                <th style="padding: 9px 10px; width: 105px; border-bottom: 2px solid #e2e8f0;">Date & Time</th>
-                                <th style="padding: 9px 10px; width: 90px; border-bottom: 2px solid #e2e8f0;">Section</th>
-                                <th style="padding: 9px 10px; width: 80px; border-bottom: 2px solid #e2e8f0;">Category</th>
-                                <th style="padding: 9px 10px; border-bottom: 2px solid #e2e8f0;">Description / Ref</th>
-                                <th style="padding: 9px 10px; width: 55px; border-bottom: 2px solid #e2e8f0;">Mode</th>
-                                <th style="padding: 9px 10px; text-align: right; width: 90px; border-bottom: 2px solid #e2e8f0;">Amount (₹)</th>
+                            <tr style="background: #f8fafc; color: #475569; font-size: 9px; font-weight: 800; height: 34px;">
+                                <th style="padding: 8px 8px; width: 32px; border-bottom: 2px solid #e2e8f0;">#</th>
+                                <th style="padding: 8px 8px; width: 82px; border-bottom: 2px solid #e2e8f0;">Date & Time</th>
+                                <th style="padding: 8px 8px; width: 72px; border-bottom: 2px solid #e2e8f0;">Section</th>
+                                <th style="padding: 8px 8px; width: 76px; border-bottom: 2px solid #e2e8f0;">Category</th>
+                                <th style="padding: 8px 8px; width: 256px; border-bottom: 2px solid #e2e8f0;">Description / Ref</th>
+                                <th style="padding: 8px 8px; width: 48px; border-bottom: 2px solid #e2e8f0;">Mode</th>
+                                <th style="padding: 8px 8px; text-align: right; width: 84px; border-bottom: 2px solid #e2e8f0;">Amount (₹)</th>
                             </tr>
                         </thead>
-                        <tbody id="statement-items-body" style="color: #334155; font-size: 10px;"></tbody>
+                        <tbody id="statement-items-body" style="color: #334155; font-size: 10.5px;"></tbody>
                     </table>
                 </div>
 
-                <div style="position: relative; z-index: 1; margin-top: auto; padding: 16px 28px 24px 28px;">
-                    <div id="statement-bottom-summary-box" style="padding: 16px 22px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <div style="position: relative; z-index: 1; margin-top: auto; padding: 12px 24px 18px 24px;">
+                    <div id="statement-bottom-summary-box" style="padding: 13px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <div>
-                            <span style="font-size: 9px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 4px 10px; border-radius: 6px;">Verified Ledger Statement</span>
-                            <div style="font-size: 11px; font-weight: 800; color: #0f172a; margin-top: 4px;">KhataFlow Financial Engine • 100% On-Device Audit</div>
+                            <span style="font-size: 8.5px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 3px 9px; border-radius: 6px;">Verified Ledger Statement</span>
+                            <div style="font-size: 10.5px; font-weight: 800; color: #0f172a; margin-top: 4px;">KhataFlow Financial Engine • 100% On-Device Audit</div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-size: 10px; color: #64748b; font-weight: 700;">Total Net Outflow</div>
-                            <div id="statement-grand-total" style="font-size: 26px; font-weight: 900; color: #1d42ad;">₹0</div>
+                            <div style="font-size: 9.5px; color: #64748b; font-weight: 700;">Total Net Outflow</div>
+                            <div id="statement-grand-total" style="font-size: 23px; font-weight: 900; color: #1d42ad;">₹0</div>
                         </div>
                     </div>
-                    <div style="padding-top: 12px; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; font-size: 10px; color: #94a3b8;">
+                    <div style="padding-top: 10px; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; font-size: 9.5px; color: #94a3b8;">
                         <span>Computed via <strong style="color: #2453d6;">KhataFlow</strong></span>
                         <span id="statement-page-footer-num" style="font-weight: 700; color: #475569; font-family: monospace;">Page 1 of 1</span>
                     </div>
@@ -1606,7 +1760,9 @@
                             <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-neutral-900 border"><input type="checkbox" id="admob-place-dashboard"> Dashboard Feed</label>
                             <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-neutral-900 border"><input type="checkbox" id="admob-place-history"> History Feed</label>
                             <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-neutral-900 border"><input type="checkbox" id="admob-place-grocery"> Shopping Screen</label>
+                            <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-neutral-900 border"><input type="checkbox" id="admob-place-udhar"> Udhar Khata</label>
                             <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-neutral-900 border"><input type="checkbox" id="admob-place-hub"> Friends Hub</label>
+                            <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-neutral-900 border"><input type="checkbox" id="admob-place-analytics"> Reports & Analytics</label>
                             <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-neutral-900 border"><input type="checkbox" id="admob-place-bottom"> Sticky Bottom</label>
                         </div>
                         <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-600 text-white font-extrabold text-xs">Save AdMob Settings</button>
@@ -1653,11 +1809,11 @@
         </footer>
     </div>
 
-    <!-- Sticky Floating AdMob Bottom Anchor Banner (100% invisible unless real ad fills) -->
-    <div id="admob-slot-bottom" class="hidden fixed bottom-14 left-0 right-0 z-40 px-2 sm:px-6 transition-all pointer-events-auto">
-        <div class="max-w-md mx-auto sm:max-w-xl rounded-2xl overflow-hidden text-center relative">
-            <button onclick="document.getElementById('admob-slot-bottom').classList.add('hidden')" class="absolute top-1 right-2 w-6 h-6 rounded-full bg-black/50 text-white text-xs z-10 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
-            <div id="admob-bottom-container" class="flex items-center justify-center"></div>
+    <!-- Sticky Floating AdMob Bottom Anchor Banner -->
+    <div id="admob-slot-bottom" class="hidden fixed bottom-16 left-0 right-0 z-40 px-2 sm:px-6 transition-all pointer-events-auto">
+        <div class="max-w-md mx-auto sm:max-w-xl rounded-2xl overflow-hidden text-center relative bg-white/95 dark:bg-neutral-900/95 border border-neutral-200 dark:border-neutral-800 shadow-lg p-1.5">
+            <button onclick="document.getElementById('admob-slot-bottom').classList.add('hidden')" class="absolute top-1 right-2 w-6 h-6 rounded-full bg-black/60 text-white text-xs z-10 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            <div id="admob-bottom-container" class="flex items-center justify-center min-h-[52px]"></div>
         </div>
     </div>
 
@@ -1710,6 +1866,9 @@
             </button>
         </div>
     </nav>
+
+    <!-- Floating Toast Notification -->
+    <div id="toast" class="fixed bottom-20 right-5 z-[210] translate-y-20 opacity-0 transition-all duration-300 px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 pointer-events-none bg-neutral-900 dark:bg-white text-white dark:text-neutral-900"></div>
 
     <!-- ================= MODALS ================= -->
     <!-- Add / Edit Udhar Customer Modal -->
@@ -2183,6 +2342,36 @@
         </div>
     </div>
 
+    <!-- Self-Service Permanent Account Deletion Confirmation Modal -->
+    <div id="delete-self-account-modal" class="fixed inset-0 z-50 bg-neutral-950/85 backdrop-blur-xl hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-[2rem] shadow-2xl relative bg-white/95 dark:bg-neutral-900/95 border border-rose-500/30">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-neutral-200 dark:border-neutral-800">
+                <h4 class="text-sm font-black flex items-center gap-2 text-rose-600">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Delete My Account Permanently
+                </h4>
+                <button type="button" onclick="closeDeleteSelfAccountModal()" class="w-7 h-7 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-400 text-xs flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div class="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/25 text-rose-700 dark:text-rose-300 space-y-1">
+                    <div class="font-black">Warning: This action cannot be undone!</div>
+                    <p class="leading-relaxed text-[11px]">Deleting your account (<strong id="delete-self-account-identity">User</strong>) will permanently remove all your transactions, Udhar Khata customers, shopping checklists, and group splits from both this device and Google Firebase Cloud.</p>
+                </div>
+                <form onsubmit="confirmDeleteSelfAccount(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1">Type <span class="font-mono text-rose-600 font-black">DELETE</span> to confirm:</label>
+                        <input type="text" id="delete-self-confirm-input" required autocomplete="off" placeholder="Type DELETE here" class="w-full p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-xs font-mono font-black uppercase focus:outline-none focus:border-rose-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button type="button" onclick="closeDeleteSelfAccountModal()" class="py-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-xs font-bold">Cancel</button>
+                        <button type="submit" id="confirm-delete-self-btn" class="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-black flex items-center justify-center gap-1.5 shadow-md shadow-rose-600/25">
+                            <i class="fa-solid fa-trash-can"></i> Delete Forever
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Synchronous Application Script -->
     <script>
         function createEmptyAppState() {
@@ -2593,17 +2782,66 @@
             showToast('Signed out safely');
         }
 
-        function toggleSideMenu(open) {
-            const overlay = document.getElementById('side-menu-overlay');
-            const drawer = document.getElementById('side-menu-drawer');
-            if (!overlay || !drawer) return;
-            if (open) {
-                updateAuthUI();
-                overlay.classList.remove('hidden');
-                requestAnimationFrame(() => drawer.classList.remove('translate-x-full'));
-            } else {
-                drawer.classList.add('translate-x-full');
-                setTimeout(() => overlay.classList.add('hidden'), 300);
+        function openDeleteSelfAccountModal() {
+            const session = getAuthSession();
+            if (!session || !session.isLoggedIn) return;
+            if (session.role === 'admin') {
+                showToast('Master Admin account cannot be self-deleted', 'error');
+                return;
+            }
+            const idEl = document.getElementById('delete-self-account-identity');
+            if (idEl) {
+                const phone = appState.userProfile?.phone || session.phone || session.username || '';
+                idEl.textContent = `${getPrimaryUserName()}${phone ? ' (+91 ' + phone + ')' : ''}`;
+            }
+            const inp = document.getElementById('delete-self-confirm-input');
+            if (inp) inp.value = '';
+            const modal = document.getElementById('delete-self-account-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeDeleteSelfAccountModal() {
+            const modal = document.getElementById('delete-self-account-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        async function confirmDeleteSelfAccount(e) {
+            e.preventDefault();
+            const val = (document.getElementById('delete-self-confirm-input')?.value || '').trim().toUpperCase();
+            if (val !== 'DELETE') {
+                showToast('Please type DELETE to confirm permanent deletion', 'error');
+                return;
+            }
+            const btn = document.getElementById('confirm-delete-self-btn');
+            if (btn) btn.disabled = true;
+
+            try {
+                const session = getAuthSession();
+                const phone = extractCleanPhone(appState.userProfile?.phone || session?.phone || session?.username || '');
+                const email = (appState.userProfile?.email || session?.email || '').trim().toLowerCase();
+                const uid = session?.uid || '';
+
+                if (typeof window.deleteSelfCloudAccount === 'function') {
+                    await window.deleteSelfCloudAccount({ phone, email, uid });
+                }
+
+                const rawUsers = JSON.parse(localStorage.getItem('khataflow_registered_users') || '[]');
+                const remaining = rawUsers.filter(u => extractCleanPhone(u.phone || '') !== phone && (u.email || '').toLowerCase() !== email);
+                localStorage.setItem('khataflow_registered_users', JSON.stringify(remaining));
+
+                closeDeleteSelfAccountModal();
+                await logoutCurrentUser();
+                showToast('Your account and cloud data have been permanently deleted.');
+            } catch (err) {
+                showToast(err?.message || 'Could not delete account right now', 'error');
+            } finally {
+                if (btn) btn.disabled = false;
             }
         }
 
@@ -2626,20 +2864,38 @@
             if (session && session.isLoggedIn) {
                 const name = getPrimaryUserName();
                 const phone = appState.userProfile?.phone || session.username || '';
+                const upi = appState.userProfile?.upi || appState.merchantUpi || (phone ? `${phone}@upi` : 'user@upi');
+                const txCount = (appState.transactions || []).length;
+                const udharCount = (appState.udharCustomers || []).length;
+
                 card.innerHTML = `
-                    <div class="flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-2.5 min-w-0">
-                            <div class="w-10 h-10 rounded-2xl bg-primary-600 text-white font-black text-sm flex items-center justify-center flex-shrink-0">${name.charAt(0).toUpperCase()}</div>
-                            <div class="min-w-0">
-                                <div class="text-xs font-black text-neutral-900 dark:text-white truncate">${name}</div>
-                                <div class="text-[10px] text-neutral-500 font-mono truncate">${phone ? '+91 ' + phone : (session.email || 'Active User')}</div>
+                    <div class="relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-primary-700 via-primary-600 to-indigo-700 text-white shadow-lg shadow-primary-600/20">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none"></div>
+                        <div class="absolute -left-6 -bottom-8 w-20 h-20 rounded-full bg-emerald-400/15 pointer-events-none"></div>
+
+                        <div class="relative flex items-center justify-between gap-2.5">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 text-white font-black text-base flex items-center justify-center flex-shrink-0 shadow-inner">${name.charAt(0).toUpperCase()}</div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-sm font-black tracking-tight truncate">${name}</span>
+                                        <i class="fa-solid fa-circle-check text-emerald-300 text-[11px]" title="Verified Account"></i>
+                                    </div>
+                                    <div class="text-[11px] text-white/85 font-mono truncate mt-0.5">${phone ? '+91 ' + phone : (session.email || 'Active Account')}</div>
+                                </div>
                             </div>
+                            <button type="button" onclick="openEditSelfUpiModal(); toggleSideMenu(false);" class="px-3 py-1.5 rounded-xl bg-white/20 hover:bg-white text-white hover:text-primary-700 backdrop-blur-md border border-white/25 text-[11px] font-extrabold transition flex items-center gap-1 flex-shrink-0 active:scale-95">
+                                <i class="fa-solid fa-pen text-[9px]"></i> Edit
+                            </button>
                         </div>
-                        <button type="button" onclick="openEditSelfUpiModal(); toggleSideMenu(false);" class="px-2.5 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border text-[10px] font-bold text-primary-600">Edit</button>
-                    </div>
-                    <button type="button" onclick="logoutCurrentUser()" class="mt-3 w-full py-2 rounded-xl bg-error-500/10 hover:bg-error-500 text-error-600 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-                    </button>`;
+
+                        <div class="relative mt-3.5 pt-3 border-t border-white/15 flex items-center justify-between text-[10px]">
+                            <span class="font-mono text-white/90 bg-black/20 px-2.5 py-1 rounded-lg truncate max-w-[165px]">
+                                <i class="fa-solid fa-qrcode mr-1 text-emerald-300"></i>${upi}
+                            </span>
+                            <span class="font-bold text-white/90">${txCount} Logs • ${udharCount} Khata</span>
+                        </div>
+                    </div>`;
             }
         }
 
@@ -2978,7 +3234,7 @@
             const shopUpi = appState.merchantUpi || appState.userProfile?.upi || 'store@upi';
 
             document.getElementById('udhar-pdf-shop-name').textContent = `${shopName} • Digital Bahi-Khata Statement`;
-            document.getElementById('udhar-pdf-date').textContent = `Generated: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+            document.getElementById('udhar-pdf-date').textContent = `Generated: ${formatFullPdfDateTime(new Date())}`;
             document.getElementById('udhar-pdf-cust-name').textContent = cust.name;
             document.getElementById('udhar-pdf-cust-phone').textContent = cust.phone ? `+91 ${cust.phone}` : 'No mobile linked';
             document.getElementById('udhar-pdf-cust-address').textContent = cust.address || '';
@@ -2997,10 +3253,10 @@
 
             document.getElementById('udhar-pdf-items-body').innerHTML = (cust.entries || []).map((ent, idx) => {
                 const isGave = ent.type === 'gave';
-                const dStr = new Date(ent.date || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+                const dStr = formatFullPdfDateTime(ent.date || Date.now());
                 return `<tr style="border-bottom: 1px solid #f1f5f9;">
                     <td style="padding: 10px 12px;">${idx + 1}</td>
-                    <td style="padding: 10px 12px;">${dStr}</td>
+                    <td style="padding: 10px 12px; white-space: nowrap; font-size: 10.5px;">${dStr}</td>
                     <td style="padding: 10px 12px; font-weight: 700;">${ent.note}</td>
                     <td style="padding: 10px 12px; font-weight: 700; color: ${isGave ? '#dc2626' : '#16a34a'};">${isGave ? 'Udhar Given' : 'Payment Got'}</td>
                     <td style="padding: 10px 12px; text-align: right; font-weight: 800; color: ${isGave ? '#dc2626' : '#16a34a'};">${isGave ? '+' : '-'}₹${Number(ent.amount).toLocaleString('en-IN')}</td>
@@ -3029,7 +3285,7 @@
             });
 
             document.getElementById('udhar-pdf-shop-name').textContent = `${shopName} • Master Udhar Khata Summary`;
-            document.getElementById('udhar-pdf-date').textContent = `Generated: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+            document.getElementById('udhar-pdf-date').textContent = `Generated: ${formatFullPdfDateTime(new Date())}`;
             document.getElementById('udhar-pdf-cust-name').textContent = `All Customers (${customers.length})`;
             document.getElementById('udhar-pdf-cust-phone').textContent = 'Consolidated Credit Register';
             document.getElementById('udhar-pdf-cust-address').textContent = '';
@@ -3189,6 +3445,23 @@
             if (typeof updateCharts === 'function') updateCharts();
         }
 
+        function toggleSideMenu(forceOpen) {
+            const drawer = document.getElementById('side-menu-drawer');
+            const overlay = document.getElementById('side-menu-overlay');
+            if (!drawer || !overlay) return;
+            const shouldOpen = typeof forceOpen === 'boolean'
+                ? forceOpen
+                : drawer.classList.contains('translate-x-full');
+            if (shouldOpen) {
+                updateAuthUI();
+                overlay.classList.remove('hidden');
+                requestAnimationFrame(() => drawer.classList.remove('translate-x-full'));
+            } else {
+                drawer.classList.add('translate-x-full');
+                setTimeout(() => overlay.classList.add('hidden'), 260);
+            }
+        }
+
         function switchTab(tabId) {
             const tabs = ['dashboard', 'transactions', 'grocery', 'udhar', 'hub', 'analytics', 'admin'];
             tabs.forEach(t => {
@@ -3213,46 +3486,56 @@
                 }
             });
 
-            if (tabId === 'dashboard') updateDashboard();
-            if (tabId === 'transactions') renderTransactions();
-            if (tabId === 'grocery') renderGrocery();
-            if (tabId === 'udhar') renderUdharKhata();
-            if (tabId === 'hub') renderSplitter();
+            // Highlight active item inside the side menu drawer
+            document.querySelectorAll('.menu-nav-item').forEach(item => {
+                const isCurrent = item.getAttribute('data-menu-tab') === tabId;
+                item.classList.toggle('bg-primary-50', isCurrent);
+                item.classList.toggle('dark:bg-primary-950/50', isCurrent);
+                item.classList.toggle('ring-1', isCurrent);
+                item.classList.toggle('ring-primary-500/30', isCurrent);
+            });
+
             if (tabId === 'analytics') updateCharts();
             if (tabId === 'admin') {
-                if (typeof window.fetchFirestoreUsersNow === 'function') window.fetchFirestoreUsersNow();
-                if (typeof updateAdminDashboardMetrics === 'function') updateAdminDashboardMetrics();
-                if (typeof renderAdminUsersList === 'function') renderAdminUsersList();
-                if (typeof renderAdminAdsList === 'function') renderAdminAdsList();
+                updateAdminDashboardMetrics();
+                renderAdminUsersList();
+                renderAdminAdsList();
+                if (typeof window.fetchFirestoreUsersNow === 'function') {
+                    window.fetchFirestoreUsersNow();
+                }
             }
-            renderAdmobSlots();
         }
 
         function updateDashboard() {
             const now = new Date();
-            const todayStr = now.toISOString().split('T')[0];
-            const yest = new Date(now);
-            yest.setDate(now.getDate() - 1);
-            const yestStr = yest.toISOString().split('T')[0];
-            const d7 = new Date(now);
-            d7.setDate(now.getDate() - 7);
-            const d30 = new Date(now);
-            d30.setDate(now.getDate() - 30);
+            const hour = now.getHours();
+            const greeting = hour < 12 ? 'Good Morning' : (hour < 17 ? 'Good Afternoon' : 'Good Evening');
+            const userName = getPrimaryUserName();
+            const welcomeEl = document.getElementById('dash-welcome-heading');
+            if (welcomeEl) welcomeEl.textContent = `${greeting}, ${userName}!`;
+            const dateBadgeEl = document.getElementById('dash-live-date-badge');
+            if (dateBadgeEl) {
+                dateBadgeEl.textContent = now.toLocaleDateString('en-IN', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+            }
+
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const yesterdayStart = new Date(todayStart.getTime() - 86400000);
+            const sevenDaysAgo = new Date(now.getTime() - 7 * 86400000);
+            const thirtyDaysAgo = new Date(now.getTime() - 30 * 86400000);
 
             let todayExp = 0, yestExp = 0, exp7 = 0, exp30 = 0, totalExp = 0, totalInc = 0;
 
             (appState.transactions || []).forEach(tx => {
                 const amt = Number(tx.amount) || 0;
-                const txDateObj = new Date(tx.date || Date.now());
-                const txDay = txDateObj.toISOString().split('T')[0];
+                const d = new Date(tx.date || Date.now());
                 if (tx.type === 'income') {
                     totalInc += amt;
                 } else {
                     totalExp += amt;
-                    if (txDay === todayStr) todayExp += amt;
-                    if (txDay === yestStr) yestExp += amt;
-                    if (txDateObj >= d7) exp7 += amt;
-                    if (txDateObj >= d30) exp30 += amt;
+                    if (d >= todayStart) todayExp += amt;
+                    else if (d >= yesterdayStart && d < todayStart) yestExp += amt;
+                    if (d >= sevenDaysAgo) exp7 += amt;
+                    if (d >= thirtyDaysAgo) exp30 += amt;
                 }
             });
 
@@ -3260,7 +3543,32 @@
             if (document.getElementById('dash-yesterday')) document.getElementById('dash-yesterday').textContent = `₹${yestExp.toLocaleString('en-IN')}`;
             if (document.getElementById('dash-7days')) document.getElementById('dash-7days').textContent = `₹${exp7.toLocaleString('en-IN')}`;
             if (document.getElementById('dash-30days')) document.getElementById('dash-30days').textContent = `₹${exp30.toLocaleString('en-IN')}`;
+            if (document.getElementById('dash-lifetime')) document.getElementById('dash-lifetime').textContent = `₹${totalExp.toLocaleString('en-IN')}`;
             if (document.getElementById('dash-total')) document.getElementById('dash-total').textContent = `₹${totalExp.toLocaleString('en-IN')}`;
+
+            // Auto-scale large numbers (₹10,00,000+) so amounts never clip on compact mobile screens
+            ['dash-today', 'dash-yesterday', 'dash-7days', 'dash-30days'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const len = el.textContent.length;
+                const colorMap = {
+                    'dash-today': 'text-blue-700 dark:text-blue-300',
+                    'dash-yesterday': 'text-slate-800 dark:text-slate-200',
+                    'dash-7days': 'text-emerald-700 dark:text-emerald-300',
+                    'dash-30days': 'text-amber-700 dark:text-amber-300'
+                };
+                const sizeClass = len >= 11
+                    ? 'text-[17px] sm:text-2xl md:text-3xl font-black tabular-nums tracking-tighter mt-2.5 leading-tight '
+                    : (len >= 9
+                        ? 'text-[20px] sm:text-2xl md:text-3xl font-black tabular-nums tracking-tight mt-2.5 leading-tight '
+                        : 'text-[26px] sm:text-3xl md:text-4xl font-black tabular-nums tracking-tight mt-2.5 leading-tight ');
+                el.className = sizeClass + (colorMap[id] || '');
+            });
+            if (document.getElementById('dash-total-inflow-pill')) document.getElementById('dash-total-inflow-pill').textContent = `₹${totalInc.toLocaleString('en-IN')}`;
+            const netCashflow = totalInc - totalExp;
+            if (document.getElementById('dash-net-cashflow')) {
+                document.getElementById('dash-net-cashflow').textContent = `${netCashflow < 0 ? '-' : ''}₹${Math.abs(netCashflow).toLocaleString('en-IN')}`;
+            }
 
             const budget = Number(appState.budget) || 0;
             const remaining = budget - exp30;
@@ -3268,16 +3576,46 @@
 
             if (document.getElementById('display-budget')) document.getElementById('display-budget').textContent = `₹${budget.toLocaleString('en-IN')}`;
             if (document.getElementById('display-balance')) document.getElementById('display-balance').textContent = `₹${remaining.toLocaleString('en-IN')}`;
-            if (document.getElementById('budget-percent')) document.getElementById('budget-percent').textContent = `${pct}%`;
+            if (document.getElementById('budget-percent')) document.getElementById('budget-percent').textContent = `${pct}% Used`;
 
             const bar = document.getElementById('budget-progress-bar');
             const statusText = document.getElementById('budget-status-text');
             if (bar) {
                 bar.style.width = `${pct}%`;
-                bar.className = `h-full transition-all duration-700 rounded-full ${pct >= 90 ? 'bg-error-600' : (pct >= 75 ? 'bg-warning-500' : 'bg-primary-600')}`;
+                bar.className = `h-full transition-all duration-700 rounded-full ${pct >= 90 ? 'bg-rose-400' : (pct >= 75 ? 'bg-amber-400' : 'bg-emerald-400')}`;
             }
             if (statusText) {
-                statusText.textContent = pct >= 100 ? 'Monthly budget exceeded!' : (pct >= 80 ? 'Approaching monthly budget limit' : 'Budget on track');
+                statusText.textContent = pct >= 100 ? '• Monthly budget exceeded!' : (pct >= 80 ? '• Approaching budget limit' : '• Budget on track');
+            }
+
+            // Update Feature Explorer Live Badges
+            const groceryCount = (appState.groceryItems || []).length;
+            const splitBillsCount = (appState.splitBills || []).length;
+            if (document.getElementById('dash-feature-grocery-badge')) document.getElementById('dash-feature-grocery-badge').textContent = `${groceryCount} Items`;
+            if (document.getElementById('dash-feature-hub-badge')) document.getElementById('dash-feature-hub-badge').textContent = `${splitBillsCount} Bills`;
+
+            // Update Recent Activity Snapshot on Dashboard
+            const totalLogsEl = document.getElementById('dash-total-logs-badge');
+            if (totalLogsEl) totalLogsEl.textContent = `${(appState.transactions || []).length} Entries`;
+            const recentListEl = document.getElementById('dash-recent-activity-list');
+            if (recentListEl) {
+                const recent = (appState.transactions || []).slice(0, 4);
+                recentListEl.innerHTML = recent.map(tx => {
+                    const isInc = tx.type === 'income';
+                    const dStr = new Date(tx.date || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+                    return `<div class="p-2.5 rounded-2xl bg-white/80 dark:bg-neutral-900/80 border border-neutral-200/70 dark:border-neutral-800 flex items-center justify-between gap-2 text-xs">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="w-7 h-7 rounded-xl ${isInc ? 'bg-emerald-500/10 text-emerald-600' : 'bg-rose-500/10 text-rose-600'} flex items-center justify-center text-[11px] flex-shrink-0">
+                                <i class="fa-solid ${isInc ? 'fa-arrow-down-left' : 'fa-arrow-up-right'}"></i>
+                            </span>
+                            <div class="min-w-0">
+                                <div class="font-bold text-neutral-800 dark:text-neutral-100 truncate">${tx.note || tx.category}</div>
+                                <div class="text-[10px] text-neutral-400">${dStr} • ${tx.category || 'Other'}</div>
+                            </div>
+                        </div>
+                        <span class="font-black flex-shrink-0 ${isInc ? 'text-emerald-600' : 'text-rose-600'}">${isInc ? '+' : '-'}₹${Number(tx.amount).toLocaleString('en-IN')}</span>
+                    </div>`;
+                }).join('') || '<div class="text-center py-8 text-xs text-neutral-400">No recent activity yet. Add an entry above!</div>';
             }
 
             // Sync Udhar Khata Live Overview on Dashboard
@@ -3294,6 +3632,7 @@
             if (document.getElementById('dash-udhar-given')) document.getElementById('dash-udhar-given').textContent = `₹${udharTotalGiven.toLocaleString('en-IN')}`;
             if (document.getElementById('dash-udhar-received')) document.getElementById('dash-udhar-received').textContent = `₹${udharTotalReceived.toLocaleString('en-IN')}`;
             if (document.getElementById('dash-udhar-remaining')) document.getElementById('dash-udhar-remaining').textContent = `₹${udharNetRemaining.toLocaleString('en-IN')}`;
+            if (document.getElementById('dash-feature-udhar-badge')) document.getElementById('dash-feature-udhar-badge').textContent = `₹${udharNetRemaining.toLocaleString('en-IN')} Bakaya`;
             if (document.getElementById('dash-udhar-pending-customers')) document.getElementById('dash-udhar-pending-customers').textContent = `${pendingCustCount} ग्राहकों पर बकाया शेष`;
 
             const insightEl = document.getElementById('ai-insight-text');
@@ -4193,7 +4532,7 @@
             const upi = appState.merchantUpi || 'store@upi';
 
             document.getElementById('invoice-bill-no').textContent = invId;
-            document.getElementById('invoice-bill-date').textContent = `Date: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+            document.getElementById('invoice-bill-date').textContent = `Date: ${formatFullPdfDateTime(new Date())}`;
             document.getElementById('invoice-billed-user-name').textContent = getPrimaryUserName();
             document.getElementById('invoice-billed-user-phone').textContent = appState.userProfile?.phone ? `+91 ${appState.userProfile.phone}` : '';
             document.getElementById('invoice-merchant-upi-display').textContent = upi;
@@ -4886,6 +5225,14 @@
             });
         }
 
+        function formatFullPdfDateTime(inputDate) {
+            const d = inputDate ? new Date(inputDate) : new Date();
+            const validDate = isNaN(d.getTime()) ? new Date() : d;
+            const datePart = validDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+            const timePart = validDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).toUpperCase();
+            return `${datePart}, ${timePart}`;
+        }
+
         async function exportElementToFile(elementId, filename, format = 'pdf') {
             try {
                 await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
@@ -4923,12 +5270,16 @@
             });
             const net = income - expense;
             const stmtId = `STMT-${Math.floor(100000 + Math.random() * 900000)}`;
+            const genDateStr = `Generated: ${formatFullPdfDateTime(new Date())}`;
+            const userName = getPrimaryUserName();
+            const userPhone = appState.userProfile?.phone ? `+91 ${appState.userProfile.phone}` : '';
+            const scopeLabel = currentHistorySegment === 'all' ? 'All Transactions' : currentHistorySegment.toUpperCase();
 
             document.getElementById('statement-doc-no').textContent = stmtId;
-            document.getElementById('statement-gen-date').textContent = `Generated: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`;
-            document.getElementById('statement-user-name').textContent = getPrimaryUserName();
-            document.getElementById('statement-user-phone').textContent = appState.userProfile?.phone ? `+91 ${appState.userProfile.phone}` : '';
-            document.getElementById('statement-scope-tag').textContent = currentHistorySegment === 'all' ? 'All Transactions' : currentHistorySegment.toUpperCase();
+            document.getElementById('statement-gen-date').textContent = genDateStr;
+            document.getElementById('statement-user-name').textContent = userName;
+            document.getElementById('statement-user-phone').textContent = userPhone;
+            document.getElementById('statement-scope-tag').textContent = scopeLabel;
             document.getElementById('statement-records-count').textContent = `${list.length} Records Computed`;
 
             document.getElementById('stmt-kpi-income').textContent = `₹${income.toLocaleString('en-IN')}`;
@@ -4936,21 +5287,94 @@
             document.getElementById('stmt-kpi-balance').textContent = `${net < 0 ? '-' : ''}₹${Math.abs(net).toLocaleString('en-IN')}`;
             document.getElementById('statement-grand-total').textContent = `₹${expense.toLocaleString('en-IN')}`;
 
-            document.getElementById('statement-items-body').innerHTML = list.map((tx, idx) => {
-                const isInc = tx.type === 'income';
-                const dStr = new Date(tx.date || Date.now()).toLocaleDateString('en-IN');
-                return `<tr style="border-bottom: 1px solid #f1f5f9;">
-                    <td style="padding: 8px 10px;">${idx + 1}</td>
-                    <td style="padding: 8px 10px;">${dStr}</td>
-                    <td style="padding: 8px 10px;">${tx.section || 'dashboard'}</td>
-                    <td style="padding: 8px 10px; font-weight: 700;">${tx.category || 'Other'}</td>
-                    <td style="padding: 8px 10px;">${tx.note || '-'}</td>
-                    <td style="padding: 8px 10px;">${tx.mode || 'UPI'}</td>
-                    <td style="padding: 8px 10px; text-align: right; font-weight: 800; color: ${isInc ? '#16a34a' : '#dc2626'};">${isInc ? '+' : '-'}₹${Number(tx.amount).toLocaleString('en-IN')}</td>
-                </tr>`;
-            }).join('');
+            const ROWS_PER_PAGE = 10;
+            const chunks = [];
+            if (list.length === 0) {
+                chunks.push([]);
+            } else {
+                for (let i = 0; i < list.length; i += ROWS_PER_PAGE) {
+                    chunks.push(list.slice(i, i + ROWS_PER_PAGE));
+                }
+            }
+            const totalPages = chunks.length;
 
-            runWithLiveRewardedAd(() => exportElementToFile('history-statement-slip', `KhataFlow_Statement_${stmtId}`, 'pdf'));
+            runWithLiveRewardedAd(async () => {
+                try {
+                    await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+                    await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+                    const slipEl = document.getElementById('history-statement-slip');
+                    const tbodyEl = document.getElementById('statement-items-body');
+                    const footerPageEl = document.getElementById('statement-page-footer-num');
+                    if (!slipEl || !tbodyEl) return;
+
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    const ROWS_PER_PAGE = 15;
+                    const pageChunks = [];
+                    if (list.length === 0) {
+                        pageChunks.push([]);
+                    } else {
+                        for (let i = 0; i < list.length; i += ROWS_PER_PAGE) {
+                            pageChunks.push(list.slice(i, i + ROWS_PER_PAGE));
+                        }
+                    }
+                    const totalPages = pageChunks.length;
+
+                    for (let pIdx = 0; pIdx < totalPages; pIdx++) {
+                        const pageRows = pageChunks[pIdx];
+                        const startSr = pIdx * ROWS_PER_PAGE;
+                        if (footerPageEl) footerPageEl.textContent = `Page ${pIdx + 1} of ${totalPages}`;
+
+                        let rowsHtml = pageRows.map((tx, idx) => {
+                            const srNo = startSr + idx + 1;
+                            const isInc = tx.type === 'income';
+                            const dtObj = new Date(tx.date || Date.now());
+                            const dPart = dtObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+                            const tPart = dtObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).toUpperCase();
+                            const rawNote = String(tx.note || tx.category || '-').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                            return `<tr style="border-bottom: 1px solid #f1f5f9; height: 42px;">
+                                <td style="padding: 6px 8px; font-weight: 700; color: #64748b; vertical-align: middle;">${srNo}</td>
+                                <td style="padding: 6px 8px; white-space: nowrap; vertical-align: middle; line-height: 1.25;"><div style="font-weight: 700; font-size: 9.5px; color: #1e293b;">${dPart}</div><div style="font-size: 8.5px; color: #64748b; font-family: monospace;">${tPart}</div></td>
+                                <td style="padding: 6px 8px; text-transform: lowercase; vertical-align: middle;">${tx.section || 'dashboard'}</td>
+                                <td style="padding: 6px 8px; font-weight: 700; vertical-align: middle;">${tx.category || 'Other'}</td>
+                                <td style="padding: 6px 8px; vertical-align: middle;"><div style="white-space: normal; word-break: break-word; overflow-wrap: anywhere; max-width: 244px; line-height: 1.35; font-size: 9.8px; color: #1e293b;">${rawNote}</div></td>
+                                <td style="padding: 6px 8px; vertical-align: middle;">${tx.mode || 'UPI'}</td>
+                                <td style="padding: 6px 8px; text-align: right; font-weight: 800; white-space: nowrap; vertical-align: middle; color: ${isInc ? '#16a34a' : '#dc2626'};">${isInc ? '+' : '-'}₹${Number(tx.amount).toLocaleString('en-IN')}</td>
+                            </tr>`;
+                        }).join('');
+
+                        if (pageRows.length === 0) {
+                            rowsHtml = `<tr style="height: 44px;"><td colspan="7" style="padding: 14px; text-align: center; color: #94a3b8;">No transactions recorded</td></tr>`;
+                        }
+
+                        tbodyEl.innerHTML = rowsHtml;
+
+                        const canvas = await window.html2canvas(slipEl, {
+                            scale: 2,
+                            useCORS: true,
+                            backgroundColor: '#ffffff',
+                            width: 794,
+                            height: 1123,
+                            windowWidth: 794,
+                            windowHeight: 1123,
+                            x: 0,
+                            y: 0,
+                            scrollX: 0,
+                            scrollY: 0
+                        });
+                        const imgData = canvas.toDataURL('image/png');
+                        if (pIdx > 0) pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    }
+
+                    pdf.save(`KhataFlow_Statement_${stmtId}.pdf`);
+                    showToast(`PDF downloaded (${totalPages} page${totalPages > 1 ? 's' : ''})!`);
+                } catch (err) {
+                    showToast('PDF export failed, please try again', 'error');
+                }
+            });
         }
 
         // ================= CHARTS (FULL 6-CHART ANALYTICS SUITE) =================
@@ -5251,8 +5675,11 @@
             adDeliveryMode: 'hybrid',
             admobPubId: '',
             admobSlotId: '',
-            places: { top: true, dashboard: true, history: true, grocery: true, hub: true, bottom: false }
+            places: { top: true, dashboard: true, history: true, grocery: true, udhar: true, hub: true, analytics: true, bottom: true }
         };
+        if (!adminConfig.places) {
+            adminConfig.places = { top: true, dashboard: true, history: true, grocery: true, udhar: true, hub: true, analytics: true, bottom: true };
+        }
         if (adminConfig.adDeliveryMode === 'admob-only' && !adminConfig.admobPubId) {
             adminConfig.adDeliveryMode = 'hybrid';
             localStorage.setItem('khataflow_admin_config', JSON.stringify(adminConfig));
@@ -5381,6 +5808,23 @@
             if (document.getElementById('admin-announcement-enabled')) document.getElementById('admin-announcement-enabled').checked = !!adminConfig.announcementEnabled;
             if (document.getElementById('admin-admob-pub-id')) document.getElementById('admin-admob-pub-id').value = adminConfig.admobPubId || '';
             if (document.getElementById('admin-admob-slot-id')) document.getElementById('admin-admob-slot-id').value = adminConfig.admobSlotId || '';
+
+            const p = adminConfig.places || {};
+            const placeIds = {
+                'admob-place-top': p.top !== false,
+                'admob-place-dashboard': p.dashboard !== false,
+                'admob-place-history': p.history !== false,
+                'admob-place-grocery': p.grocery !== false,
+                'admob-place-udhar': p.udhar !== false,
+                'admob-place-hub': p.hub !== false,
+                'admob-place-analytics': p.analytics !== false,
+                'admob-place-bottom': !!p.bottom
+            };
+            Object.entries(placeIds).forEach(([elId, checked]) => {
+                const cb = document.getElementById(elId);
+                if (cb) cb.checked = checked;
+            });
+            renderAdmobSlots();
         }
 
         function dismissAnnouncement() {
@@ -5788,17 +6232,106 @@
             e.preventDefault();
             adminConfig.admobPubId = document.getElementById('admin-admob-pub-id')?.value.trim() || '';
             adminConfig.admobSlotId = document.getElementById('admin-admob-slot-id')?.value.trim() || '';
+            adminConfig.places = {
+                top: !!document.getElementById('admob-place-top')?.checked,
+                dashboard: !!document.getElementById('admob-place-dashboard')?.checked,
+                history: !!document.getElementById('admob-place-history')?.checked,
+                grocery: !!document.getElementById('admob-place-grocery')?.checked,
+                udhar: !!document.getElementById('admob-place-udhar')?.checked,
+                hub: !!document.getElementById('admob-place-hub')?.checked,
+                analytics: !!document.getElementById('admob-place-analytics')?.checked,
+                bottom: !!document.getElementById('admob-place-bottom')?.checked
+            };
             localStorage.setItem('khataflow_admin_config', JSON.stringify(adminConfig));
             renderAdmobSlots();
             saveAllAdminChangesLive();
         }
+        function hydrateLiveAdSlot(containerId, isEnabled = true, isBottomAnchor = false) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            if (!isEnabled || adminConfig.adDeliveryMode === 'custom-only') {
+                container.classList.add('hidden');
+                return;
+            }
+
+            // Always show every enabled AdMob slot; Admin toggles control visibility
+            container.classList.remove('hidden');
+
+            const pubId = (adminConfig.admobPubId || '').trim();
+            const slotId = (adminConfig.admobSlotId || '').trim();
+            const targetBox = isBottomAnchor ? (document.getElementById('admob-bottom-container') || container) : container;
+
+            if (pubId && slotId) {
+                ensureAdSenseScript(pubId);
+                const sig = `${pubId}_${slotId}`;
+                if (targetBox.dataset.adSig !== sig) {
+                    targetBox.dataset.adSig = sig;
+                    targetBox.innerHTML = `<ins class="adsbygoogle" style="display:block" data-ad-client="${pubId}" data-ad-slot="${slotId}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
+                    try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+                }
+            } else if (!targetBox.dataset.adSig) {
+                targetBox.innerHTML = `
+                    <div class="p-3 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-dashed border-blue-300 dark:border-blue-800/70 flex items-center justify-between gap-2 text-left">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="px-2 py-0.5 rounded-md bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider flex-shrink-0">AdMob Slot</span>
+                            <span class="text-[11px] font-bold text-neutral-700 dark:text-neutral-200 truncate">Active Placement (${containerId.replace('admob-slot-', '').toUpperCase()})</span>
+                        </div>
+                        <span class="text-[10px] font-mono text-blue-600 dark:text-blue-400 flex-shrink-0">Admin Controlled</span>
+                    </div>
+                `;
+            }
+        }
+
+        function renderAdmobSlots() {
+            const p = adminConfig.places || { top: true, dashboard: true, history: true, grocery: true, udhar: true, hub: true, analytics: true, bottom: true };
+            const slotMap = [
+                { id: 'admob-slot-top', enabled: p.top !== false },
+                { id: 'admob-slot-dashboard', enabled: p.dashboard !== false },
+                { id: 'admob-slot-dashboard-2', enabled: p.dashboard !== false },
+                { id: 'admob-slot-history-top', enabled: p.history !== false },
+                { id: 'admob-slot-history', enabled: p.history !== false },
+                { id: 'admob-slot-grocery-top', enabled: p.grocery !== false },
+                { id: 'admob-slot-grocery', enabled: p.grocery !== false },
+                { id: 'admob-slot-udhar-top', enabled: p.udhar !== false },
+                { id: 'admob-slot-udhar', enabled: p.udhar !== false },
+                { id: 'admob-slot-hub-top', enabled: p.hub !== false },
+                { id: 'admob-slot-hub', enabled: p.hub !== false },
+                { id: 'admob-slot-analytics-top', enabled: p.analytics !== false },
+                { id: 'admob-slot-analytics-2', enabled: p.analytics !== false },
+                { id: 'admob-slot-bottom', enabled: !!p.bottom, isBottom: true }
+            ];
+            slotMap.forEach(s => hydrateLiveAdSlot(s.id, s.enabled, !!s.isBottom));
+        }
 
         function saveAllAdminChangesLive() {
+            adminConfig.announcementText = document.getElementById('admin-announcement-text')?.value.trim() || '';
+            adminConfig.announcementType = document.getElementById('admin-announcement-type')?.value || 'info';
+            adminConfig.announcementEnabled = !!document.getElementById('admin-announcement-enabled')?.checked;
+            adminConfig.admobPubId = document.getElementById('admin-admob-pub-id')?.value.trim() || '';
+            adminConfig.admobSlotId = document.getElementById('admin-admob-slot-id')?.value.trim() || '';
+            adminConfig.places = {
+                top: !!document.getElementById('admob-place-top')?.checked,
+                dashboard: !!document.getElementById('admob-place-dashboard')?.checked,
+                history: !!document.getElementById('admob-place-history')?.checked,
+                grocery: !!document.getElementById('admob-place-grocery')?.checked,
+                udhar: !!document.getElementById('admob-place-udhar')?.checked,
+                hub: !!document.getElementById('admob-place-hub')?.checked,
+                analytics: !!document.getElementById('admob-place-analytics')?.checked,
+                bottom: !!document.getElementById('admob-place-bottom')?.checked
+            };
             localStorage.setItem('khataflow_admin_config', JSON.stringify(adminConfig));
             localStorage.setItem('khataflow_sponsored_ads', JSON.stringify(SPONSORED_ADS_LIST));
+
             if (typeof window.publishAdminBroadcastToCloud === 'function') {
-                window.publishAdminBroadcastToCloud({ adminConfig, sponsoredAds: SPONSORED_ADS_LIST, updatedAt: Date.now() });
+                window.publishAdminBroadcastToCloud({
+                    adminConfig,
+                    sponsoredAds: SPONSORED_ADS_LIST
+                }).catch(() => {});
             }
+
+            applyAdminConfigToUI();
+            renderAdmobSlots();
             showToast('All admin settings published live!');
         }
 
@@ -5822,34 +6355,6 @@
             s.crossOrigin = 'anonymous';
             s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(pubId)}`;
             document.head.appendChild(s);
-        }
-
-        function hydrateLiveAdSlot(containerId) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            const pubId = (adminConfig.admobPubId || '').trim();
-            const slotId = (adminConfig.admobSlotId || '').trim();
-            if (!pubId || !slotId || adminConfig.adDeliveryMode === 'custom-only') {
-                container.classList.add('hidden');
-                return;
-            }
-            ensureAdSenseScript(pubId);
-            if (!container.dataset.adRequested) {
-                container.dataset.adRequested = 'true';
-                container.innerHTML = `<ins class="adsbygoogle" style="display:block" data-ad-client="${pubId}" data-ad-slot="${slotId}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
-                try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
-            }
-            // Reveal container ONLY if Google AdSense/AdMob actually fills an iframe with height > 0
-            setTimeout(() => {
-                const ins = container.querySelector('ins.adsbygoogle');
-                const filled = ins && (ins.getAttribute('data-ad-status') === 'filled' || ins.offsetHeight > 20);
-                container.classList.toggle('hidden', !filled);
-            }, 1500);
-        }
-
-        function renderAdmobSlots() {
-            const slots = ['admob-slot-top', 'admob-slot-dashboard', 'admob-slot-dashboard-2', 'admob-slot-history-top', 'admob-slot-history', 'admob-slot-grocery-top', 'admob-slot-grocery', 'admob-slot-udhar-top', 'admob-slot-udhar', 'admob-slot-hub-top', 'admob-slot-hub', 'admob-slot-analytics-top', 'admob-slot-analytics-2'];
-            slots.forEach(id => hydrateLiveAdSlot(id));
         }
 
         function runWithLiveRewardedAd(callback) {
@@ -5973,8 +6478,8 @@
         Object.assign(window, {
             getAuthSession, setAuthSession, enforceAuthGate, dismissAuthGate, setAuthGateMode,
             handleGatePhoneInput, checkGatePasswordMatch, togglePasswordVisibility, handleAuthGateSubmit,
-            logoutCurrentUser, forcePullUserCloudData, toggleSideMenu, updateAuthUI,
-            showToast, showFeedbackModal, closeFeedbackModal, toggleTheme, switchTab,
+            logoutCurrentUser, openDeleteSelfAccountModal, closeDeleteSelfAccountModal, confirmDeleteSelfAccount,
+            forcePullUserCloudData, toggleSideMenu, updateAuthUI,
             updateDashboard, addTransaction, deleteTransaction, setHistorySegment, goToHistoryPage, renderTransactions,
             openKiranaDropdown, closeKiranaDropdown, filterKiranaDropdown, selectKiranaItem, clearKiranaInput,
             handleKiranaKeydown, filterSliderCategory, scrollProductSlider, loadMoreSliderProducts, quickAddCatalogProduct,
@@ -6035,7 +6540,8 @@
             signInWithCustomToken,
             signInAnonymously,
             updateProfile,
-            signOut
+            signOut,
+            deleteUser
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import {
             getFirestore,
@@ -6043,6 +6549,7 @@
             setDoc,
             getDoc,
             getDocs,
+            deleteDoc,
             collection,
             onSnapshot
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -6549,6 +7056,52 @@
             if (clean.length === 10) {
                 await rtdbRestPut(`user_directory/${clean}`, null);
                 await rtdbRestPut(`user_workspaces/phone_${clean}`, null);
+                if (db) {
+                    await deleteDoc(doc(db, "public_users", `phone_${clean}`)).catch(() => {});
+                    await deleteDoc(doc(db, "user_workspaces", `phone_${clean}`)).catch(() => {});
+                    await deleteDoc(doc(db, "artifacts", appId, "public", "data", "public_users", `phone_${clean}`)).catch(() => {});
+                    await deleteDoc(doc(db, "artifacts", appId, "public", "data", "user_workspaces", `phone_${clean}`)).catch(() => {});
+                }
+            }
+        };
+
+        window.deleteSelfCloudAccount = async function({ phone = "", email = "", uid = "" } = {}) {
+            if (userWorkspaceUnsub) {
+                userWorkspaceUnsub();
+                userWorkspaceUnsub = null;
+            }
+            const cleanPhone = window.extractCleanPhone ? window.extractCleanPhone(phone) : "";
+            const targetUid = uid || auth?.currentUser?.uid || "";
+
+            // 1. Erase from Firebase Realtime Database
+            if (cleanPhone.length === 10) {
+                await rtdbRestPut(`user_directory/${cleanPhone}`, null);
+                await rtdbRestPut(`user_workspaces/phone_${cleanPhone}`, null);
+            }
+            if (targetUid) {
+                await rtdbRestPut(`users_by_uid/${targetUid}`, null);
+                await rtdbRestPut(`user_workspaces/${targetUid}`, null);
+            }
+
+            // 2. Erase from Cloud Firestore
+            if (db) {
+                if (cleanPhone.length === 10) {
+                    await deleteDoc(doc(db, "public_users", `phone_${cleanPhone}`)).catch(() => {});
+                    await deleteDoc(doc(db, "user_workspaces", `phone_${cleanPhone}`)).catch(() => {});
+                    await deleteDoc(doc(db, "artifacts", appId, "public", "data", "public_users", `phone_${cleanPhone}`)).catch(() => {});
+                    await deleteDoc(doc(db, "artifacts", appId, "public", "data", "user_workspaces", `phone_${cleanPhone}`)).catch(() => {});
+                }
+                if (targetUid) {
+                    await deleteDoc(doc(db, "public_users", targetUid)).catch(() => {});
+                    await deleteDoc(doc(db, "user_workspaces", targetUid)).catch(() => {});
+                    await deleteDoc(doc(db, "artifacts", appId, "public", "data", "public_users", targetUid)).catch(() => {});
+                    await deleteDoc(doc(db, "artifacts", appId, "users", targetUid, "workspace", "data")).catch(() => {});
+                }
+            }
+
+            // 3. Delete Firebase Authentication user record if signed in
+            if (auth?.currentUser) {
+                await deleteUser(auth.currentUser).catch(() => {});
             }
         };
 
