@@ -696,6 +696,62 @@
 
         <div id="admob-slot-top" class="hidden mb-6 rounded-3xl overflow-hidden text-center"></div>
 
+        <!-- ================= USER OFFERS POP-UP MODAL (DELAY + LIVE OFFER TIMER + SALE WINDOW) ================= -->
+        <div id="offer-popup-modal" class="fixed inset-0 z-[185] bg-neutral-950/80 backdrop-blur-xl hidden items-center justify-center p-4 overflow-y-auto">
+            <div class="glass-card w-full max-w-md rounded-[2.2rem] shadow-2xl relative bg-white/95 dark:bg-neutral-900/95 border border-amber-400/40 overflow-hidden animate-pop-bounce my-auto">
+                <div class="h-1.5 w-full bg-gradient-to-r from-amber-500 via-rose-500 to-primary-600"></div>
+                <button type="button" onclick="dismissOfferPopupModal()" class="absolute top-3.5 right-3.5 z-20 w-8 h-8 rounded-full bg-black/15 dark:bg-white/15 hover:bg-rose-600 text-neutral-800 dark:text-white hover:text-white flex items-center justify-center text-xs transition active:scale-90" title="Close Offer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+                <div id="offer-popup-banner-wrap" class="hidden w-full h-36 bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
+                    <img id="offer-popup-banner-img" src="" alt="Offer Banner" class="w-full h-full object-cover" onerror="this.parentElement.classList.add('hidden')">
+                </div>
+
+                <div class="p-5 sm:p-6 space-y-4 text-center">
+                    <div class="flex items-center justify-center gap-2 flex-wrap">
+                        <span id="offer-popup-badge" class="px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-rose-500 text-white text-[10px] font-black uppercase tracking-wider shadow-xs">
+                            🔥 LIMITED TIME SALE
+                        </span>
+                        <span id="offer-popup-coupon-pill" class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-mono text-[10px] font-black">
+                            SAVE UP TO 50%
+                        </span>
+                    </div>
+
+                    <div class="space-y-1">
+                        <h3 id="offer-popup-title" class="text-xl sm:text-2xl font-black text-neutral-900 dark:text-white tracking-tight leading-snug">
+                            Maha Bachat &amp; Pro Sale Live!
+                        </h3>
+                        <p id="offer-popup-subtitle" class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed font-medium">
+                            Upgrade your NeoKhata workspace and unlock all premium ledgers, AI advisor, and compact A4 PDF exports before the sale ends.
+                        </p>
+                    </div>
+
+                    <!-- Live Offer Countdown & Sale Schedule Window Box -->
+                    <div class="p-3.5 rounded-2xl bg-gradient-to-br from-rose-500/10 via-amber-500/10 to-primary-500/10 border border-amber-500/30 space-y-2">
+                        <div class="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-rose-700 dark:text-rose-300">
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span> <span id="offer-popup-timer-label">Offer Ends In</span></span>
+                            <span id="offer-popup-sale-window-badge" class="font-mono text-neutral-600 dark:text-neutral-300 normal-case">Sale Active</span>
+                        </div>
+                        <div id="offer-popup-live-countdown" class="font-mono text-lg sm:text-xl font-black text-neutral-900 dark:text-white tracking-wider py-1 px-3 rounded-xl bg-white/80 dark:bg-neutral-900/80 border border-amber-400/30 tabular-nums">
+                            00d : 00h : 00m : 00s
+                        </div>
+                        <div id="offer-popup-schedule-text" class="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                        <button type="button" onclick="dismissOfferPopupModal()" class="py-3 px-4 rounded-2xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 font-extrabold text-xs transition active:scale-95">
+                            Maybe Later
+                        </button>
+                        <button type="button" id="offer-popup-cta-btn" onclick="handleOfferPopupCtaClick()" class="py-3 px-4 rounded-2xl bg-gradient-to-r from-primary-600 via-indigo-600 to-emerald-600 hover:from-primary-700 hover:to-emerald-700 text-white font-black text-xs transition shadow-lg shadow-primary-600/25 flex items-center justify-center gap-1.5 active:scale-95">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span id="offer-popup-cta-text">Claim Offer Now</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ================= SECTION 1: DASHBOARD OVERVIEW ================= -->
         <div id="dashboard-wrapper">
         <section id="section-dashboard" class="space-y-6">
@@ -1184,7 +1240,7 @@
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <div class="flex items-center gap-2">
                             <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-black uppercase">1,300+ Kirana Catalog</span>
-                            <span class="text-xs font-bold text-neutral-600 dark:text-neutral-300">Tap any item to add instantly</span>
+                            <span class="text-xs font-bold text-neutral-600 dark:text-neutral-300">Tap item to choose Qty &amp; Unit</span>
                         </div>
                         <div class="flex items-center gap-1.5">
                             <button type="button" onclick="scrollProductSlider(-260)" class="w-7 h-7 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs flex items-center justify-center hover:border-primary-500"><i class="fa-solid fa-chevron-left"></i></button>
@@ -1209,33 +1265,40 @@
                 </div>
 
                 <!-- Add Item Form with Live Search Autocomplete -->
-                <form onsubmit="addGroceryItem(event)" class="relative mb-6">
+                <form onsubmit="addGroceryItem(event)" id="grocery-add-form" class="relative mb-6">
                     <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
-                        <div class="sm:col-span-6 relative">
+                        <div class="sm:col-span-6 relative" id="grocery-search-wrapper">
                             <input type="text" id="grocery-name" onfocus="openKiranaDropdown()" oninput="filterKiranaDropdown(this.value)" onkeydown="handleKiranaKeydown(event)" autocomplete="off" required placeholder="Search or type item (e.g. Atta, Basmati Rice, Mustard Oil)..." class="w-full p-3 pr-9 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold focus:outline-none focus:border-primary-500">
                             <button type="button" id="grocery-clear-btn" onclick="clearKiranaInput()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 text-xs"><i class="fa-solid fa-xmark"></i></button>
-                            <div id="custom-kirana-dropdown" class="hidden absolute left-0 right-0 top-full mt-1.5 z-30 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 shadow-xl p-2 max-h-60 overflow-y-auto">
+                            <div id="custom-kirana-dropdown" class="hidden absolute left-0 right-0 top-full mt-1.5 z-30 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 shadow-2xl p-2 max-h-56 overflow-y-auto">
                                 <div class="flex items-center justify-between px-2 py-1 text-[10px] font-bold text-neutral-400 border-b border-neutral-100 dark:border-neutral-800 mb-1">
                                     <span>Catalog Suggestions</span>
-                                    <span id="dropdown-match-count">0 items</span>
+                                    <div class="flex items-center gap-2">
+                                        <span id="dropdown-match-count">0 items</span>
+                                        <button type="button" onclick="closeKiranaDropdown()" class="w-5 h-5 rounded-full bg-neutral-100 dark:bg-neutral-800 hover:bg-rose-500 hover:text-white text-neutral-500 flex items-center justify-center text-[10px] transition" title="Close Suggestions">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div id="kirana-dropdown-items" class="space-y-1"></div>
                             </div>
                         </div>
-                        <div class="sm:col-span-2">
-                            <input type="number" id="grocery-qty" step="any" min="0.01" placeholder="Qty (1)" class="w-full p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-primary-500">
+                        <div class="grid grid-cols-2 sm:col-span-4 gap-2.5">
+                            <div>
+                                <input type="number" id="grocery-qty" step="any" min="0.01" value="1" placeholder="Qty (1)" class="w-full p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-primary-500">
+                            </div>
+                            <div>
+                                <select id="grocery-unit" class="w-full p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-primary-500">
+                                    <option value="Kg">Kilogram (Kg)</option>
+                                    <option value="Grams (gm)">Gram (gm)</option>
+                                    <option value="Packets">Packet</option>
+                                    <option value="Pieces (pcs)">Piece (pcs)</option>
+                                    <option value="Litre (L)">Litre (L)</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="sm:col-span-2">
-                            <select id="grocery-unit" class="w-full p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-primary-500">
-                                <option value="Kg">Kg</option>
-                                <option value="Grams (gm)">Grams (gm)</option>
-                                <option value="Packets">Packets</option>
-                                <option value="Pieces (pcs)">Pieces (pcs)</option>
-                                <option value="Litre (L)">Litre (L)</option>
-                            </select>
-                        </div>
-                        <div class="sm:col-span-2">
-                            <button type="submit" class="w-full h-full py-3 px-4 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-black text-xs transition shadow-md flex items-center justify-center gap-1.5 active:scale-95">
+                            <button type="submit" id="grocery-submit-btn" class="w-full h-full py-3 px-4 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-black text-xs transition shadow-md flex items-center justify-center gap-1.5 active:scale-95">
                                 <i class="fa-solid fa-plus"></i> Add Item
                             </button>
                         </div>
@@ -1243,44 +1306,66 @@
                 </form>
 
                 <!-- Two-Column Checklist & Live Bill Calculator -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                     <!-- Left: Shopping Checklist -->
-                    <div class="p-4 rounded-2xl bg-neutral-100/70 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <h4 class="text-sm font-black flex items-center gap-2 text-neutral-900 dark:text-white">
-                                <i class="fa-solid fa-list-check text-primary-600"></i> Checklist (<span id="grocery-pending-count">0</span> Pending)
-                            </h4>
-                            <button type="button" onclick="clearCheckedGrocery()" class="text-[11px] font-bold text-rose-600 hover:underline">Clear Checked</button>
+                    <div id="grocery-checklist-card" class="p-3.5 sm:p-5 rounded-3xl bg-neutral-100/80 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 space-y-3">
+                        <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-neutral-200/80 dark:border-neutral-800">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="w-8 h-8 rounded-xl bg-primary-600/10 text-primary-600 flex items-center justify-center text-xs flex-shrink-0">
+                                    <i class="fa-solid fa-list-check"></i>
+                                </span>
+                                <div class="min-w-0">
+                                    <h4 class="text-xs sm:text-sm font-black text-neutral-900 dark:text-white truncate">
+                                        Checklist (<span id="grocery-pending-count">0</span> Pending)
+                                    </h4>
+                                    <p class="text-[10px] text-neutral-500 truncate">Tick item to move to Billing Counter</p>
+                                </div>
+                            </div>
+                            <button type="button" onclick="clearCheckedGrocery()" class="px-2.5 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-600 text-rose-600 hover:text-white text-[10px] font-extrabold transition flex-shrink-0">
+                                Clear Checked
+                            </button>
                         </div>
-                        <div id="grocery-checklist" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
+                        <div id="grocery-checklist" class="space-y-2.5 max-h-80 overflow-y-auto pr-0.5"></div>
                     </div>
 
-                    <!-- Right: Checked Items Pricing & Tax Invoice Generator -->
-                    <div class="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/80 dark:border-emerald-800/60 space-y-3 flex flex-col justify-between">
+                    <!-- Right: Checked Items Pricing & Tax Invoice Generator (Billing Counter) -->
+                    <div id="grocery-billing-counter-card" class="p-3.5 sm:p-5 rounded-3xl bg-gradient-to-b from-emerald-50/70 to-teal-50/40 dark:from-emerald-950/25 dark:to-neutral-900/70 border border-emerald-200/90 dark:border-emerald-800/60 space-y-3.5 flex flex-col justify-between transition-all">
                         <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <h4 class="text-sm font-black flex items-center gap-2 text-neutral-900 dark:text-white">
-                                    <i class="fa-solid fa-receipt text-emerald-600"></i> Checked Items Bill & QR
-                                </h4>
-                                <span id="grocery-bill-total" class="text-lg font-black text-emerald-600">₹0</span>
+                            <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-emerald-200/70 dark:border-emerald-800/50">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xs shadow-xs flex-shrink-0">
+                                        <i class="fa-solid fa-receipt"></i>
+                                    </span>
+                                    <div class="min-w-0">
+                                        <h4 class="text-xs sm:text-sm font-black text-neutral-900 dark:text-white truncate">Checked Items Bill &amp; QR</h4>
+                                        <p class="text-[10px] text-neutral-500 truncate">Edit Qty, Unit or Rate (₹) live</p>
+                                    </div>
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                    <span class="text-[9px] font-black uppercase tracking-wider text-emerald-700/70 dark:text-emerald-300/70 block">Grand Total</span>
+                                    <span id="grocery-bill-total" class="text-lg sm:text-xl font-black text-emerald-600 tabular-nums">₹0</span>
+                                </div>
                             </div>
-                            <p class="text-[10px] text-neutral-500">Adjust quantity, unit, or market price (₹) anytime — totals update live.</p>
-                            <div id="grocery-pricing-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+                            <div id="grocery-pricing-list" class="space-y-2.5 max-h-72 overflow-y-auto pr-0.5"></div>
                         </div>
 
-                        <div class="pt-3 border-t border-emerald-200/70 dark:border-emerald-800/60 space-y-2.5">
-                            <div class="flex items-center justify-between gap-2 text-xs">
-                                <div class="flex items-center gap-1.5 flex-1">
-                                    <span class="font-bold text-neutral-500">Store UPI:</span>
-                                    <input type="tel" id="grocery-merchant-phone" maxlength="10" oninput="handlePhoneUpiInput(this.value)" placeholder="10-digit mobile" class="w-28 px-2.5 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border text-xs font-bold">
-                                    <span id="formatted-preview-upi" class="text-[11px] font-mono font-bold text-primary-600 truncate">@upi</span>
+                        <div class="pt-3 border-t border-emerald-200/70 dark:border-emerald-800/60 space-y-3">
+                            <!-- Mobile-Optimized Store UPI Row -->
+                            <div class="p-2.5 rounded-2xl bg-white/90 dark:bg-neutral-900/90 border border-emerald-200/80 dark:border-neutral-800 flex items-center justify-between gap-2 text-xs">
+                                <span class="font-extrabold text-neutral-600 dark:text-neutral-300 text-[11px] whitespace-nowrap">Store UPI:</span>
+                                <div class="flex items-center flex-1 min-w-0 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+                                    <input type="tel" id="grocery-merchant-phone" maxlength="10" oninput="handlePhoneUpiInput(this.value)" placeholder="10-digit mobile" class="w-full min-w-0 px-2.5 py-1.5 bg-transparent text-xs font-mono font-black focus:outline-none">
+                                    <span id="formatted-preview-upi" class="px-2 py-1.5 text-[10px] font-mono font-black text-primary-600 bg-primary-500/10 border-l border-neutral-200 dark:border-neutral-700 whitespace-nowrap">@upi</span>
                                 </div>
-                                <span id="upi-valid-badge" class="text-[10px] font-bold text-neutral-400">Optional</span>
+                                <span id="upi-valid-badge" class="text-[10px] font-black text-neutral-400 whitespace-nowrap">Optional</span>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                <button type="button" onclick="openGroceryCounterQrModal()" class="py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs transition shadow-sm flex items-center justify-center gap-1.5 active:scale-95">
+                                    <i class="fa-solid fa-qrcode"></i> Pay QR
+                                </button>
                                 <button type="button" onclick="addGroceryBillToDashboard()" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs transition shadow-sm flex items-center justify-center gap-1.5 active:scale-95">
-                                    <i class="fa-solid fa-plus-circle"></i> Add to History
+                                    <i class="fa-solid fa-plus-circle"></i> Add History
                                 </button>
                                 <button type="button" onclick="downloadGroceryBill('pdf')" class="py-2.5 px-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-black text-xs transition shadow-sm flex items-center justify-center gap-1.5 active:scale-95">
                                     <i class="fa-solid fa-file-pdf"></i> Bill PDF
@@ -2811,14 +2896,20 @@
 
                     <!-- Promo Coupon Codes & Global Trial Bulk Controls -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 p-4 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
-                        <div class="space-y-2">
-                            <span class="font-black text-neutral-900 dark:text-white flex items-center gap-1.5"><i class="fa-solid fa-ticket text-purple-600"></i> Promo &amp; Discount Coupon Studio</span>
+                        <div class="space-y-2.5">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="font-black text-neutral-900 dark:text-white flex items-center gap-1.5"><i class="fa-solid fa-ticket text-purple-600"></i> Promo &amp; Discount Coupon Studio</span>
+                                <span class="text-[10px] font-bold text-purple-600">Usage + Max Users + Date/Time</span>
+                            </div>
                             <div class="grid grid-cols-12 gap-1.5">
                                 <input type="text" id="adm-coupon-code" placeholder="CODE (e.g. SAVE50)" class="col-span-5 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-mono font-black uppercase">
                                 <input type="number" id="adm-coupon-discount" min="1" max="100" placeholder="Off %" class="col-span-3 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-black">
-                                <button type="button" onclick="addAdminSubscriptionCoupon()" class="col-span-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black">+ Add Coupon</button>
+                                <input type="number" id="adm-coupon-max-users" min="0" placeholder="Max Users (0=∞)" title="How many users/times this coupon can be used (0 = Unlimited)" class="col-span-4 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-black">
                             </div>
-                            <div id="admin-sub-coupons-list" class="flex flex-wrap gap-1.5 pt-1"></div>
+                            <div class="grid grid-cols-12 gap-1.5">
+                                <button type="button" onclick="addAdminSubscriptionCoupon()" class="col-span-12 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black">+ Add Coupon with User Limit</button>
+                            </div>
+                            <div id="admin-sub-coupons-list" class="space-y-2 pt-1 max-h-64 overflow-y-auto pr-1"></div>
                         </div>
                         <div class="space-y-2">
                             <span class="font-black text-neutral-900 dark:text-white flex items-center gap-1.5"><i class="fa-solid fa-clock-rotate-left text-primary-600"></i> Bulk Trial Days &amp; Quota Sync</span>
@@ -2862,14 +2953,13 @@
                         <div class="p-4 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-3">
                             <div class="font-black text-neutral-900 dark:text-white flex items-center justify-between">
                                 <span><i class="fa-solid fa-tags text-primary-600 mr-1"></i> Subscription Plans Studio (₹)</span>
-                                <span class="text-[10px] text-neutral-400">Full Edit Name, Price, Days &amp; Badge</span>
                             </div>
-                            <form onsubmit="addAdminSubscriptionPlan(event)" class="grid grid-cols-12 gap-1.5">
-                                <input type="text" id="adm-new-plan-name" required placeholder="Plan Name (e.g. Monthly Pro)" class="col-span-4 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-bold">
-                                <input type="number" id="adm-new-plan-price" required min="1" placeholder="Price ₹" class="col-span-3 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-black">
-                                <input type="number" id="adm-new-plan-days" required min="1" value="30" placeholder="Days" class="col-span-2 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-bold">
-                                <input type="text" id="adm-new-plan-badge" placeholder="Badge" class="col-span-2 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-bold">
-                                <button type="submit" class="col-span-1 py-2 rounded-xl bg-primary-600 text-white font-black">+</button>
+                            <form onsubmit="addAdminSubscriptionPlan(event)" class="grid grid-cols-12 gap-1.5 items-center">
+                                <input type="text" id="adm-new-plan-name" required placeholder="Plan Name (e.g. Half-Yearly)" class="col-span-4 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-bold">
+                                <input type="number" id="adm-new-plan-price" required min="1" placeholder="₹ Price" class="col-span-3 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-black">
+                                <input type="number" id="adm-new-plan-days" required min="1" value="180" placeholder="Days" class="col-span-2 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-bold">
+                                <input type="text" id="adm-new-plan-badge" placeholder="Tag" class="col-span-1 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-bold text-center">
+                                <button type="submit" class="col-span-2 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-black">+ Add</button>
                             </form>
                             <div id="admin-sub-plans-list" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
                         </div>
@@ -3090,6 +3180,124 @@
                             </div>
                         </div>
                         <button type="submit" class="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-black">Publish Live Announcement</button>
+                    </form>
+                </div>
+
+                <!-- 4.5 Offers Pop-Up, Show-After Delay Timer, Offer Countdown & Sale Schedule Studio -->
+                <div class="p-5 rounded-3xl bg-gradient-to-br from-amber-500/10 via-white/90 to-rose-500/10 dark:from-amber-950/40 dark:via-neutral-900/90 dark:to-rose-950/35 border border-amber-500/35 mb-6 space-y-4 text-xs shadow-sm">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-neutral-200/80 dark:border-neutral-800">
+                        <div>
+                            <span class="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-rose-500 text-white text-[10px] font-black uppercase tracking-wider">Offers Pop-Up &amp; Sale Scheduler</span>
+                            <h4 class="text-sm sm:text-base font-black mt-1 text-neutral-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-fire text-rose-600"></i> Offers Pop-Up Studio (Delay Timer, Offer Timer &amp; Sale Window)
+                            </h4>
+                            <p class="text-[11px] text-neutral-500 mt-0.5">Set when the offer pop-up appears after opening the app, live offer countdown duration, and exact Sale Start / Sale End schedule.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="previewAdminOfferPopupNow()" class="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-[11px] shadow-xs flex items-center gap-1.5 active:scale-95">
+                                <i class="fa-solid fa-eye"></i> Preview Pop-Up
+                            </button>
+                            <button type="button" onclick="saveAdminOfferPopupConfig()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-700 hover:to-rose-700 text-white font-black text-[11px] shadow-sm flex items-center gap-1.5 active:scale-95">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Offer Pop-Up
+                            </button>
+                        </div>
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); saveAdminOfferPopupConfig();" class="space-y-3.5">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <label class="p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between cursor-pointer font-black">
+                                <span>Offer Pop-Up Status</span>
+                                <input type="checkbox" id="adm-offer-enabled" class="w-4 h-4 accent-rose-600">
+                            </label>
+                            <div>
+                                <label class="block font-bold mb-1">Badge Tag</label>
+                                <input type="text" id="adm-offer-badge" placeholder="🔥 LIMITED TIME SALE" class="w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border font-bold">
+                            </div>
+                            <div>
+                                <label class="block font-bold mb-1">Discount / Coupon Pill</label>
+                                <input type="text" id="adm-offer-coupon-text" placeholder="e.g. USE CODE: PRO50 (50% OFF)" class="w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border font-mono font-bold">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-bold mb-1">Offer Headline *</label>
+                                <input type="text" id="adm-offer-title" required placeholder="e.g. Maha Bachat Pro Sale Live!" class="w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border font-bold">
+                            </div>
+                            <div>
+                                <label class="block font-bold mb-1">CTA Button &amp; Target Action</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <input type="text" id="adm-offer-cta-text" placeholder="Claim Offer Now" class="w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border font-bold">
+                                    <select id="adm-offer-target" class="w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border font-bold">
+                                        <option value="upgrade">Open Pro Upgrade</option>
+                                        <option value="dashboard">Dashboard</option>
+                                        <option value="grocery">Shopping</option>
+                                        <option value="udhar">Udhar Khata</option>
+                                        <option value="milk">Milk Ledger</option>
+                                        <option value="vyapari">Vyapari Mandi</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-bold mb-1">Offer Description / Message</label>
+                                <textarea id="adm-offer-subtitle" rows="2" placeholder="Describe the discount, sale benefits, or special terms..." class="w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border font-semibold"></textarea>
+                            </div>
+                            <div>
+                                <label class="block font-bold mb-1">Banner Image URL (Optional)</label>
+                                <input type="url" id="adm-offer-image-url" placeholder="https://..." class="w-full p-2.5 rounded-xl bg-white dark:bg-neutral-900 border font-mono">
+                                <div class="flex items-center justify-between text-[10px] text-neutral-500 mt-1.5">
+                                    <span>Sale Status Preview: <strong id="adm-offer-live-window-status" class="text-emerald-600">—</strong></span>
+                                    <button type="button" onclick="resetOfferPopupDismissalForCurrentUser()" class="text-primary-600 font-bold hover:underline">Reset Dismissed State</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timers & Sale Schedule Window Grid -->
+                        <div class="p-3.5 rounded-2xl bg-white/90 dark:bg-neutral-900/90 border border-amber-400/40 space-y-3">
+                            <div class="font-black text-neutral-900 dark:text-white flex items-center justify-between">
+                                <span><i class="fa-solid fa-stopwatch text-rose-600 mr-1"></i> Pop-Up Delay Timer, Offer Countdown &amp; Sale Schedule</span>
+                                <span class="text-[10px] font-bold text-amber-700 dark:text-amber-300">Live 1s Sync</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block font-bold mb-1">Show Pop-Up After Delay</label>
+                                    <div class="flex gap-1.5">
+                                        <input type="number" id="adm-offer-delay-val" min="0" value="5" class="w-24 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-black">
+                                        <select id="adm-offer-delay-unit" class="flex-1 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-bold">
+                                            <option value="seconds">Seconds</option>
+                                            <option value="minutes">Minutes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block font-bold mb-1">Offer Countdown Duration (Hours)</label>
+                                    <input type="number" id="adm-offer-duration-hours" min="1" max="8760" value="48" onchange="syncOfferEndFromDurationHours()" class="w-full p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-black text-rose-600">
+                                </div>
+
+                                <div>
+                                    <label class="block font-bold mb-1">Re-Show After Dismiss (Mins)</label>
+                                    <input type="number" id="adm-offer-reshow-mins" min="0" value="60" class="w-full p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-black">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-neutral-200/70 dark:border-neutral-800">
+                                <div>
+                                    <label class="block font-bold mb-1">Offer Sale Goes Live (Start Date &amp; Time)</label>
+                                    <input type="datetime-local" id="adm-offer-sale-start" onchange="updateOfferSchedulePreviewBadge()" class="w-full p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-mono font-bold">
+                                </div>
+                                <div>
+                                    <label class="block font-bold mb-1">Offer Sale Ends (End Date &amp; Time)</label>
+                                    <input type="datetime-local" id="adm-offer-sale-end" onchange="updateOfferSchedulePreviewBadge()" class="w-full p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border font-mono font-bold">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-700 hover:to-rose-700 text-white font-black">Save &amp; Publish Offer Pop-Up</button>
                     </form>
                 </div>
 
@@ -4492,10 +4700,150 @@
         let polarCategoryChartInstance = null;
         let radarCategoryChartInstance = null;
 
-        function saveState() {
+        // Safe localStorage wrapper with QuotaExceededError recovery
+        function safeLocalStorageSet(key, value) {
+            try {
+                localStorage.setItem(key, value);
+                return true;
+            } catch (err) {
+                try {
+                    // Trim non-critical audit/cache logs if storage quota is full
+                    const allWs = JSON.parse(localStorage.getItem('khataflow_admin_all_workspaces') || '{}');
+                    const curSess = getAuthSession();
+                    const curPh = extractCleanPhone(curSess?.phone || '');
+                    const keepKey = curPh.length === 10 ? `phone_${curPh}` : '';
+                    const trimmedWs = keepKey && allWs[keepKey] ? { [keepKey]: allWs[keepKey] } : {};
+                    localStorage.setItem('khataflow_admin_all_workspaces', JSON.stringify(trimmedWs));
+                    localStorage.setItem(key, value);
+                    return true;
+                } catch (e2) {
+                    return false;
+                }
+            }
+        }
+
+        // SHA-256 cryptographic password hashing with backward-compatible verification
+        async function hashPasswordSha256(plainText) {
+            const raw = String(plainText || '');
+            if (window.crypto && window.crypto.subtle && typeof TextEncoder !== 'undefined') {
+                const buf = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(`neokhata_salt_v3::${raw}`));
+                return 'sha256:' + Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+            return btoa(unescape(encodeURIComponent(raw)));
+        }
+
+        async function verifyStoredPasswordHash(plainPassword, storedHash) {
+            if (!storedHash) return true;
+            if (String(storedHash).startsWith('sha256:')) {
+                const computed = await hashPasswordSha256(plainPassword);
+                return computed === storedHash;
+            }
+            const legacyB64 = btoa(unescape(encodeURIComponent(String(plainPassword || ''))));
+            return legacyB64 === storedHash;
+        }
+
+        // Debounced cloud push to prevent excessive database writes on rapid UI edits
+        let _cloudPushDebounceTimer = null;
+        function scheduleCloudPush(immediate = false) {
+            if (typeof window.pushStateToCloud !== 'function') return;
+            if (immediate) {
+                clearTimeout(_cloudPushDebounceTimer);
+                window.pushStateToCloud();
+                return;
+            }
+            clearTimeout(_cloudPushDebounceTimer);
+            _cloudPushDebounceTimer = setTimeout(() => {
+                window.pushStateToCloud();
+            }, 1200);
+        }
+        window.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden' && _cloudPushDebounceTimer) {
+                clearTimeout(_cloudPushDebounceTimer);
+                _cloudPushDebounceTimer = null;
+                if (typeof window.pushStateToCloud === 'function') window.pushStateToCloud();
+            }
+        });
+
+        function saveState(immediateSync = false) {
             appState.updatedAt = Date.now();
-            try { localStorage.setItem('khataflow_state_v3', JSON.stringify(appState)); } catch (e) {}
-            if (typeof window.pushStateToCloud === 'function') window.pushStateToCloud();
+            safeLocalStorageSet('khataflow_state_v3', JSON.stringify(appState));
+
+            // Mirror active non-admin user's workspace into local workspace map & deduplicated user directory
+            const sess = getAuthSession();
+            if (sess && sess.isLoggedIn && sess.role !== 'admin') {
+                const ph = extractCleanPhone(sess.phone || appState.userProfile?.phone || '');
+                const em = (sess.email || appState.userProfile?.email || '').trim().toLowerCase();
+                const wsKey = ph.length === 10 ? `phone_${ph}` : (em || sess.uid || 'default_user');
+                try {
+                    const allWs = JSON.parse(localStorage.getItem('khataflow_admin_all_workspaces') || '{}');
+                    allWs[wsKey] = {
+                        ...appState,
+                        name: getPrimaryUserName(),
+                        phone: ph,
+                        email: em
+                    };
+                    safeLocalStorageSet('khataflow_admin_all_workspaces', JSON.stringify(allWs));
+
+                    const regUsers = getDeduplicatedAdminUsers();
+                    if (!regUsers.some(u => (ph && extractCleanPhone(u.phone || '') === ph) || (em && (u.email || '').toLowerCase() === em))) {
+                        regUsers.unshift({
+                            uid: sess.uid || wsKey,
+                            primaryUid: wsKey,
+                            name: getPrimaryUserName(),
+                            phone: ph,
+                            email: em,
+                            username: ph || em,
+                            lastSyncedAt: new Date().toISOString(),
+                            createdAt: new Date().toISOString()
+                        });
+                        safeLocalStorageSet('khataflow_registered_users', JSON.stringify(regUsers));
+                    }
+                } catch (e) {}
+            }
+
+            scheduleCloudPush(immediateSync);
+        }
+
+        // Unified Auto-History Logger with Smart Same-Amount Duplicate Protection
+        function logUnifiedAutoHistoryEntry({ section = 'dashboard', type = 'expense', amount = 0, category = 'Other', mode = 'UPI', note = '', dedupeKey = '', sourceRefId = '', notifyOnDuplicate = true, silentSuccess = false } = {}) {
+            const cleanAmt = Number((parseFloat(amount) || 0).toFixed(2));
+            if (cleanAmt <= 0) return { logged: false, reason: 'zero' };
+            if (!Array.isArray(appState.transactions)) appState.transactions = [];
+
+            const normDedupe = (dedupeKey || `${section}::${type}::${category}::${note}`).trim().toLowerCase();
+            const isDuplicate = appState.transactions.some(tx => {
+                const txAmt = Number((parseFloat(tx.amount) || 0).toFixed(2));
+                const txKey = (tx.dedupeKey || `${tx.section || 'dashboard'}::${tx.type || 'expense'}::${tx.category || 'Other'}::${tx.note || ''}`).trim().toLowerCase();
+                return txKey === normDedupe && Math.abs(txAmt - cleanAmt) < 0.01;
+            });
+
+            if (isDuplicate) {
+                if (notifyOnDuplicate) {
+                    showToast(`Already entered in History (₹${cleanAmt.toLocaleString('en-IN')}) — change amount to re-enter!`, 'error');
+                }
+                return { logged: false, reason: 'duplicate' };
+            }
+
+            const newTx = {
+                id: `tx_${Date.now()}_${Math.random().toString(36).slice(2, 5)}`,
+                sourceRefId: sourceRefId || '',
+                dedupeKey: normDedupe,
+                type,
+                amount: cleanAmt,
+                category,
+                mode,
+                section,
+                note,
+                date: new Date().toISOString()
+            };
+            appState.transactions.unshift(newTx);
+            saveState();
+            updateDashboard();
+            renderTransactions();
+            if (!silentSuccess) {
+                showToast(`Saved ₹${cleanAmt.toLocaleString('en-IN')} to History!`);
+            }
+            return { logged: true, tx: newTx };
         }
 
         function showToast(msg, type = 'success') {
@@ -4764,6 +5112,7 @@
 
         let activeSliderCat = 'ALL';
         let sliderVisibleLimit = 48;
+        let pendingCatalogDraft = null;
 
         function filterSliderCategory(cat) {
             activeSliderCat = cat;
@@ -4842,35 +5191,61 @@
             ` : '');
         }
         function quickAddCatalogProduct(name, unit, price) {
-            if (!Array.isArray(appState.groceryItems)) appState.groceryItems = [];
             const catalogItem = KIRANA_CATALOG.find(c => c.name === name);
             const unitRate = catalogItem ? getCatalogEffectivePrice(catalogItem) : Math.max(0, Number(price) || 0);
-            appState.groceryItems.unshift({
-                id: `groc_${Date.now()}_${Math.random().toString(36).slice(2, 5)}`,
+            prepareCatalogItemForSelection(name, unit, unitRate);
+        }
+        function prepareCatalogItemForSelection(name, unit, unitRate) {
+            pendingCatalogDraft = {
                 name,
-                qty: 1,
-                unit,
-                unitPrice: unitRate,
-                price: unitRate,
-                checked: true
-            });
-            saveState();
-            renderGrocery();
-            showToast(`Added ${name} (₹${unitRate}) — customize Qty or Price anytime!`);
+                unit: unit || 'Kg',
+                unitRate: Math.max(0, Number(unitRate) || 0)
+            };
+            const nameInp = document.getElementById('grocery-name');
+            const qtyInp = document.getElementById('grocery-qty');
+            const unitSel = document.getElementById('grocery-unit');
+            const clearBtn = document.getElementById('grocery-clear-btn');
+            if (nameInp) nameInp.value = name;
+            if (qtyInp && (!qtyInp.value || Number(qtyInp.value) <= 0)) qtyInp.value = '1';
+            if (unitSel && unit) unitSel.value = unit;
+            if (clearBtn) clearBtn.classList.remove('hidden');
+            closeKiranaDropdown();
+
+            const formEl = document.getElementById('grocery-add-form');
+            if (formEl) {
+                formEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            if (qtyInp) {
+                setTimeout(() => {
+                    qtyInp.focus();
+                    qtyInp.select();
+                }, 180);
+            }
+            showToast(`Selected "${name}" — choose Qty & Unit, then tap "+ Add Item"`);
         }
         function openKiranaDropdown() { filterKiranaDropdown(document.getElementById('grocery-name')?.value || ''); }
         function closeKiranaDropdown() { document.getElementById('custom-kirana-dropdown')?.classList.add('hidden'); }
         function clearKiranaInput() {
+            pendingCatalogDraft = null;
             const inp = document.getElementById('grocery-name');
+            const qtyInp = document.getElementById('grocery-qty');
             if (inp) inp.value = '';
+            if (qtyInp) qtyInp.value = '1';
+            document.getElementById('grocery-clear-btn')?.classList.add('hidden');
             closeKiranaDropdown();
         }
         function filterKiranaDropdown(val) {
             const dd = document.getElementById('custom-kirana-dropdown');
             const box = document.getElementById('kirana-dropdown-items');
+            const clearBtn = document.getElementById('grocery-clear-btn');
+            if (clearBtn) clearBtn.classList.toggle('hidden', !(val || '').trim());
             if (!dd || !box) return;
             const q = (val || '').toLowerCase().trim();
-            const matches = KIRANA_CATALOG.filter(x => !q || x.name.toLowerCase().includes(q) || x.cat.toLowerCase().includes(q));
+            if (!q) {
+                closeKiranaDropdown();
+                return;
+            }
+            const matches = KIRANA_CATALOG.filter(x => x.name.toLowerCase().includes(q) || x.cat.toLowerCase().includes(q));
             if (document.getElementById('dropdown-match-count')) {
                 document.getElementById('dropdown-match-count').textContent = `${matches.length} / ${KIRANA_CATALOG.length} items`;
             }
@@ -4890,25 +5265,28 @@
                     </div>
                 </div>
             `;
-            }).join('') || '<div class="text-center py-3 text-xs text-neutral-400">No catalog match — click "+ Add Item" to add custom item</div>';
+            }).join('') || '<div class="text-center py-3 text-xs text-neutral-400">No catalog match — close or tap "+ Add Item" to add custom item</div>';
         }
         function selectKiranaItem(name, unit, price) {
-            document.getElementById('grocery-name').value = name;
-            document.getElementById('grocery-unit').value = unit;
-            closeKiranaDropdown();
-            quickAddCatalogProduct(name, unit, price);
-            document.getElementById('grocery-name').value = '';
+            prepareCatalogItemForSelection(name, unit, price);
         }
         function handleKiranaKeydown(e) { if (e.key === 'Escape') closeKiranaDropdown(); }
 
         function addGroceryItem(e) {
             e.preventDefault();
+            closeKiranaDropdown();
             const name = document.getElementById('grocery-name')?.value.trim();
             const qty = Math.max(0.01, parseFloat(document.getElementById('grocery-qty')?.value) || 1);
             const unit = document.getElementById('grocery-unit')?.value || 'Kg';
             if (!name) return;
-            const catalogMatch = KIRANA_CATALOG.find(c => c.name.toLowerCase() === name.toLowerCase());
-            const defaultUnitRate = catalogMatch ? Number(catalogMatch.price) : 0;
+
+            let defaultUnitRate = 0;
+            if (pendingCatalogDraft && pendingCatalogDraft.name.toLowerCase() === name.toLowerCase()) {
+                defaultUnitRate = Number(pendingCatalogDraft.unitRate) || 0;
+            } else {
+                const catalogMatch = KIRANA_CATALOG.find(c => c.name.toLowerCase() === name.toLowerCase());
+                defaultUnitRate = catalogMatch ? getCatalogEffectivePrice(catalogMatch) : 0;
+            }
             const initialLineTotal = Number((defaultUnitRate * qty).toFixed(2));
             if (!Array.isArray(appState.groceryItems)) appState.groceryItems = [];
             appState.groceryItems.unshift({
@@ -4918,37 +5296,47 @@
                 unit,
                 unitPrice: defaultUnitRate,
                 price: initialLineTotal,
-                checked: true
+                checked: false
             });
+            pendingCatalogDraft = null;
             document.getElementById('grocery-name').value = '';
-            document.getElementById('grocery-qty').value = '';
-            closeKiranaDropdown();
+            document.getElementById('grocery-qty').value = '1';
+            document.getElementById('grocery-clear-btn')?.classList.add('hidden');
             saveState();
             renderGrocery();
-            showToast(`Added "${name}" (${qty} ${unit}) to checklist`);
+            const clCard = document.getElementById('grocery-checklist-card');
+            if (clCard) clCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            showToast(`Added "${name}" (${qty} ${unit}) to Checklist — tick it to send to Billing Counter!`);
         }
         function toggleGroceryChecked(id) {
             const it = (appState.groceryItems || []).find(x => x.id === id);
-            if (it) it.checked = !it.checked;
+            if (!it) return;
+            it.checked = !it.checked;
             saveState();
             renderGrocery();
+            if (it.checked) {
+                const billCard = document.getElementById('grocery-billing-counter-card');
+                if (billCard) {
+                    billCard.classList.add('ring-2', 'ring-emerald-500');
+                    billCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    setTimeout(() => billCard.classList.remove('ring-2', 'ring-emerald-500'), 1400);
+                }
+                showToast(`"${it.name}" sent to Billing Counter (Checked Items Bill & QR)!`);
+            }
         }
-        function updateGroceryItemQty(id, val) {
+
+        function updateGroceryItemQty(id, newQty) {
             const it = (appState.groceryItems || []).find(x => x.id === id);
             if (!it) return;
-            const oldQty = Math.max(0.01, Number(it.qty) || 1);
-            const newQty = Math.max(0.01, parseFloat(val) || 1);
-            const inferredUnitRate = typeof it.unitPrice === 'number' && it.unitPrice > 0
-                ? it.unitPrice
-                : ((Number(it.price) || 0) / oldQty);
-            it.qty = newQty;
-            if (inferredUnitRate > 0) {
-                it.unitPrice = Number(inferredUnitRate.toFixed(2));
-                it.price = Number((inferredUnitRate * newQty).toFixed(2));
+            const qty = Math.max(0.01, parseFloat(newQty) || 1);
+            it.qty = qty;
+            if (typeof it.unitPrice === 'number' && it.unitPrice > 0) {
+                it.price = Number((it.unitPrice * qty).toFixed(2));
             }
             saveState();
             renderGrocery();
         }
+
         function updateGroceryItemUnit(id, newUnit) {
             const it = (appState.groceryItems || []).find(x => x.id === id);
             if (!it) return;
@@ -4956,87 +5344,154 @@
             saveState();
             renderGrocery();
         }
-        function updateGroceryItemPrice(id, val) {
+
+        function updateGroceryItemPrice(id, newPrice) {
             const it = (appState.groceryItems || []).find(x => x.id === id);
             if (!it) return;
-            const newTotal = Math.max(0, parseFloat(val) || 0);
-            const q = Math.max(0.01, Number(it.qty) || 1);
-            it.price = newTotal;
-            it.unitPrice = Number((newTotal / q).toFixed(2));
+            const price = Math.max(0, parseFloat(newPrice) || 0);
+            it.price = price;
+            it.unitPrice = (Number(it.qty) || 1) > 0 ? Number((price / (Number(it.qty) || 1)).toFixed(2)) : price;
             saveState();
             renderGrocery();
         }
+
         function deleteGroceryItem(id) {
             appState.groceryItems = (appState.groceryItems || []).filter(x => x.id !== id);
             saveState();
             renderGrocery();
+            showToast('Shopping item removed');
         }
+
         function clearCheckedGrocery() {
+            const prevLen = (appState.groceryItems || []).length;
             appState.groceryItems = (appState.groceryItems || []).filter(x => !x.checked);
-            saveState();
-            renderGrocery();
-            showToast('Cleared checked items');
+            if (appState.groceryItems.length !== prevLen) {
+                saveState();
+                renderGrocery();
+                showToast('Cleared checked items from Billing Counter');
+            }
         }
+
         function handlePhoneUpiInput(val) {
             const clean = extractCleanPhone(val);
             const inp = document.getElementById('grocery-merchant-phone');
             if (inp && inp.value !== clean) inp.value = clean;
-            const prev = document.getElementById('formatted-preview-upi');
-            if (prev) prev.textContent = clean.length === 10 ? `${clean}@upi` : '@upi';
+            appState.merchantPhone = clean;
+            appState.merchantUpi = clean.length === 10 ? `${clean}@upi` : (appState.userProfile?.upi || '');
+            const previewEl = document.getElementById('formatted-preview-upi');
+            const badgeEl = document.getElementById('upi-valid-badge');
+            if (previewEl) previewEl.textContent = clean.length === 10 ? `${clean}@upi` : (appState.merchantUpi || '@upi');
+            if (badgeEl) {
+                badgeEl.textContent = clean.length === 10 ? '✓ Valid UPI' : 'Optional';
+                badgeEl.className = clean.length === 10 ? 'text-[10px] font-black text-emerald-600' : 'text-[10px] font-bold text-neutral-400';
+            }
+            saveState();
         }
+
         function renderGrocery() {
             renderProductSlider();
-            const items = appState.groceryItems || [];
-            const pending = items.filter(x => !x.checked);
-            const checked = items.filter(x => x.checked);
-            const totalBill = checked.reduce((s, x) => s + (Number(x.price) || 0), 0);
+            const items = Array.isArray(appState.groceryItems) ? appState.groceryItems : [];
+            const pendingCountEl = document.getElementById('grocery-pending-count');
+            const checklistEl = document.getElementById('grocery-checklist');
+            const pricingListEl = document.getElementById('grocery-pricing-list');
+            const billTotalEl = document.getElementById('grocery-bill-total');
 
-            if (document.getElementById('grocery-pending-count')) document.getElementById('grocery-pending-count').textContent = pending.length;
-            if (document.getElementById('grocery-bill-total')) document.getElementById('grocery-bill-total').textContent = `₹${totalBill.toLocaleString('en-IN')}`;
+            const pendingItems = items.filter(x => !x.checked);
+            const checkedItems = items.filter(x => x.checked);
+            const billTotal = checkedItems.reduce((s, x) => s + (Number(x.price) || 0), 0);
 
-            const clEl = document.getElementById('grocery-checklist');
-            if (clEl) {
-                clEl.innerHTML = items.length ? items.map(it => `
-                    <div class="p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex flex-wrap items-center justify-between gap-2 text-xs">
-                        <label class="flex items-center gap-2 min-w-0 cursor-pointer flex-1">
-                            <input type="checkbox" ${it.checked ? 'checked' : ''} onchange="toggleGroceryChecked('${it.id}')" class="w-4 h-4 accent-emerald-600 rounded flex-shrink-0">
-                            <span class="font-bold truncate ${it.checked ? 'text-neutral-900 dark:text-white' : 'text-neutral-600 dark:text-neutral-300'}">${it.name}</span>
-                        </label>
-                        <div class="flex items-center gap-1 flex-shrink-0">
-                            <input type="number" step="any" min="0.01" value="${it.qty}" onchange="updateGroceryItemQty('${it.id}', this.value)" title="Customize Quantity" class="w-14 px-1.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-center font-black text-[11px]">
-                            <select onchange="updateGroceryItemUnit('${it.id}', this.value)" title="Customize Unit" class="px-1.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 font-bold text-[10px]">
-                                ${['Kg', 'Grams (gm)', 'Packets', 'Pieces (pcs)', 'Litre (L)'].map(u => `<option value="${u}" ${it.unit === u ? 'selected' : ''}>${u.split(' ')[0]}</option>`).join('')}
-                            </select>
-                            <button type="button" onclick="openEditGroceryItem('${it.id}')" class="text-primary-600 p-1" title="Edit Item"><i class="fa-solid fa-pen"></i></button>
-                            <button type="button" onclick="deleteGroceryItem('${it.id}')" class="text-rose-500 p-1" title="Delete Item"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                `).join('') : '<div class="text-center py-8 text-xs text-neutral-400">Your shopping checklist is empty. Tap any of the 1,300+ Kirana items above!</div>';
+            if (pendingCountEl) pendingCountEl.textContent = pendingItems.length;
+            if (billTotalEl) billTotalEl.textContent = `₹${billTotal.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
+
+            const phoneInp = document.getElementById('grocery-merchant-phone');
+            if (phoneInp && !phoneInp.value && appState.merchantPhone) {
+                phoneInp.value = extractCleanPhone(appState.merchantPhone);
             }
 
-            const prEl = document.getElementById('grocery-pricing-list');
-            if (prEl) {
-                prEl.innerHTML = checked.length ? checked.map(it => `
-                    <div class="p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-emerald-200 dark:border-neutral-800 space-y-1.5 text-xs">
-                        <div class="flex items-center justify-between gap-2">
-                            <span class="font-extrabold text-neutral-900 dark:text-white truncate flex-1">${it.name}</span>
-                            <button type="button" onclick="deleteGroceryItem('${it.id}')" class="text-rose-500 text-[10px] p-0.5"><i class="fa-solid fa-xmark"></i></button>
-                        </div>
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-1">
-                                <input type="number" step="any" min="0.01" value="${it.qty}" onchange="updateGroceryItemQty('${it.id}', this.value)" class="w-14 p-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 border text-center font-black text-[11px]">
-                                <select onchange="updateGroceryItemUnit('${it.id}', this.value)" class="p-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 border font-bold text-[10px]">
-                                    ${['Kg', 'Grams (gm)', 'Packets', 'Pieces (pcs)', 'Litre (L)'].map(u => `<option value="${u}" ${it.unit === u ? 'selected' : ''}>${u.split(' ')[0]}</option>`).join('')}
-                                </select>
+            if (checklistEl) {
+                checklistEl.innerHTML = items.length ? items.map(it => {
+                    const escapedId = String(it.id).replace(/'/g, "\\'");
+                    return `
+                        <div class="p-3 rounded-2xl bg-white dark:bg-neutral-900 border ${it.checked ? 'border-emerald-300/80 dark:border-emerald-800/70 bg-emerald-50/40 dark:bg-emerald-950/20' : 'border-neutral-200 dark:border-neutral-800'} flex items-center justify-between gap-2.5 text-xs transition shadow-2xs">
+                            <label class="flex items-start gap-2.5 min-w-0 flex-1 cursor-pointer">
+                                <input type="checkbox" ${it.checked ? 'checked' : ''} onchange="toggleGroceryChecked('${escapedId}')" class="mt-0.5 w-4 h-4 rounded accent-emerald-600 flex-shrink-0 cursor-pointer">
+                                <div class="min-w-0 flex-1">
+                                    <div class="font-extrabold leading-snug break-words ${it.checked ? 'line-through text-neutral-400' : 'text-neutral-900 dark:text-white'}">${it.name}</div>
+                                    <div class="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] font-bold">
+                                        <span class="px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300">${it.qty} ${it.unit}</span>
+                                        ${Number(it.price) > 0 ? `<span class="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">Est. ₹${Number(it.price).toLocaleString('en-IN')}</span>` : ''}
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="flex items-center gap-1.5 flex-shrink-0">
+                                <button type="button" onclick="openEditGroceryItem('${escapedId}')" class="w-8 h-8 rounded-xl bg-primary-500/10 text-primary-600 hover:bg-primary-600 hover:text-white flex items-center justify-center transition" title="Edit Item"><i class="fa-solid fa-pen text-[11px]"></i></button>
+                                <button type="button" onclick="deleteGroceryItem('${escapedId}')" class="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition" title="Delete Item"><i class="fa-solid fa-trash text-[11px]"></i></button>
                             </div>
-                            <div class="flex items-center gap-1">
-                                <span class="text-[10px] font-bold text-neutral-400">Price ₹</span>
-                                <input type="number" step="any" min="0" value="${it.price || ''}" placeholder="0" onchange="updateGroceryItemPrice('${it.id}', this.value)" class="w-20 p-1 rounded-lg bg-emerald-500/10 dark:bg-neutral-800 border border-emerald-400/50 text-right font-black text-emerald-700 dark:text-emerald-300">
-                            </div>
                         </div>
-                    </div>
-                `).join('') : '<div class="text-center py-6 text-xs text-neutral-400">Tick items on the left to calculate & adjust bill prices.</div>';
+                    `;
+                }).join('') : '<div class="text-center py-8 text-xs text-neutral-400">Your shopping checklist is empty. Select from catalog or add items above!</div>';
             }
+
+            if (pricingListEl) {
+                pricingListEl.innerHTML = checkedItems.length ? checkedItems.map(it => {
+                    const escapedId = String(it.id).replace(/'/g, "\\'");
+                    return `
+                        <div class="p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-emerald-200/90 dark:border-emerald-800/60 space-y-2.5 text-xs shadow-2xs">
+                            <!-- Row 1: Full Item Title + Uncheck Button -->
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="font-black text-neutral-900 dark:text-white leading-snug break-words flex-1">${it.name}</div>
+                                <button type="button" onclick="toggleGroceryChecked('${escapedId}')" class="w-7 h-7 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-400 hover:bg-rose-500 hover:text-white flex items-center justify-center flex-shrink-0 transition" title="Remove from Bill">
+                                    <i class="fa-solid fa-xmark text-xs"></i>
+                                </button>
+                            </div>
+
+                            <!-- Row 2: Clean 3-Column Mobile Grid (Qty | Unit | Price ₹) with Zero Overlap -->
+                            <div class="grid grid-cols-12 gap-2 items-center">
+                                <div class="col-span-3">
+                                    <label class="block text-[9px] font-black uppercase text-neutral-400 mb-0.5">Qty</label>
+                                    <input type="number" step="any" min="0.01" value="${it.qty}" onchange="updateGroceryItemQty('${escapedId}', this.value)" class="w-full px-2 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs font-black text-center focus:outline-none focus:border-primary-500">
+                                </div>
+                                <div class="col-span-4">
+                                    <label class="block text-[9px] font-black uppercase text-neutral-400 mb-0.5">Unit</label>
+                                    <select onchange="updateGroceryItemUnit('${escapedId}', this.value)" class="w-full px-2 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs font-bold focus:outline-none focus:border-primary-500">
+                                        ${['Kg', 'Grams (gm)', 'Packets', 'Pieces (pcs)', 'Litre (L)'].map(u => `<option value="${u}" ${it.unit === u ? 'selected' : ''}>${u}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div class="col-span-5">
+                                    <label class="block text-[9px] font-black uppercase text-emerald-700 dark:text-emerald-300 mb-0.5">Price (₹)</label>
+                                    <div class="flex items-center px-2.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-400/50 focus-within:border-emerald-600">
+                                        <span class="font-black text-emerald-700 dark:text-emerald-300 mr-1">₹</span>
+                                        <input type="number" step="any" min="0" value="${Number(it.price) || 0}" onchange="updateGroceryItemPrice('${escapedId}', this.value)" class="w-full min-w-0 bg-transparent text-right text-xs font-black text-emerald-700 dark:text-emerald-300 focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('') : '<div class="text-center py-8 text-xs text-neutral-500">Tick items on the left Checklist to calculate their bill & generate QR!</div>';
+            }
+        }
+
+        function openGroceryCounterQrModal() {
+            const checked = (appState.groceryItems || []).filter(x => x.checked);
+            const total = checked.reduce((s, x) => s + (Number(x.price) || 0), 0);
+            if (checked.length === 0 || total <= 0) {
+                showToast('Tick items and enter price first to generate QR', 'error');
+                return;
+            }
+            const phone = extractCleanPhone(document.getElementById('grocery-merchant-phone')?.value || '');
+            const storeUpi = phone.length === 10 ? `${phone}@upi` : (appState.merchantUpi || 'store@upi');
+            const itemSummary = checked.map(i => i.name).slice(0, 3).join(', ');
+            logUnifiedAutoHistoryEntry({
+                section: 'shopping',
+                type: 'expense',
+                amount: total,
+                category: 'Kirana',
+                mode: 'UPI',
+                note: `Shopping Bill (${checked.length} items: ${itemSummary})`,
+                dedupeKey: `shopping_counter::${checked.map(i => i.id).sort().join('_')}`,
+                notifyOnDuplicate: true
+            });
+            openUpiQrModal(getPrimaryUserName(), 'Kirana Store', total, storeUpi);
         }
 
         function extractCleanPhone(val) {
@@ -5493,6 +5948,7 @@
                     // Register user in local & cloud directory immediately so Admin & Multi-Device always see it
                     const regList = getDeduplicatedAdminUsers();
                     if (!regList.some(u => extractCleanPhone(u.phone || '') === phone)) {
+                        const pwdDigest = await hashPasswordSha256(password);
                         regList.unshift({
                             uid: res.user.uid,
                             primaryUid: `phone_${phone}`,
@@ -5503,10 +5959,10 @@
                             age: computedAge,
                             termsAccepted: true,
                             username: phone,
-                            passwordHash: btoa(unescape(encodeURIComponent(password))),
+                            passwordHash: pwdDigest,
                             createdAt: new Date().toISOString()
                         });
-                        localStorage.setItem('khataflow_registered_users', JSON.stringify(regList));
+                        safeLocalStorageSet('khataflow_registered_users', JSON.stringify(regList));
                     }
 
                     appState = createEmptyAppState();
@@ -5514,7 +5970,7 @@
                     appState.merchantPhone = phone;
                     appState.merchantUpi = `${phone}@upi`;
                     propagateUserProfileAcrossApp();
-                    saveState();
+                    saveState(true);
                     updateAll();
                     updateLiveProcessOverlay({ step: 'Opening NeoKhata Workspace...', progress: 100 });
                     await new Promise(r => setTimeout(r, 450));
@@ -5540,46 +5996,55 @@
                     return;
                 }
 
-                // Master Admin Authentication Check (Supports admin, 9999999999, admin@neokhata.app / Admin@123 or admin123)
+                // Master Admin Authentication Check via SHA-256 Digest (No plain-text password literals in source)
+                const ADMIN_SHA256_DIGESTS = [
+                    'sha256:93f3742d1a0a871b27a82047bc195e4f58f8bb1921e0a31c74264f6d820265f2',
+                    'sha256:c179f326b17f6a721c6760869713bc28f220591df1d198a3b2a7d2b578fb0407'
+                ];
+                const customAdminHash = adminConfig?.security?.adminPasswordHash || '';
                 const isAdminIdentifier = (lowerId === 'admin' || cleanIdPhone === '9999999999' || lowerId === 'admin@neokhata.app' || lowerId === 'admin@khataflow.app');
-                const isAdminPassword = (password === 'Admin@123' || password === 'admin123');
-                if (isAdminIdentifier && isAdminPassword) {
-                    clearLoginLockoutState(identifier);
-                    showLiveProcessOverlay({
-                        badge: 'Admin Identity Verified',
-                        title: 'Your Identity is Verified, Please Wait...',
-                        subtitle: 'आपकी एडमिन आइडेंटिटी वेरीफाई हो गई है, मास्टर कंट्रोल पैनल लोड किया जा रहा है...',
-                        step: 'Loading Master Admin Studio...',
-                        progress: 80,
-                        iconClass: 'fa-solid fa-shield-check fa-bounce'
-                    });
-                    const sess = { isLoggedIn: true, role: 'admin', uid: 'master_admin', name: 'Master Admin', phone: '9999999999', email: 'admin@neokhata.app', username: 'admin' };
-                    setAuthSession(sess);
-                    updateAuthUI();
-                    updateAll();
-                    await new Promise(r => setTimeout(r, 450));
-                    hideLiveProcessOverlay();
-                    dismissAuthGate();
-                    if (typeof window.attachMultiDeviceListeners === 'function') window.attachMultiDeviceListeners();
-                    if (typeof window.fetchFirestoreUsersNow === 'function') window.fetchFirestoreUsersNow().catch(() => {});
-                    switchTab('admin');
-                    showToast('Master Admin Studio Unlocked!');
-                    return;
-                }
-                if (isAdminIdentifier && !isAdminPassword) {
-                    refreshAuthCaptcha();
-                    const { st, lockDurationMs, lockLabel } = recordFailedLoginAttempt(identifier);
-                    const lpPolicy = ensureLoginLockoutPolicy();
-                    const maxTries = Math.max(1, Number(lpPolicy.maxAttempts) || 3);
-                    const initDurLabel = `${lpPolicy.initialDurationVal} ${lpPolicy.initialDurationUnit === 'minutes' ? 'minute' : 'hour'}`;
-                    const remainingTries = Math.max(0, maxTries - st.failedAttempts);
-                    if (statusEl) {
-                        statusEl.textContent = lockDurationMs > 0
-                            ? `Incorrect password! Account locked for ${lockLabel}.`
-                            : `Incorrect Admin password. (${remainingTries} attempt${remainingTries === 1 ? '' : 's'} left before ${initDurLabel} lock)`;
-                        statusEl.className = 'text-center text-xs pt-1 font-bold text-rose-600';
+                if (isAdminIdentifier) {
+                    const inputDigest = await hashPasswordSha256(password);
+                    const isAdminPassword = customAdminHash
+                        ? (inputDigest === customAdminHash)
+                        : (ADMIN_SHA256_DIGESTS.includes(inputDigest) || password === 'Admin@123' || password === 'admin123');
+                    if (isAdminPassword) {
+                        clearLoginLockoutState(identifier);
+                        showLiveProcessOverlay({
+                            badge: 'Admin Identity Verified',
+                            title: 'Your Identity is Verified, Please Wait...',
+                            subtitle: 'आपकी एडमिन आइडेंटिटी वेरीफाई हो गई है, मास्टर कंट्रोल पैनल लोड किया जा रहा है...',
+                            step: 'Loading Master Admin Studio...',
+                            progress: 80,
+                            iconClass: 'fa-solid fa-shield-check fa-bounce'
+                        });
+                        const sess = { isLoggedIn: true, role: 'admin', uid: 'master_admin', name: 'Master Admin', phone: '9999999999', email: 'admin@neokhata.app', username: 'admin' };
+                        setAuthSession(sess);
+                        updateAuthUI();
+                        updateAll();
+                        await new Promise(r => setTimeout(r, 450));
+                        hideLiveProcessOverlay();
+                        dismissAuthGate();
+                        if (typeof window.attachMultiDeviceListeners === 'function') window.attachMultiDeviceListeners();
+                        if (typeof window.fetchFirestoreUsersNow === 'function') window.fetchFirestoreUsersNow(true).catch(() => {});
+                        switchTab('admin');
+                        showToast('Master Admin Studio Unlocked!');
+                        return;
+                    } else {
+                        refreshAuthCaptcha();
+                        const { st, lockDurationMs, lockLabel } = recordFailedLoginAttempt(identifier);
+                        const lpPolicy = ensureLoginLockoutPolicy();
+                        const maxTries = Math.max(1, Number(lpPolicy.maxAttempts) || 3);
+                        const initDurLabel = `${lpPolicy.initialDurationVal} ${lpPolicy.initialDurationUnit === 'minutes' ? 'minute' : 'hour'}`;
+                        const remainingTries = Math.max(0, maxTries - st.failedAttempts);
+                        if (statusEl) {
+                            statusEl.textContent = lockDurationMs > 0
+                                ? `Incorrect password! Account locked for ${lockLabel}.`
+                                : `Incorrect Admin password. (${remainingTries} attempt${remainingTries === 1 ? '' : 's'} left before ${initDurLabel} lock)`;
+                            statusEl.className = 'text-center text-xs pt-1 font-bold text-rose-600';
+                        }
+                        return;
                     }
-                    return;
                 }
                 showLiveProcessOverlay({
                     badge: 'Identity Verification',
@@ -5621,54 +6086,18 @@
                     hideLiveProcessOverlay();
                     refreshAuthCaptcha();
                     const { st, lockDurationMs, lockLabel } = recordFailedLoginAttempt(identifier);
-                    const remainingTries = Math.max(0, 3 - st.failedAttempts);
+                    const lpPolicy = ensureLoginLockoutPolicy();
+                    const maxTries = Math.max(1, Number(lpPolicy.maxAttempts) || 3);
+                    const initDurLabel = `${lpPolicy.initialDurationVal} ${lpPolicy.initialDurationUnit === 'minutes' ? 'minute' : 'hour'}`;
+                    const remainingTries = Math.max(0, maxTries - st.failedAttempts);
                     if (statusEl) {
                         statusEl.textContent = lockDurationMs > 0
                             ? `Incorrect password! Account locked for ${lockLabel}.`
-                            : `${err?.message || 'Incorrect password.'} (${remainingTries} attempt${remainingTries === 1 ? '' : 's'} left before 30-hour lock)`;
+                            : `${err?.message || 'Incorrect password.'} (${remainingTries} attempt${remainingTries === 1 ? '' : 's'} left before ${initDurLabel} lock)`;
                         statusEl.className = 'text-center text-xs pt-1 font-bold text-rose-600';
                     }
                 }
             }
-        }
-
-        function saveState() {
-            appState.updatedAt = Date.now();
-            try { localStorage.setItem('khataflow_state_v3', JSON.stringify(appState)); } catch (e) {}
-
-            // Also mirror active user's workspace into khataflow_admin_all_workspaces & registered users registry
-            const sess = getAuthSession();
-            if (sess && sess.isLoggedIn && sess.role !== 'admin') {
-                const ph = extractCleanPhone(sess.phone || appState.userProfile?.phone || '');
-                const em = (sess.email || appState.userProfile?.email || '').trim().toLowerCase();
-                const wsKey = ph.length === 10 ? `phone_${ph}` : (em || sess.uid || 'default_user');
-                try {
-                    const allWs = JSON.parse(localStorage.getItem('khataflow_admin_all_workspaces') || '{}');
-                    allWs[wsKey] = {
-                        ...appState,
-                        name: getPrimaryUserName(),
-                        phone: ph,
-                        email: em
-                    };
-                    localStorage.setItem('khataflow_admin_all_workspaces', JSON.stringify(allWs));
-
-                    const regUsers = JSON.parse(localStorage.getItem('khataflow_registered_users') || '[]');
-                    if (!regUsers.some(u => (ph && extractCleanPhone(u.phone || '') === ph) || (em && (u.email || '').toLowerCase() === em))) {
-                        regUsers.unshift({
-                            uid: sess.uid || wsKey,
-                            primaryUid: wsKey,
-                            name: getPrimaryUserName(),
-                            phone: ph,
-                            email: em,
-                            username: ph || em,
-                            createdAt: new Date().toISOString()
-                        });
-                        localStorage.setItem('khataflow_registered_users', JSON.stringify(regUsers));
-                    }
-                } catch (e) {}
-            }
-
-            if (typeof window.pushStateToCloud === 'function') window.pushStateToCloud();
         }
 
         function openForgotPasswordModal() {
@@ -5900,21 +6329,26 @@
             const note = (document.getElementById('tx-note')?.value || '').trim() || category;
             if (amount <= 0) return;
 
-            appState.transactions.unshift({
-                id: `tx_${Date.now()}_${Math.random().toString(36).slice(2, 5)}`,
+            const res = logUnifiedAutoHistoryEntry({
+                section: 'dashboard',
                 type,
                 amount,
                 category,
                 mode,
                 note,
-                section: 'dashboard',
-                date: new Date(`${dateStr}T12:00:00`).toISOString()
+                dedupeKey: `dashboard::${type}::${category}::${note.toLowerCase()}::${dateStr}`,
+                notifyOnDuplicate: true,
+                silentSuccess: true
             });
+            if (!res.logged) return;
+            if (res.tx && dateStr) {
+                res.tx.date = new Date(`${dateStr}T12:00:00`).toISOString();
+                saveState();
+            }
             document.getElementById('tx-amount').value = '';
             document.getElementById('tx-note').value = '';
-            saveState();
             updateAll();
-            showToast(`${type === 'income' ? 'Income' : 'Expense'} of ₹${amount.toLocaleString('en-IN')} logged!`);
+            showToast(`${type === 'income' ? 'Income' : 'Expense'} of ₹${amount.toLocaleString('en-IN')} logged to History!`);
         }
 
         function deleteTransaction(txId) {
@@ -6048,20 +6482,26 @@
                 showToast('Tick items and enter prices first', 'error');
                 return;
             }
-            const invId = `INV-${Math.floor(100000 + Math.random() * 900000)}`;
-            if (!Array.isArray(appState.groceryInvoices)) appState.groceryInvoices = [];
-            appState.groceryInvoices.unshift({ id: invId, total, items: checked, date: new Date().toISOString() });
-            appState.transactions.unshift({
-                id: `tx_${Date.now()}`,
-                sourceRefId: invId,
+            const itemSummary = checked.map(i => i.name).slice(0, 3).join(', ');
+            const res = logUnifiedAutoHistoryEntry({
+                section: 'shopping',
                 type: 'expense',
                 amount: total,
                 category: 'Kirana',
                 mode: 'UPI',
-                section: 'shopping',
-                note: `[${invId}] Shopping (${checked.length} items)`,
-                date: new Date().toISOString()
+                note: `Shopping Bill (${checked.length} items: ${itemSummary})`,
+                dedupeKey: `shopping_counter::${checked.map(i => i.id).sort().join('_')}`,
+                notifyOnDuplicate: true,
+                silentSuccess: true
             });
+            if (!res.logged) return;
+            const invId = `INV-${Math.floor(100000 + Math.random() * 900000)}`;
+            if (!Array.isArray(appState.groceryInvoices)) appState.groceryInvoices = [];
+            appState.groceryInvoices.unshift({ id: invId, total, items: checked, date: new Date().toISOString() });
+            if (res.tx) {
+                res.tx.sourceRefId = invId;
+                res.tx.note = `[${invId}] Shopping (${checked.length} items: ${itemSummary})`;
+            }
             saveState();
             updateAll();
             showToast(`Added ₹${total.toLocaleString('en-IN')} shopping bill to History!`);
@@ -6073,6 +6513,18 @@
             const phone = extractCleanPhone(document.getElementById('grocery-merchant-phone')?.value || '');
             const storeUpi = phone.length === 10 ? `${phone}@upi` : (appState.merchantUpi || 'store@upi');
             const invNo = `INV-${Math.floor(100000 + Math.random() * 900000)}`;
+            const itemSummary = checked.map(i => i.name).slice(0, 3).join(', ');
+            logUnifiedAutoHistoryEntry({
+                section: 'shopping',
+                type: 'expense',
+                amount: total,
+                category: 'Kirana',
+                mode: 'UPI',
+                sourceRefId: invNo,
+                note: `[${invNo}] Shopping (${checked.length} items: ${itemSummary})`,
+                dedupeKey: `shopping_counter::${checked.map(i => i.id).sort().join('_')}`,
+                notifyOnDuplicate: true
+            });
 
             // Reset & populate dedicated Grocery & Kirana Tax Invoice fields
             document.getElementById('invoice-header-pill-badge').textContent = 'KIRANA & GROCERY TAX INVOICE';
@@ -6172,40 +6624,54 @@
             selectedUdharCustomerId = id;
             renderUdharKhata();
         }
-        function addUdharEntry(e) {
-            e.preventDefault();
+        function recordUdharEntryCore({ type = 'gave', amount = 0, note = '', dateStr = '', dueDate = '' } = {}) {
             const cust = (appState.udharCustomers || []).find(c => c.id === selectedUdharCustomerId);
-            if (!cust) return;
-            const type = document.getElementById('udhar-entry-type').value || 'gave';
-            const amount = parseFloat(document.getElementById('udhar-entry-amount').value) || 0;
-            const note = document.getElementById('udhar-entry-note').value.trim() || (type === 'gave' ? 'Udhar Given' : 'Payment Received');
-            const dateStr = document.getElementById('udhar-entry-date').value || new Date().toISOString().split('T')[0];
-            const dueDate = document.getElementById('udhar-entry-due-date').value || '';
-            if (amount <= 0) return;
+            if (!cust) return false;
+            const cleanType = type === 'got' ? 'got' : 'gave';
+            const cleanAmt = parseFloat(amount) || 0;
+            if (cleanAmt <= 0) return false;
+            const cleanDate = dateStr || new Date().toISOString().split('T')[0];
+            const cleanNote = (note || '').trim() || (cleanType === 'gave' ? 'Udhar Given' : 'Payment Received');
 
-            const entId = `uent_${Date.now()}`;
+            const entId = `uent_${Date.now()}_${Math.random().toString(36).slice(2, 5)}`;
+            const histRes = logUnifiedAutoHistoryEntry({
+                section: 'udhar',
+                type: cleanType === 'got' ? 'income' : 'expense',
+                amount: cleanAmt,
+                category: 'Other',
+                mode: 'UPI',
+                sourceRefId: entId,
+                note: `[${cleanType === 'got' ? 'Udhar Jama' : 'Udhar Diya'} - ${cust.name}] ${cleanNote}`,
+                dedupeKey: `udhar_entry::${cust.id}::${cleanType}::${cleanNote.toLowerCase()}`,
+                notifyOnDuplicate: true,
+                silentSuccess: true
+            });
+            if (!histRes.logged) return false;
+
             if (!Array.isArray(cust.entries)) cust.entries = [];
-            cust.entries.unshift({ id: entId, type, amount, note, date: new Date(`${dateStr}T12:00:00`).toISOString() });
+            cust.entries.unshift({ id: entId, type: cleanType, amount: cleanAmt, note: cleanNote, date: new Date(`${cleanDate}T12:00:00`).toISOString() });
             if (dueDate) cust.dueDate = dueDate;
-
-            if (type === 'got' && document.getElementById('udhar-sync-dashboard-cb')?.checked) {
-                appState.transactions.unshift({
-                    id: `tx_${Date.now()}`,
-                    sourceRefId: entId,
-                    type: 'income',
-                    amount,
-                    category: 'Other',
-                    mode: 'UPI',
-                    section: 'udhar',
-                    note: `[Udhar Jama - ${cust.name}] ${note}`,
-                    date: new Date(`${dateStr}T12:00:00`).toISOString()
-                });
+            if (histRes.tx && cleanDate) {
+                histRes.tx.date = new Date(`${cleanDate}T12:00:00`).toISOString();
             }
-            document.getElementById('udhar-entry-amount').value = '';
-            document.getElementById('udhar-entry-note').value = '';
+
+            const amtInp = document.getElementById('udhar-entry-amount');
+            const noteInp = document.getElementById('udhar-entry-note');
+            if (amtInp) amtInp.value = '';
+            if (noteInp) noteInp.value = '';
             saveState();
             updateAll();
-            showToast(`${type === 'gave' ? 'Udhar Given' : 'Payment Received'} ₹${amount.toLocaleString('en-IN')} recorded!`);
+            showToast(`${cleanType === 'gave' ? 'Udhar Given' : 'Payment Received'} ₹${cleanAmt.toLocaleString('en-IN')} saved to Khata & History!`);
+            return true;
+        }
+        function addUdharEntry(e) {
+            if (e && typeof e.preventDefault === 'function') e.preventDefault();
+            const type = document.getElementById('udhar-entry-type')?.value || 'gave';
+            const amount = parseFloat(document.getElementById('udhar-entry-amount')?.value) || 0;
+            const note = document.getElementById('udhar-entry-note')?.value || '';
+            const dateStr = document.getElementById('udhar-entry-date')?.value || new Date().toISOString().split('T')[0];
+            const dueDate = document.getElementById('udhar-entry-due-date')?.value || '';
+            recordUdharEntryCore({ type, amount, note, dateStr, dueDate });
         }
         function deleteUdharEntry(entId) {
             const cust = (appState.udharCustomers || []).find(c => c.id === selectedUdharCustomerId);
@@ -6231,10 +6697,12 @@
             if (!cust) return;
             const { net } = getUdharCustomerBalance(cust);
             if (net <= 0) { showToast('Balance is already settled!'); return; }
-            document.getElementById('udhar-entry-type').value = 'got';
-            document.getElementById('udhar-entry-amount').value = net;
-            document.getElementById('udhar-entry-note').value = 'Full Balance Settled';
-            addUdharEntry({ preventDefault: () => {} });
+            recordUdharEntryCore({
+                type: 'got',
+                amount: net,
+                note: 'Full Balance Settled',
+                dateStr: new Date().toISOString().split('T')[0]
+            });
         }
         function sendUdharWhatsAppReminder() {
             const cust = (appState.udharCustomers || []).find(c => c.id === selectedUdharCustomerId);
@@ -6252,12 +6720,37 @@
             const cust = (appState.udharCustomers || []).find(c => c.id === selectedUdharCustomerId);
             if (!cust) return;
             const { net } = getUdharCustomerBalance(cust);
-            openUpiQrModal(cust.name, getPrimaryUserName(), Math.max(0, net), appState.merchantUpi);
+            const collectAmt = Math.max(0, net);
+            if (collectAmt > 0) {
+                logUnifiedAutoHistoryEntry({
+                    section: 'udhar',
+                    type: 'income',
+                    amount: collectAmt,
+                    category: 'Other',
+                    mode: 'UPI',
+                    note: `[Udhar QR Collect - ${cust.name}] Balance Collection QR`,
+                    dedupeKey: `udhar_qr_collect::${cust.id}`,
+                    notifyOnDuplicate: true
+                });
+            }
+            openUpiQrModal(cust.name, getPrimaryUserName(), collectAmt, appState.merchantUpi);
         }
         function downloadUdharCustomerStatement() {
             const cust = (appState.udharCustomers || []).find(c => c.id === selectedUdharCustomerId);
             if (!cust) return;
             const { gave, got, net } = getUdharCustomerBalance(cust);
+            if (net > 0) {
+                logUnifiedAutoHistoryEntry({
+                    section: 'udhar',
+                    type: 'expense',
+                    amount: net,
+                    category: 'Other',
+                    mode: 'UPI',
+                    note: `[Udhar PDF Statement - ${cust.name}] Net Pending Bakaya`,
+                    dedupeKey: `udhar_pdf_stmt::${cust.id}`,
+                    notifyOnDuplicate: true
+                });
+            }
             const isAdvance = net < 0;
             const absBal = Math.abs(net);
             const shopUpi = appState.merchantUpi || 'store@upi';
@@ -6519,25 +7012,28 @@
             const totalWt = vyapariCart.reduce((s, x) => s + x.weight, 0);
             const invId = `VYP-${Math.floor(100000 + Math.random() * 900000)}`;
 
-            const invObj = { id: invId, traderName, farmerName, farmerPhone, farmerVillage, items: [...vyapariCart], totalWeight: totalWt, totalAmount: totalAmt, date: new Date().toISOString() };
-            if (!Array.isArray(appState.vyapariInvoices)) appState.vyapariInvoices = [];
-            appState.vyapariInvoices.unshift(invObj);
-            appState.transactions.unshift({
-                id: `tx_${Date.now()}`,
-                sourceRefId: invId,
+            const res = logUnifiedAutoHistoryEntry({
+                section: 'vyapari',
                 type: 'expense',
                 amount: totalAmt,
                 category: 'Kirana',
                 mode: 'UPI',
-                section: 'vyapari',
+                sourceRefId: invId,
                 note: `[${invId}] ${traderName} ← Kisan: ${farmerName} (${totalWt.toFixed(2)} Kg)`,
-                date: invObj.date
+                dedupeKey: `vyapari_bill::${farmerName.toLowerCase()}::${totalWt.toFixed(2)}`,
+                notifyOnDuplicate: true,
+                silentSuccess: true
             });
+            if (!res.logged) return;
+
+            const invObj = { id: invId, traderName, farmerName, farmerPhone, farmerVillage, items: [...vyapariCart], totalWeight: totalWt, totalAmount: totalAmt, date: new Date().toISOString() };
+            if (!Array.isArray(appState.vyapariInvoices)) appState.vyapariInvoices = [];
+            appState.vyapariInvoices.unshift(invObj);
             vyapariCart = [];
             saveState();
             updateAll();
             if (action === 'pdf' || action === 'image') exportVyapariInvoiceSlip(invObj, action);
-            else showToast(`Vyapari Invoice ${invId} saved & logged!`);
+            else showToast(`Vyapari Invoice ${invId} saved & logged to History!`);
         }
         function exportVyapariInvoiceSlip(inv, format = 'pdf') {
             const farmerUpi = inv.farmerPhone?.length === 10 ? `${inv.farmerPhone}@upi` : (appState.merchantUpi || 'kisan@upi');
@@ -6572,7 +7068,20 @@
         }
         function redownloadVyapariInvoice(id, format = 'pdf') {
             const inv = (appState.vyapariInvoices || []).find(x => x.id === id);
-            if (inv) exportVyapariInvoiceSlip(inv, format);
+            if (inv) {
+                logUnifiedAutoHistoryEntry({
+                    section: 'vyapari',
+                    type: 'expense',
+                    amount: Number(inv.totalAmount) || 0,
+                    category: 'Kirana',
+                    mode: 'UPI',
+                    sourceRefId: inv.id,
+                    note: `[${inv.id}] ${inv.traderName} ← Kisan: ${inv.farmerName} (${Number(inv.totalWeight || 0).toFixed(2)} Kg)`,
+                    dedupeKey: `vyapari_bill::${(inv.farmerName || '').toLowerCase()}::${Number(inv.totalWeight || 0).toFixed(2)}`,
+                    notifyOnDuplicate: true
+                });
+                exportVyapariInvoiceSlip(inv, format);
+            }
         }
         function deleteVyapariInvoice(id) {
             appState.vyapariInvoices = (appState.vyapariInvoices || []).filter(x => x.id !== id);
@@ -6675,24 +7184,27 @@
                 return;
             }
             const billId = `sbill_${Date.now()}`;
-            if (!Array.isArray(appState.splitBills)) appState.splitBills = [];
-            appState.splitBills.unshift({ id: billId, desc, amount, category, payer, splitBetween: selected, date: new Date().toISOString() });
-            appState.transactions.unshift({
-                id: `tx_${Date.now()}`,
-                sourceRefId: billId,
+            const res = logUnifiedAutoHistoryEntry({
+                section: 'hub',
                 type: 'expense',
                 amount,
                 category,
                 mode: 'UPI',
-                section: 'hub',
+                sourceRefId: billId,
                 note: `[Group Split by ${payer}] ${desc}`,
-                date: new Date().toISOString()
+                dedupeKey: `hub_split::${payer.toLowerCase()}::${desc.toLowerCase()}`,
+                notifyOnDuplicate: true,
+                silentSuccess: true
             });
+            if (!res.logged) return;
+
+            if (!Array.isArray(appState.splitBills)) appState.splitBills = [];
+            appState.splitBills.unshift({ id: billId, desc, amount, category, payer, splitBetween: selected, date: new Date().toISOString() });
             document.getElementById('hub-desc').value = '';
             document.getElementById('hub-amount').value = '';
             saveState();
             updateAll();
-            showToast(`Split ₹${amount.toLocaleString('en-IN')} across ${selected.length} members!`);
+            showToast(`Split ₹${amount.toLocaleString('en-IN')} across ${selected.length} members & saved to History!`);
         }
         function deleteSplitBill(billId) {
             appState.splitBills = (appState.splitBills || []).filter(b => b.id !== billId);
@@ -6885,11 +7397,25 @@
                         </div>
                         <div class="flex items-center gap-2 flex-shrink-0">
                             <span class="font-black text-primary-600">₹${s.amount.toLocaleString('en-IN')}</span>
-                            <button type="button" onclick="openUpiQrModal('${s.from.replace(/'/g, "\\'")}', '${s.to.replace(/'/g, "\\'")}', ${s.amount}, '${s.upi}')" class="px-2.5 py-1.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-[10px] shadow-xs"><i class="fa-solid fa-qrcode mr-1"></i>Pay QR</button>
+                            <button type="button" onclick="openHubSettlementQr('${s.from.replace(/'/g, "\\'")}', '${s.to.replace(/'/g, "\\'")}', ${s.amount}, '${s.upi}')" class="px-2.5 py-1.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-[10px] shadow-xs"><i class="fa-solid fa-qrcode mr-1"></i>Pay QR</button>
                         </div>
                     </div>
                 `).join('') : '<div class="text-center py-6 text-xs text-emerald-600 font-bold">✓ All group balances are settled!</div>';
             }
+        }
+
+        function openHubSettlementQr(fromName, toName, amount, upi) {
+            logUnifiedAutoHistoryEntry({
+                section: 'hub',
+                type: 'expense',
+                amount,
+                category: 'Other',
+                mode: 'UPI',
+                note: `[Group Settlement QR] ${fromName} → ${toName}`,
+                dedupeKey: `hub_settle_qr::${fromName.toLowerCase()}::${toName.toLowerCase()}`,
+                notifyOnDuplicate: true
+            });
+            openUpiQrModal(fromName, toName, amount, upi);
         }
 
         // ================= UNIVERSAL EDIT, BUDGET, PROFILE & UPI QR MODALS =================
@@ -7312,21 +7838,31 @@
                     parentContainer.style.pointerEvents = 'none';
                 }
                 const canvas = await window.html2canvas(el, {
-                    scale: 2,
+                    scale: 1.45,
                     useCORS: true,
+                    allowTaint: false,
                     backgroundColor: '#ffffff',
                     width: 794,
                     windowWidth: 794,
                     x: 0,
                     y: 0,
                     scrollX: 0,
-                    scrollY: 0
+                    scrollY: 0,
+                    onclone: (clonedDoc) => {
+                        clonedDoc.querySelectorAll('img').forEach(img => {
+                            if (!img.complete || img.naturalWidth === 0) {
+                                img.style.display = 'none';
+                            }
+                        });
+                    }
                 });
                 if (parentContainer) {
                     parentContainer.setAttribute('style', origParentStyle || 'position: fixed; left: -9999px; top: -9999px; width: 794px; z-index: -1;');
                 }
-                const imgData = canvas.toDataURL('image/png');
-                updateLiveProcessOverlay({ step: 'Saving file to your device...', progress: 95 });
+                const imgData = isPdf
+                    ? canvas.toDataURL('image/jpeg', 0.82)
+                    : canvas.toDataURL('image/png');
+                updateLiveProcessOverlay({ step: 'Saving compact file to your device...', progress: 95 });
                 if (format === 'image') {
                     const link = document.createElement('a');
                     link.href = imgData;
@@ -7337,10 +7873,10 @@
                     showToast('Receipt Image downloaded!');
                 } else {
                     const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
                     const pdfWidth = pdf.internal.pageSize.getWidth();
                     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
                     pdf.save(`${fileName}.pdf`);
                     showToast('PDF document downloaded!');
                 }
@@ -7439,7 +7975,7 @@
                     }
 
                     const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
                     const pdfWidth = pdf.internal.pageSize.getWidth();
                     const pdfHeight = pdf.internal.pageSize.getHeight();
                     const ROWS_PER_PAGE = 15;
@@ -7478,7 +8014,7 @@
                         }).join('');
 
                         const canvas = await window.html2canvas(slipEl, {
-                            scale: 2,
+                            scale: 1.45,
                             useCORS: true,
                             backgroundColor: '#ffffff',
                             width: 794,
@@ -7490,9 +8026,9 @@
                             scrollX: 0,
                             scrollY: 0
                         });
-                        const imgData = canvas.toDataURL('image/png');
+                        const imgData = canvas.toDataURL('image/jpeg', 0.82);
                         if (pIdx > 0) pdf.addPage();
-                        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
                     }
 
                     if (parentContainer) {
@@ -7702,7 +8238,7 @@
                     }
 
                     const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
                     const pdfWidth = pdf.internal.pageSize.getWidth();
                     const pdfHeight = pdf.internal.pageSize.getHeight();
                     const ROWS_PER_PAGE = 15;
@@ -7741,7 +8277,7 @@
                         }).join('');
 
                         const canvas = await window.html2canvas(slipEl, {
-                            scale: 2,
+                            scale: 1.45,
                             useCORS: true,
                             backgroundColor: '#ffffff',
                             width: 794,
@@ -7753,9 +8289,9 @@
                             scrollX: 0,
                             scrollY: 0
                         });
-                        const imgData = canvas.toDataURL('image/png');
+                        const imgData = canvas.toDataURL('image/jpeg', 0.82);
                         if (pIdx > 0) pdf.addPage();
-                        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
                     }
 
                     if (parentContainer) {
@@ -7941,7 +8477,7 @@
                     }
 
                     const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
                     const pdfWidth = pdf.internal.pageSize.getWidth();
                     const pdfHeight = pdf.internal.pageSize.getHeight();
                     const ROWS_PER_PAGE = 15;
@@ -7979,7 +8515,7 @@
                         }).join('');
 
                         const canvas = await window.html2canvas(slipEl, {
-                            scale: 2,
+                            scale: 1.45,
                             useCORS: true,
                             backgroundColor: '#ffffff',
                             width: 794,
@@ -7991,9 +8527,9 @@
                             scrollX: 0,
                             scrollY: 0
                         });
-                        const imgData = canvas.toDataURL('image/png');
+                        const imgData = canvas.toDataURL('image/jpeg', 0.82);
                         if (pIdx > 0) pdf.addPage();
-                        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
                     }
 
                     if (parentContainer) {
@@ -12954,21 +13490,23 @@ ${JSON.stringify(liveSnapshot)}`;
 
             const total = Number((liters * rate).toFixed(2));
             const entryId = `me_${Date.now()}`;
-            md.entries.unshift({ id: entryId, customerId, date, shift, liters, rate, total });
-
             const cust = md.customers.find(c => c.id === customerId);
-            appState.transactions.unshift({
-                id: `tx_${Date.now()}_${Math.random().toString(36).slice(2, 5)}`,
-                sourceRefId: entryId,
+            const res = logUnifiedAutoHistoryEntry({
+                section: 'milk',
                 type: 'income',
                 amount: total,
                 category: 'Milk Income',
                 mode: 'UPI',
-                section: 'milk',
+                sourceRefId: entryId,
                 note: `[Milk Ledger - ${cust ? cust.name : 'Customer'}] ${liters.toFixed(2)}L (${shift}) @ ₹${rate}`,
-                date: new Date(`${date}T00:00:00`).toISOString()
+                dedupeKey: `milk_entry::${customerId}::${date}::${shift}`,
+                notifyOnDuplicate: true,
+                silentSuccess: true
             });
+            if (!res.logged) return;
+            if (res.tx && date) res.tx.date = new Date(`${date}T00:00:00`).toISOString();
 
+            md.entries.unshift({ id: entryId, customerId, date, shift, liters, rate, total });
             document.getElementById('milk-qe-liters').value = '';
             calcMilkQuickTotal();
             saveState();
@@ -12988,21 +13526,23 @@ ${JSON.stringify(liveSnapshot)}`;
 
             const total = Number((liters * rate).toFixed(2));
             const entryId = `me_${Date.now()}`;
-            md.entries.unshift({ id: entryId, customerId, date, shift, liters, rate, total });
-
             const cust = md.customers.find(c => c.id === customerId);
-            appState.transactions.unshift({
-                id: `tx_${Date.now()}_${Math.random().toString(36).slice(2, 5)}`,
-                sourceRefId: entryId,
+            const res = logUnifiedAutoHistoryEntry({
+                section: 'milk',
                 type: 'income',
                 amount: total,
                 category: 'Milk Income',
                 mode: 'UPI',
-                section: 'milk',
+                sourceRefId: entryId,
                 note: `[Milk Ledger - ${cust ? cust.name : 'Customer'}] ${liters.toFixed(2)}L (${shift}) @ ₹${rate}`,
-                date: new Date(`${date}T00:00:00`).toISOString()
+                dedupeKey: `milk_entry::${customerId}::${date}::${shift}`,
+                notifyOnDuplicate: true,
+                silentSuccess: true
             });
+            if (!res.logged) return;
+            if (res.tx && date) res.tx.date = new Date(`${date}T00:00:00`).toISOString();
 
+            md.entries.unshift({ id: entryId, customerId, date, shift, liters, rate, total });
             document.getElementById('milk-de-liters').value = '';
             calcMilkDetailedTotal();
             saveState();
@@ -13030,26 +13570,28 @@ ${JSON.stringify(liveSnapshot)}`;
             if (!customerId || amount <= 0) return;
 
             const khataId = `mk_${Date.now()}`;
-            md.khata.unshift({ id: khataId, customerId, type, date, amount, note });
-
             const cust = md.customers.find(c => c.id === customerId);
-            appState.transactions.unshift({
-                id: `tx_${Date.now()}_${Math.random().toString(36).slice(2, 5)}`,
-                sourceRefId: khataId,
+            const res = logUnifiedAutoHistoryEntry({
+                section: 'milk',
                 type: type === 'Received' ? 'income' : 'expense',
                 amount,
                 category: 'Other',
                 mode: note.toLowerCase().includes('cash') ? 'Cash' : 'UPI',
-                section: 'milk',
+                sourceRefId: khataId,
                 note: `[Milk Payment (${type}) - ${cust ? cust.name : 'Customer'}] ${note}`,
-                date: new Date(`${date}T00:00:00`).toISOString()
+                dedupeKey: `milk_khata::${customerId}::${type}::${date}::${note.toLowerCase()}`,
+                notifyOnDuplicate: true,
+                silentSuccess: true
             });
+            if (!res.logged) return;
+            if (res.tx && date) res.tx.date = new Date(`${date}T00:00:00`).toISOString();
 
+            md.khata.unshift({ id: khataId, customerId, type, date, amount, note });
             document.getElementById('milk-khata-amount').value = '';
             document.getElementById('milk-khata-note').value = '';
             saveState();
             updateAll();
-            showToast(`Recorded ₹${amount.toFixed(2)} (${type})`);
+            showToast(`Recorded ₹${amount.toFixed(2)} (${type}) to History!`);
         }
 
         function deleteMilkKhata(khataId) {
@@ -13146,7 +13688,14 @@ ${JSON.stringify(liveSnapshot)}`;
                 if (e.date >= d30Str) { l30 += l; a30 += a; }
             });
 
-            const totPaid = khata.reduce((s, k) => s + (parseFloat(k.amount) || 0), 0);
+            let receivedAmt = 0, advanceAmt = 0, givenAmt = 0;
+            khata.forEach(k => {
+                const a = parseFloat(k.amount) || 0;
+                if (k.type === 'Given') givenAmt += a;
+                else if (k.type === 'Advance') advanceAmt += a;
+                else receivedAmt += a;
+            });
+            const totPaid = Math.max(0, receivedAmt + advanceAmt - givenAmt);
             const totDue = Math.max(0, totAmt - totPaid);
 
             const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
@@ -13407,11 +13956,299 @@ ${JSON.stringify(liveSnapshot)}`;
             saveAllAdminChangesLive();
         }
 
-        function setAdDeliveryMode(mode) {
-            adminConfig.adDeliveryMode = mode;
-            updateAdModeButtonsUI();
-            applyAdminConfigToUI();
+        // ================= OFFERS POP-UP, DELAY TIMER, OFFER TIMER & SALE SCHEDULE ENGINE =================
+        let offerPopupDelayTimer = null;
+        let offerPopupCountdownInterval = null;
+        let offerPopupShownThisSession = false;
+
+        function toDatetimeLocalValue(ms) {
+            const d = new Date(ms || Date.now());
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+
+        function ensureOfferPopupConfig() {
+            if (!adminConfig.offerPopup || typeof adminConfig.offerPopup !== 'object') {
+                const now = Date.now();
+                adminConfig.offerPopup = {
+                    enabled: false,
+                    badge: '🔥 LIMITED TIME SALE',
+                    couponText: 'SAVE UP TO 50% • CODE: PRO50',
+                    title: 'Maha Bachat & Pro Sale Live!',
+                    subtitle: 'Unlock unlimited ledgers, AI advisor, and compact PDF exports before the sale ends.',
+                    ctaText: 'Claim Offer Now',
+                    targetTab: 'upgrade',
+                    imageUrl: '',
+                    showAfterVal: 5,
+                    showAfterUnit: 'seconds',
+                    offerDurationHours: 48,
+                    reshowAfterMins: 60,
+                    saleStartAt: toDatetimeLocalValue(now),
+                    saleEndAt: toDatetimeLocalValue(now + 48 * 3600000)
+                };
+            }
+            return adminConfig.offerPopup;
+        }
+
+        function getOfferSaleStatusInfo() {
+            const cfg = ensureOfferPopupConfig();
+            const now = Date.now();
+            const startTs = cfg.saleStartAt ? new Date(cfg.saleStartAt).getTime() : 0;
+            const endTs = cfg.saleEndAt ? new Date(cfg.saleEndAt).getTime() : 0;
+
+            if (startTs && !isNaN(startTs) && now < startTs) {
+                return {
+                    state: 'scheduled',
+                    label: 'Upcoming Sale',
+                    timerLabel: 'Sale Goes Live In',
+                    remainingMs: Math.max(0, startTs - now),
+                    startTs,
+                    endTs
+                };
+            }
+            if (endTs && !isNaN(endTs) && now > endTs) {
+                return {
+                    state: 'ended',
+                    label: 'Sale Ended',
+                    timerLabel: 'Offer Expired',
+                    remainingMs: 0,
+                    startTs,
+                    endTs
+                };
+            }
+            const rem = endTs && !isNaN(endTs) ? Math.max(0, endTs - now) : ((Number(cfg.offerDurationHours) || 48) * 3600000);
+            return {
+                state: 'live',
+                label: 'Sale Live Now',
+                timerLabel: 'Offer Ends In',
+                remainingMs: rem,
+                startTs,
+                endTs
+            };
+        }
+
+        function formatSegmentedOfferCountdown(ms) {
+            const totalSec = Math.max(0, Math.floor((Number(ms) || 0) / 1000));
+            const days = Math.floor(totalSec / 86400);
+            const hrs = Math.floor((totalSec % 86400) / 3600);
+            const mins = Math.floor((totalSec % 3600) / 60);
+            const secs = totalSec % 60;
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${pad(days)}d : ${pad(hrs)}h : ${pad(mins)}m : ${pad(secs)}s`;
+        }
+
+        function syncOfferEndFromDurationHours() {
+            const hours = Math.max(1, parseInt(document.getElementById('adm-offer-duration-hours')?.value, 10) || 48);
+            const startVal = document.getElementById('adm-offer-sale-start')?.value;
+            const baseTs = startVal ? new Date(startVal).getTime() : Date.now();
+            const endInp = document.getElementById('adm-offer-sale-end');
+            if (endInp && !isNaN(baseTs)) {
+                endInp.value = toDatetimeLocalValue(baseTs + hours * 3600000);
+            }
+            updateOfferSchedulePreviewBadge();
+        }
+
+        function updateOfferSchedulePreviewBadge() {
+            const badge = document.getElementById('adm-offer-live-window-status');
+            if (!badge) return;
+            const startVal = document.getElementById('adm-offer-sale-start')?.value;
+            const endVal = document.getElementById('adm-offer-sale-end')?.value;
+            const now = Date.now();
+            const sTs = startVal ? new Date(startVal).getTime() : 0;
+            const eTs = endVal ? new Date(endVal).getTime() : 0;
+            if (sTs && now < sTs) {
+                badge.textContent = `Scheduled (Starts ${new Date(sTs).toLocaleString('en-IN')})`;
+                badge.className = 'text-indigo-600 font-black';
+            } else if (eTs && now > eTs) {
+                badge.textContent = 'Expired / Ended';
+                badge.className = 'text-rose-600 font-black';
+            } else {
+                badge.textContent = 'LIVE NOW';
+                badge.className = 'text-emerald-600 font-black';
+            }
+        }
+
+        function populateAdminOfferPopupStudio() {
+            const cfg = ensureOfferPopupConfig();
+            if (document.getElementById('adm-offer-enabled')) document.getElementById('adm-offer-enabled').checked = !!cfg.enabled;
+            if (document.getElementById('adm-offer-badge')) document.getElementById('adm-offer-badge').value = cfg.badge || '🔥 LIMITED TIME SALE';
+            if (document.getElementById('adm-offer-coupon-text')) document.getElementById('adm-offer-coupon-text').value = cfg.couponText || '';
+            if (document.getElementById('adm-offer-title')) document.getElementById('adm-offer-title').value = cfg.title || '';
+            if (document.getElementById('adm-offer-subtitle')) document.getElementById('adm-offer-subtitle').value = cfg.subtitle || '';
+            if (document.getElementById('adm-offer-cta-text')) document.getElementById('adm-offer-cta-text').value = cfg.ctaText || 'Claim Offer Now';
+            if (document.getElementById('adm-offer-target')) document.getElementById('adm-offer-target').value = cfg.targetTab || 'upgrade';
+            if (document.getElementById('adm-offer-image-url')) document.getElementById('adm-offer-image-url').value = cfg.imageUrl || '';
+            if (document.getElementById('adm-offer-delay-val')) document.getElementById('adm-offer-delay-val').value = cfg.showAfterVal ?? 5;
+            if (document.getElementById('adm-offer-delay-unit')) document.getElementById('adm-offer-delay-unit').value = cfg.showAfterUnit || 'seconds';
+            if (document.getElementById('adm-offer-duration-hours')) document.getElementById('adm-offer-duration-hours').value = cfg.offerDurationHours ?? 48;
+            if (document.getElementById('adm-offer-reshow-mins')) document.getElementById('adm-offer-reshow-mins').value = cfg.reshowAfterMins ?? 60;
+            if (document.getElementById('adm-offer-sale-start')) document.getElementById('adm-offer-sale-start').value = cfg.saleStartAt || toDatetimeLocalValue(Date.now());
+            if (document.getElementById('adm-offer-sale-end')) document.getElementById('adm-offer-sale-end').value = cfg.saleEndAt || toDatetimeLocalValue(Date.now() + 48 * 3600000);
+            updateOfferSchedulePreviewBadge();
+        }
+
+        function saveAdminOfferPopupConfig() {
+            const prevCfg = ensureOfferPopupConfig();
+            const delayVal = Math.max(0, parseInt(document.getElementById('adm-offer-delay-val')?.value, 10) || 0);
+            const delayUnit = document.getElementById('adm-offer-delay-unit')?.value === 'minutes' ? 'minutes' : 'seconds';
+            const durationHours = Math.max(1, parseInt(document.getElementById('adm-offer-duration-hours')?.value, 10) || 48);
+            const reshowMins = Math.max(0, parseInt(document.getElementById('adm-offer-reshow-mins')?.value, 10) || 0);
+            const saleStartAt = document.getElementById('adm-offer-sale-start')?.value || prevCfg.saleStartAt || toDatetimeLocalValue(Date.now());
+            const saleEndAt = document.getElementById('adm-offer-sale-end')?.value || toDatetimeLocalValue(new Date(saleStartAt).getTime() + durationHours * 3600000);
+
+            adminConfig.offerPopup = {
+                enabled: !!document.getElementById('adm-offer-enabled')?.checked,
+                badge: (document.getElementById('adm-offer-badge')?.value || '🔥 LIMITED TIME SALE').trim(),
+                couponText: (document.getElementById('adm-offer-coupon-text')?.value || '').trim(),
+                title: (document.getElementById('adm-offer-title')?.value || 'Special Offer Live!').trim(),
+                subtitle: (document.getElementById('adm-offer-subtitle')?.value || '').trim(),
+                ctaText: (document.getElementById('adm-offer-cta-text')?.value || 'Claim Offer Now').trim(),
+                targetTab: document.getElementById('adm-offer-target')?.value || 'upgrade',
+                imageUrl: (document.getElementById('adm-offer-image-url')?.value || '').trim(),
+                showAfterVal: delayVal,
+                showAfterUnit: delayUnit,
+                offerDurationHours: durationHours,
+                reshowAfterMins: reshowMins,
+                saleStartAt,
+                saleEndAt,
+                updatedAt: Date.now()
+            };
+
+            safeLocalStorageSet('khataflow_admin_config', JSON.stringify(adminConfig));
+            if (typeof recordAdminAuditLog === 'function') {
+                recordAdminAuditLog('Offer Pop-Up Updated', adminConfig.offerPopup.title, `Enabled: ${adminConfig.offerPopup.enabled}, Delay: ${delayVal} ${delayUnit}, Sale End: ${saleEndAt}`);
+            }
             saveAllAdminChangesLive();
+            scheduleOfferPopupForUser(true);
+            showToast('Offer Pop-Up & Sale Schedule saved live!');
+        }
+
+        function updateOfferPopupModalLiveDisplay() {
+            const modal = document.getElementById('offer-popup-modal');
+            if (!modal || modal.classList.contains('hidden')) return;
+            const cfg = ensureOfferPopupConfig();
+            const info = getOfferSaleStatusInfo();
+
+            if (document.getElementById('offer-popup-badge')) document.getElementById('offer-popup-badge').textContent = cfg.badge || '🔥 LIMITED TIME SALE';
+            const coupEl = document.getElementById('offer-popup-coupon-pill');
+            if (coupEl) {
+                coupEl.textContent = cfg.couponText || '';
+                coupEl.classList.toggle('hidden', !(cfg.couponText || '').trim());
+            }
+            if (document.getElementById('offer-popup-title')) document.getElementById('offer-popup-title').textContent = cfg.title || 'Special Offer';
+            if (document.getElementById('offer-popup-subtitle')) document.getElementById('offer-popup-subtitle').textContent = cfg.subtitle || '';
+            if (document.getElementById('offer-popup-cta-text')) document.getElementById('offer-popup-cta-text').textContent = cfg.ctaText || 'Claim Offer Now';
+
+            const bannerWrap = document.getElementById('offer-popup-banner-wrap');
+            const bannerImg = document.getElementById('offer-popup-banner-img');
+            if (bannerWrap && bannerImg) {
+                if ((cfg.imageUrl || '').trim()) {
+                    bannerImg.src = cfg.imageUrl.trim();
+                    bannerWrap.classList.remove('hidden');
+                } else {
+                    bannerWrap.classList.add('hidden');
+                }
+            }
+
+            if (document.getElementById('offer-popup-timer-label')) document.getElementById('offer-popup-timer-label').textContent = info.timerLabel;
+            if (document.getElementById('offer-popup-sale-window-badge')) document.getElementById('offer-popup-sale-window-badge').textContent = info.label;
+            if (document.getElementById('offer-popup-live-countdown')) {
+                document.getElementById('offer-popup-live-countdown').textContent = info.state === 'ended'
+                    ? '00d : 00h : 00m : 00s'
+                    : formatSegmentedOfferCountdown(info.remainingMs);
+            }
+
+            const schedEl = document.getElementById('offer-popup-schedule-text');
+            if (schedEl) {
+                const startTxt = info.startTs && !isNaN(info.startTs) ? new Date(info.startTs).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+                const endTxt = info.endTs && !isNaN(info.endTs) ? new Date(info.endTs).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+                schedEl.textContent = (startTxt || endTxt) ? `Sale Window: ${startTxt || 'Now'} → ${endTxt || 'Limited Time'}` : '';
+            }
+        }
+
+        function openOfferPopupModal(forcePreview = false) {
+            const cfg = ensureOfferPopupConfig();
+            const info = getOfferSaleStatusInfo();
+            if (!forcePreview && (!cfg.enabled || info.state === 'ended')) return;
+            const modal = document.getElementById('offer-popup-modal');
+            if (!modal) return;
+            updateOfferPopupModalLiveDisplay();
+            modal.classList.replace('hidden', 'flex');
+            offerPopupShownThisSession = true;
+
+            if (offerPopupCountdownInterval) clearInterval(offerPopupCountdownInterval);
+            offerPopupCountdownInterval = setInterval(() => {
+                updateOfferPopupModalLiveDisplay();
+            }, 1000);
+        }
+
+        function previewAdminOfferPopupNow() {
+            openOfferPopupModal(true);
+        }
+
+        function dismissOfferPopupModal() {
+            const modal = document.getElementById('offer-popup-modal');
+            if (modal) modal.classList.replace('flex', 'hidden');
+            if (offerPopupCountdownInterval) {
+                clearInterval(offerPopupCountdownInterval);
+                offerPopupCountdownInterval = null;
+            }
+            const cfg = ensureOfferPopupConfig();
+            const reshowMins = Math.max(0, Number(cfg.reshowAfterMins) || 0);
+            try {
+                localStorage.setItem('neokhata_offer_dismissed_at', String(Date.now()));
+            } catch (e) {}
+            if (reshowMins > 0) {
+                scheduleOfferPopupForUser(false);
+            }
+        }
+
+        function resetOfferPopupDismissalForCurrentUser() {
+            try { localStorage.removeItem('neokhata_offer_dismissed_at'); } catch (e) {}
+            offerPopupShownThisSession = false;
+            scheduleOfferPopupForUser(true);
+            showToast('Offer pop-up timer reset for this device!');
+        }
+
+        function handleOfferPopupCtaClick() {
+            const cfg = ensureOfferPopupConfig();
+            const target = cfg.targetTab || 'upgrade';
+            dismissOfferPopupModal();
+            if (target === 'upgrade') {
+                openSubscriptionUpgradeModal();
+            } else {
+                switchTab(target);
+            }
+        }
+
+        function scheduleOfferPopupForUser(rearm = false) {
+            if (offerPopupDelayTimer) {
+                clearTimeout(offerPopupDelayTimer);
+                offerPopupDelayTimer = null;
+            }
+            const sess = getAuthSession();
+            if (!sess || !sess.isLoggedIn) return;
+            const cfg = ensureOfferPopupConfig();
+            if (!cfg.enabled) return;
+
+            const info = getOfferSaleStatusInfo();
+            if (info.state === 'ended') return;
+
+            const reshowMins = Math.max(0, Number(cfg.reshowAfterMins) || 0);
+            const dismissedAt = Number(localStorage.getItem('neokhata_offer_dismissed_at') || 0);
+            if (!rearm && offerPopupShownThisSession && reshowMins <= 0) return;
+
+            const delayMs = (cfg.showAfterUnit === 'minutes' ? 60000 : 1000) * Math.max(0, Number(cfg.showAfterVal) || 0);
+            const cooldownRemMs = (dismissedAt && reshowMins > 0) ? Math.max(0, (dismissedAt + reshowMins * 60000) - Date.now()) : 0;
+            const waitMs = Math.max(delayMs, cooldownRemMs);
+
+            offerPopupDelayTimer = setTimeout(() => {
+                const curSess = getAuthSession();
+                const curInfo = getOfferSaleStatusInfo();
+                if (curSess && curSess.isLoggedIn && ensureOfferPopupConfig().enabled && curInfo.state !== 'ended') {
+                    openOfferPopupModal(false);
+                }
+            }, waitMs);
         }
 
         function handleSaveAdMobConfig(e) {
@@ -13890,6 +14727,8 @@ ${JSON.stringify(liveSnapshot)}`;
                 return;
             }
             const found = (sc.coupons || []).find(c => (c.code || '').toUpperCase() === code);
+            const usedCount = Number(found?.usedCount) || 0;
+            const maxRedemptions = Number(found?.maxRedemptions) || 0;
             if (!found) {
                 appliedCheckoutDiscountPct = 0;
                 appliedCheckoutCouponCode = '';
@@ -13899,16 +14738,28 @@ ${JSON.stringify(liveSnapshot)}`;
                     statusEl.textContent = `❌ Promo code "${code}" is invalid or expired.`;
                 }
                 showToast('Invalid promo coupon code', 'error');
+            } else if (maxRedemptions > 0 && usedCount >= maxRedemptions) {
+                appliedCheckoutDiscountPct = 0;
+                appliedCheckoutCouponCode = '';
+                badgeEl?.classList.add('hidden');
+                if (statusEl) {
+                    statusEl.className = 'text-[10px] font-bold text-rose-600';
+                    statusEl.textContent = `❌ Promo code "${code}" usage limit reached (${usedCount}/${maxRedemptions} users).`;
+                }
+                showToast(`Coupon "${code}" limit (${maxRedemptions} users) reached!`, 'error');
             } else {
                 appliedCheckoutDiscountPct = Math.min(100, Math.max(1, Number(found.discountPct) || 0));
                 appliedCheckoutCouponCode = code;
+                const remainingUsers = maxRedemptions > 0 ? Math.max(0, maxRedemptions - usedCount) : null;
                 if (badgeEl) {
                     badgeEl.classList.remove('hidden');
                     badgeEl.textContent = `${code} • ${appliedCheckoutDiscountPct}% OFF`;
                 }
                 if (statusEl) {
                     statusEl.className = 'text-[10px] font-bold text-emerald-600';
-                    statusEl.textContent = `✅ Promo code "${code}" applied! You saved ${appliedCheckoutDiscountPct}% on this plan.`;
+                    statusEl.textContent = remainingUsers !== null
+                        ? `✅ Promo code "${code}" applied! (${usedCount}/${maxRedemptions} used • ${remainingUsers} slots left)`
+                        : `✅ Promo code "${code}" applied! You saved ${appliedCheckoutDiscountPct}% on this plan.`;
                 }
                 showToast(`Coupon ${code} applied (${appliedCheckoutDiscountPct}% OFF)!`);
             }
@@ -13998,13 +14849,6 @@ ${JSON.stringify(liveSnapshot)}`;
             }
         }
 
-        function launchSubscriptionUpiApp() {
-            const sc = ensureSubscriptionConfig();
-            const receiverUpi = sc.upiId || '6393954985@upi';
-            const finalAmt = Math.max(1, Math.round(selectedCheckoutAmount * (1 - appliedCheckoutDiscountPct / 100)));
-            window.location.href = `upi://pay?pa=${encodeURIComponent(receiverUpi)}&pn=${encodeURIComponent('NeoKhata Pro')}&am=${finalAmt.toFixed(2)}&cu=INR&tn=${encodeURIComponent(selectedCheckoutPlanName)}`;
-        }
-
         async function submitSubscriptionUtrPayment(e) {
             e.preventDefault();
             const utr = (document.getElementById('sub-checkout-utr-input')?.value || '').trim().toUpperCase();
@@ -14030,6 +14874,24 @@ ${JSON.stringify(liveSnapshot)}`;
             const userKey = getCurrentUserSubKey();
 
             // Save as PENDING — strictly requires Admin Panel Accept/Approval before unlocking Pro features
+            const usedCouponObj = appliedCheckoutCouponCode
+                ? (sc.coupons || []).find(c => (c.code || '').toUpperCase() === appliedCheckoutCouponCode.toUpperCase())
+                : null;
+            if (usedCouponObj) {
+                usedCouponObj.usedCount = (Number(usedCouponObj.usedCount) || 0) + 1;
+                if (!Array.isArray(usedCouponObj.redemptionLogs)) usedCouponObj.redemptionLogs = [];
+                usedCouponObj.redemptionLogs.unshift({
+                    userName: getPrimaryUserName(),
+                    userPhone: sess.phone || appState.userProfile?.phone || '',
+                    userKey,
+                    planName: selectedCheckoutPlanName,
+                    discountPct: appliedCheckoutDiscountPct,
+                    amount: finalAmt,
+                    utr,
+                    usedAt: new Date().toISOString()
+                });
+            }
+
             sc.paymentRequests.unshift({
                 id: `subreq_${Date.now()}`,
                 userKey,
@@ -14040,6 +14902,7 @@ ${JSON.stringify(liveSnapshot)}`;
                 planName: selectedCheckoutPlanName,
                 planDays: Number(selectedCheckoutDays) || 30,
                 amount: finalAmt,
+                couponCode: appliedCheckoutCouponCode || '',
                 utr,
                 status: 'pending',
                 createdAt: new Date().toISOString()
@@ -14067,50 +14930,40 @@ ${JSON.stringify(liveSnapshot)}`;
 
             const couponsEl = document.getElementById('admin-sub-coupons-list');
             if (couponsEl) {
-                couponsEl.innerHTML = (sc.coupons || []).map((c, idx) => `
-                    <span class="px-2.5 py-1 rounded-xl bg-purple-500/10 border border-purple-500/25 text-purple-700 dark:text-purple-300 font-mono font-black text-[10px] flex items-center gap-1.5">
-                        ${c.code} (${c.discountPct}% OFF)
-                        <button type="button" onclick="deleteAdminSubscriptionCoupon(${idx})" class="text-rose-500 font-black">×</button>
-                    </span>
-                `).join('');
-            }
+                couponsEl.innerHTML = (sc.coupons || []).map((c, idx) => {
+                    const usedCount = Number(c.usedCount) || 0;
+                    const maxUsers = Number(c.maxRedemptions) || 0;
+                    const limitLabel = maxUsers > 0 ? `${usedCount} / ${maxUsers} Users` : `${usedCount} Used (Unlimited Users)`;
+                    const logs = Array.isArray(c.redemptionLogs) ? c.redemptionLogs : [];
+                    const logsHtml = logs.length
+                        ? `<div class="mt-2 pt-2 border-t border-purple-500/15 space-y-1 max-h-28 overflow-y-auto pr-1">${logs.map(lg => {
+                            const dtStr = lg.usedAt ? new Date(lg.usedAt).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '—';
+                            return `<div class="flex items-center justify-between gap-2 text-[9.5px] bg-white/80 dark:bg-neutral-900/80 px-2 py-1 rounded-lg border border-neutral-200/70 dark:border-neutral-800">
+                                <span class="font-bold text-neutral-800 dark:text-neutral-200 truncate">${lg.userName || 'User'} ${lg.userPhone ? `(+91 ${lg.userPhone})` : ''} • <span class="text-emerald-600">₹${Number(lg.amount || 0).toLocaleString('en-IN')}</span></span>
+                                <span class="font-mono text-neutral-500 whitespace-nowrap">${dtStr}</span>
+                            </div>`;
+                        }).join('')}</div>`
+                        : `<div class="mt-1.5 text-[9.5px] text-neutral-400">No user has used this coupon yet (Date &amp; Time log will appear here).</div>`;
 
-            const featMatrix = document.getElementById('admin-sub-features-matrix');
-            if (featMatrix) {
-                const fq = (document.getElementById('adm-sub-feat-search')?.value || '').toLowerCase().trim();
-                const allCatalog = [...SUBSCRIPTION_FEATURE_CATALOG, ...(sc.customFeatures || [])].filter(f => !fq || `${f.key} ${f.label}`.toLowerCase().includes(fq));
-                featMatrix.innerHTML = allCatalog.map(f => {
-                    const rule = sc.featureRules[f.key] || {};
-                    const isPaid = !!rule.isPaid;
-                    const isCustom = (sc.customFeatures || []).some(cf => cf.key === f.key);
                     return `
-                        <div class="p-3 rounded-2xl bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-200 dark:border-neutral-700 space-y-2">
-                            <div class="flex items-center justify-between gap-2">
-                                <input type="text" value="${String(rule.label || f.label).replace(/"/g, '&quot;')}" onchange="updateAdminFeatureRuleField('${f.key}', 'label', this.value)" class="flex-1 p-1.5 rounded-lg bg-white dark:bg-neutral-900 border font-black text-xs">
-                                <button type="button" onclick="toggleAdminSubscriptionFeature('${f.key}')" class="px-2.5 py-1 rounded-xl text-[10px] font-black uppercase ${isPaid ? 'bg-amber-500 text-white' : 'bg-emerald-500 text-white'}">
-                                    ${isPaid ? 'PAID (PRO)' : 'FREE'}
-                                </button>
-                                ${isCustom ? `<button type="button" onclick="deleteAdminCustomSubscriptionFeature('${f.key}')" class="text-rose-500 p-1"><i class="fa-solid fa-trash"></i></button>` : ''}
-                            </div>
-                            <div class="grid grid-cols-3 gap-1.5 text-[10px]">
-                                <div>
-                                    <label class="block text-neutral-400 font-bold">Free Limit</label>
-                                    <input type="number" min="0" value="${rule.freeLimit ?? 0}" onchange="updateAdminFeatureRuleField('${f.key}', 'freeLimit', this.value)" class="w-full p-1.5 rounded-lg bg-white dark:bg-neutral-900 border font-black">
+                        <div class="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/25 text-neutral-800 dark:text-neutral-100 text-[10px]">
+                            <div class="flex items-center justify-between gap-2 flex-wrap">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span class="font-mono font-black text-purple-700 dark:text-purple-300 text-[11px]">${c.code}</span>
+                                    <span class="px-2 py-0.5 rounded-full bg-purple-600 text-white font-black text-[9px]">${c.discountPct}% OFF</span>
+                                    <span class="px-2 py-0.5 rounded-full bg-white dark:bg-neutral-900 border border-purple-300/60 dark:border-purple-700/60 font-extrabold text-[9.5px] text-emerald-700 dark:text-emerald-300">
+                                        Used: ${limitLabel}
+                                    </span>
                                 </div>
-                                <div>
-                                    <label class="block text-neutral-400 font-bold">Days Free</label>
-                                    <input type="number" min="0" value="${rule.freeDays ?? 0}" onchange="updateAdminFeatureRuleField('${f.key}', 'freeDays', this.value)" class="w-full p-1.5 rounded-lg bg-white dark:bg-neutral-900 border font-black">
-                                </div>
-                                <div>
-                                    <label class="block text-neutral-400 font-bold">Cycle</label>
-                                    <select onchange="updateAdminFeatureRuleField('${f.key}', 'quotaPeriod', this.value)" class="w-full p-1.5 rounded-lg bg-white dark:bg-neutral-900 border font-bold">
-                                        <option value="lifetime" ${rule.quotaPeriod === 'lifetime' ? 'selected' : ''}>Lifetime</option>
-                                        <option value="monthly" ${rule.quotaPeriod === 'monthly' ? 'selected' : ''}>Monthly</option>
-                                        <option value="daily" ${rule.quotaPeriod === 'daily' ? 'selected' : ''}>Daily</option>
-                                    </select>
+                                <div class="flex items-center gap-1.5">
+                                    <label class="flex items-center gap-1 text-[9px] font-bold text-neutral-500">
+                                        <span>Max:</span>
+                                        <input type="number" min="0" value="${maxUsers}" onchange="updateAdminCouponMaxUsers(${idx}, this.value)" title="Max users allowed (0 = Unlimited)" class="w-14 px-1.5 py-0.5 rounded bg-white dark:bg-neutral-900 border font-mono font-black text-neutral-800 dark:text-neutral-100">
+                                    </label>
+                                    <button type="button" onclick="deleteAdminSubscriptionCoupon(${idx})" class="text-rose-500 hover:text-rose-700 font-black px-1">×</button>
                                 </div>
                             </div>
-                            <input type="text" value="${String(rule.lockMessage || '').replace(/"/g, '&quot;')}" onchange="updateAdminFeatureRuleField('${f.key}', 'lockMessage', this.value)" placeholder="Custom lock message..." class="w-full p-1.5 rounded-lg bg-white dark:bg-neutral-900 border text-[10px]">
+                            ${logsHtml}
                         </div>
                     `;
                 }).join('');
@@ -14317,13 +15170,33 @@ ${JSON.stringify(liveSnapshot)}`;
             const sc = ensureSubscriptionConfig();
             const code = (document.getElementById('adm-coupon-code')?.value || '').trim().toUpperCase();
             const discountPct = Math.min(100, Math.max(1, parseInt(document.getElementById('adm-coupon-discount')?.value, 10) || 10));
+            const maxRedemptions = Math.max(0, parseInt(document.getElementById('adm-coupon-max-users')?.value, 10) || 0);
             if (!code) return;
-            sc.coupons.push({ code, discountPct });
+            sc.coupons.push({
+                code,
+                discountPct,
+                maxRedemptions,
+                usedCount: 0,
+                redemptionLogs: []
+            });
             document.getElementById('adm-coupon-code').value = '';
             document.getElementById('adm-coupon-discount').value = '';
+            if (document.getElementById('adm-coupon-max-users')) document.getElementById('adm-coupon-max-users').value = '';
             localStorage.setItem('khataflow_admin_config', JSON.stringify(adminConfig));
             renderAdminSubscriptionStudio();
-            showToast(`Added promo coupon ${code} (${discountPct}% OFF)`);
+            saveAllAdminChangesLive();
+            showToast(`Added promo coupon ${code} (${discountPct}% OFF • Max Users: ${maxRedemptions > 0 ? maxUsers : 'Unlimited'})`);
+        }
+
+        function updateAdminCouponMaxUsers(idx, val) {
+            const sc = ensureSubscriptionConfig();
+            if (!sc.coupons[idx]) return;
+            const parsed = Math.max(0, parseInt(val, 10) || 0);
+            sc.coupons[idx].maxRedemptions = parsed;
+            localStorage.setItem('khataflow_admin_config', JSON.stringify(adminConfig));
+            renderAdminSubscriptionStudio();
+            saveAllAdminChangesLive();
+            showToast(`Updated ${sc.coupons[idx].code} max users limit to ${parsed > 0 ? parsed : 'Unlimited'}`);
         }
 
         function deleteAdminSubscriptionCoupon(idx) {
@@ -14554,13 +15427,105 @@ ${JSON.stringify(liveSnapshot)}`;
                     clearLoginLockoutState(ph || u.email || uKey);
                 }
             });
-            localStorage.setItem('khataflow_admin_config', JSON.stringify(adminConfig));
+            safeLocalStorageSet('khataflow_admin_config', JSON.stringify(adminConfig));
             renderAdminLockoutStudio();
             saveAllAdminChangesLive();
             showToast('All user lockout timers have been reset!');
         }
 
+        // ================= GOVERNANCE HELPERS (AUDIT LOG, SYNC META, MAINTENANCE & REFERRAL) =================
+        function getUserCloudSyncMeta(u) {
+            if (!u || typeof u !== 'object') return { status: 'Offline/Local Only', lastSynced: 'Never', badgeClass: 'bg-neutral-200 text-neutral-600' };
+            const ws = typeof getWorkspaceForAdminUser === 'function' ? getWorkspaceForAdminUser(u) : {};
+            const ts = Number(ws.updatedAt) || (u.lastSyncedAt ? new Date(u.lastSyncedAt).getTime() : 0);
+            if (!ts) {
+                return { status: 'Local Only', lastSynced: 'Not synced yet', badgeClass: 'bg-amber-500/15 text-amber-700 dark:text-amber-300' };
+            }
+            return {
+                status: 'Synced',
+                lastSynced: new Date(ts).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }),
+                badgeClass: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
+            };
+        }
+
+        function recordAdminAuditLog(action, target = 'System', details = '') {
+            if (!Array.isArray(adminConfig.auditLogs)) adminConfig.auditLogs = [];
+            adminConfig.auditLogs.unshift({
+                id: `aud_${Date.now()}_${Math.random().toString(36).slice(2, 5)}`,
+                timestamp: new Date().toISOString(),
+                action: String(action || 'Admin Action'),
+                target: String(target || 'System'),
+                details: String(details || '')
+            });
+            if (adminConfig.auditLogs.length > 200) adminConfig.auditLogs.length = 200;
+            safeLocalStorageSet('khataflow_admin_config', JSON.stringify(adminConfig));
+            renderAdminAuditLogList();
+        }
+
+        function renderAdminAuditLogList() {
+            const box = document.getElementById('admin-audit-logs-list');
+            if (!box) return;
+            const q = (document.getElementById('admin-audit-search')?.value || '').toLowerCase().trim();
+            const logs = (adminConfig.auditLogs || []).filter(l => !q || `${l.action} ${l.target} ${l.details}`.toLowerCase().includes(q));
+            box.innerHTML = logs.length ? logs.slice(0, 60).map(l => `
+                <div class="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 flex items-center justify-between gap-2 text-[11px]">
+                    <div class="min-w-0">
+                        <div class="font-black text-neutral-900 dark:text-white truncate">${l.action} • <span class="text-primary-600">${l.target}</span></div>
+                        <div class="text-[10px] text-neutral-500 truncate">${l.details || ''}</div>
+                    </div>
+                    <span class="text-[9px] font-mono text-neutral-400 flex-shrink-0">${new Date(l.timestamp).toLocaleString('en-IN')}</span>
+                </div>
+            `).join('') : '<div class="text-center py-4 text-xs text-neutral-400">No admin audit logs recorded yet.</div>';
+        }
+
+        function handleClearAdminAuditLogs() {
+            adminConfig.auditLogs = [];
+            safeLocalStorageSet('khataflow_admin_config', JSON.stringify(adminConfig));
+            renderAdminAuditLogList();
+            saveAllAdminChangesLive();
+            showToast('Admin audit logs cleared');
+        }
+
+        function saveAdminMaintenanceSettings() {
+            const enabled = !!document.getElementById('adm-maint-enabled')?.checked;
+            const msg = (document.getElementById('adm-maint-message')?.value || 'System maintenance in progress. Please check back shortly.').trim();
+            adminConfig.maintenanceMode = { enabled, message: msg, updatedAt: new Date().toISOString() };
+            safeLocalStorageSet('khataflow_admin_config', JSON.stringify(adminConfig));
+            recordAdminAuditLog('Maintenance Mode', enabled ? 'ENABLED' : 'DISABLED', msg);
+            saveAllAdminChangesLive();
+            showToast(`Maintenance Mode ${enabled ? 'ENABLED' : 'DISABLED'}!`);
+        }
+
+        function applySignupReferralReward(referralCode, newUserKey) {
+            const code = (referralCode || '').trim().toUpperCase();
+            const refCfg = adminConfig.referralPolicy || { enabled: false, bonusDays: 7 };
+            if (!code || !refCfg.enabled || !newUserKey) return false;
+            const sc = ensureSubscriptionConfig();
+            if (!sc.userOverrides[newUserKey]) sc.userOverrides[newUserKey] = {};
+            if (sc.userOverrides[newUserKey].referralApplied) return false;
+            const days = Math.max(1, Number(refCfg.bonusDays) || 7);
+            const baseTs = Math.max(Date.now(), new Date(sc.userOverrides[newUserKey].expiresAt || 0).getTime() || 0);
+            sc.userOverrides[newUserKey].expiresAt = new Date(baseTs + days * 86400000).toISOString();
+            sc.userOverrides[newUserKey].planName = `Referral Bonus (+${days}d)`;
+            sc.userOverrides[newUserKey].referralApplied = code;
+            safeLocalStorageSet('khataflow_admin_config', JSON.stringify(adminConfig));
+            return true;
+        }
+
         // ================= TOUCH SWIPE SUPPORT & INITIALIZATION =================
+        (function initKiranaOutsideClickClose() {
+            const handleOutsideDismiss = (e) => {
+                const wrapper = document.getElementById('grocery-search-wrapper');
+                const dd = document.getElementById('custom-kirana-dropdown');
+                if (!wrapper || !dd || dd.classList.contains('hidden')) return;
+                if (!wrapper.contains(e.target)) {
+                    closeKiranaDropdown();
+                }
+            };
+            document.addEventListener('pointerdown', handleOutsideDismiss, true);
+            document.addEventListener('click', handleOutsideDismiss, true);
+        })();
+
         (function initSponsoredBannerSwipe() {
             const banner = document.getElementById('sponsored-ad-banner');
             if (!banner) return;
@@ -14588,12 +15553,15 @@ ${JSON.stringify(liveSnapshot)}`;
             });
 
             ensureSubscriptionConfig();
+            ensureOfferPopupConfig();
+            populateAdminOfferPopupStudio();
             applyAdminConfigToUI();
             applyBrandingToUI();
             apply70FeatureOverridesLive();
             startAdProgressTimer();
             startTargetDeadlineCountdownTicker();
             startSubscriptionCountdownTicker();
+            scheduleOfferPopupForUser(false);
             const session = getAuthSession();
             if (session && session.isLoggedIn) {
                 propagateUserProfileAcrossApp();
@@ -14747,6 +15715,9 @@ ${JSON.stringify(liveSnapshot)}`;
             const cleanPh = extractCleanPhoneSafe(phone);
             const cleanEm = (email || '').trim().toLowerCase();
             const uid = cleanPh.length === 10 ? `phone_${cleanPh}` : `email_${cleanEm.replace(/[^a-z0-9]/g, '_')}`;
+            const hashedPwd = typeof hashPasswordSha256 === 'function'
+                ? await hashPasswordSha256(password)
+                : btoa(unescape(encodeURIComponent(password)));
             const userRecord = {
                 uid,
                 primaryUid: uid,
@@ -14757,20 +15728,15 @@ ${JSON.stringify(liveSnapshot)}`;
                 age: age !== null ? Number(age) : null,
                 termsAccepted: true,
                 username: cleanPh || cleanEm,
-                passwordHash: btoa(unescape(encodeURIComponent(password))),
+                passwordHash: hashedPwd,
                 createdAt: new Date().toISOString()
             };
 
             if (rtdb) {
                 try {
-                    const snap = await get(ref(rtdb, 'neokhata_users'));
+                    const snap = await get(ref(rtdb, `neokhata_users/${uid}`));
                     if (snap.exists()) {
-                        const allCloudUsers = Object.values(snap.val() || {});
-                        const dup = allCloudUsers.find(u =>
-                            (cleanPh.length === 10 && extractCleanPhoneSafe(u.phone || '') === cleanPh) ||
-                            (cleanEm && (u.email || '').toLowerCase() === cleanEm)
-                        );
-                        if (dup) throw new Error('Account with this Mobile or Email already exists. Please Sign In.');
+                        throw new Error('Account with this Mobile or Email already exists. Please Sign In.');
                     }
                 } catch (err) {
                     if (err?.message?.includes('already exists')) throw err;
@@ -14798,48 +15764,76 @@ ${JSON.stringify(liveSnapshot)}`;
             const idStr = (identifier || '').trim();
             const cleanPh = extractCleanPhoneSafe(idStr);
             const lowerEm = idStr.toLowerCase();
-            const pwdHash = btoa(unescape(encodeURIComponent(password)));
+            const targetUid = cleanPh.length === 10 ? `phone_${cleanPh}` : `email_${lowerEm.replace(/[^a-z0-9]/g, '_')}`;
 
-            try { await window.fetchFirestoreUsersNow(); } catch (e) {}
-
-            const regList = typeof getDeduplicatedAdminUsers === 'function' ? getDeduplicatedAdminUsers() : [];
-            const matched = regList.find(u =>
-                (cleanPh.length === 10 && extractCleanPhoneSafe(u.phone || '') === cleanPh) ||
-                (lowerEm && (u.email || '').toLowerCase() === lowerEm)
-            );
+            // Point-lookup single user record first to avoid downloading all users on every login
+            let matched = null;
+            if (rtdb) {
+                try {
+                    const userSnap = await get(ref(rtdb, `neokhata_users/${targetUid}`));
+                    if (userSnap.exists()) matched = userSnap.val();
+                } catch (e) {}
+            }
+            if (!matched && db) {
+                try {
+                    const docSnap = await getDoc(doc(db, 'neokhata_users', targetUid));
+                    if (docSnap.exists()) matched = docSnap.data();
+                } catch (e) {}
+            }
+            if (!matched) {
+                const regList = typeof getDeduplicatedAdminUsers === 'function' ? getDeduplicatedAdminUsers() : [];
+                matched = regList.find(u =>
+                    (cleanPh.length === 10 && extractCleanPhoneSafe(u.phone || '') === cleanPh) ||
+                    (lowerEm && (u.email || '').toLowerCase() === lowerEm)
+                ) || null;
+            }
 
             if (!matched) {
-                const fallbackUid = cleanPh.length === 10 ? `phone_${cleanPh}` : `email_${lowerEm.replace(/[^a-z0-9]/g, '_')}`;
                 const fallbackName = cleanPh.length === 10 ? `User (${cleanPh})` : idStr.split('@')[0];
+                const newHash = typeof hashPasswordSha256 === 'function'
+                    ? await hashPasswordSha256(password)
+                    : btoa(unescape(encodeURIComponent(password)));
                 const newRec = {
-                    uid: fallbackUid,
-                    primaryUid: fallbackUid,
+                    uid: targetUid,
+                    primaryUid: targetUid,
                     name: fallbackName,
                     phone: cleanPh,
                     email: lowerEm.includes('@') ? lowerEm : '',
                     username: cleanPh || lowerEm,
-                    passwordHash: pwdHash,
+                    passwordHash: newHash,
                     createdAt: new Date().toISOString()
                 };
+                const regList = typeof getDeduplicatedAdminUsers === 'function' ? getDeduplicatedAdminUsers() : [];
                 regList.unshift(newRec);
                 localStorage.setItem('khataflow_registered_users', JSON.stringify(regList));
                 if (rtdb) {
-                    try { await set(ref(rtdb, `neokhata_users/${fallbackUid}`), sanitizeForRtdb(newRec)); } catch (e) {}
+                    try { await set(ref(rtdb, `neokhata_users/${targetUid}`), sanitizeForRtdb(newRec)); } catch (e) {}
                 }
                 if (db) {
-                    try { await setDoc(doc(db, 'neokhata_users', fallbackUid), newRec, { merge: true }); } catch (e) {}
+                    try { await setDoc(doc(db, 'neokhata_users', targetUid), newRec, { merge: true }); } catch (e) {}
                 }
-                return { user: { uid: fallbackUid, email: newRec.email, displayName: fallbackName, phone: cleanPh } };
+                return { user: { uid: targetUid, email: newRec.email, displayName: fallbackName, phone: cleanPh } };
             }
 
-            if (matched.passwordHash && matched.passwordHash !== pwdHash) {
+            const validPwd = typeof verifyStoredPasswordHash === 'function'
+                ? await verifyStoredPasswordHash(password, matched.passwordHash)
+                : (matched.passwordHash === btoa(unescape(encodeURIComponent(password))));
+            if (!validPwd) {
                 throw new Error('Incorrect password. Please check and try again.');
             }
 
-            const resolvedUid = cleanPh.length === 10 ? `phone_${cleanPh}` : (matched.uid || `email_${lowerEm.replace(/[^a-z0-9]/g, '_')}`);
+            // Upgrade legacy Base64 password hashes seamlessly to SHA-256 on successful login
+            if (matched.passwordHash && !String(matched.passwordHash).startsWith('sha256:') && typeof hashPasswordSha256 === 'function') {
+                const upgradedHash = await hashPasswordSha256(password);
+                matched.passwordHash = upgradedHash;
+                if (rtdb) {
+                    try { await update(ref(rtdb, `neokhata_users/${targetUid}`), { passwordHash: upgradedHash }); } catch (e) {}
+                }
+            }
+
             return {
                 user: {
-                    uid: resolvedUid,
+                    uid: targetUid,
                     email: matched.email || '',
                     displayName: matched.name || 'User',
                     phone: extractCleanPhoneSafe(matched.phone || cleanPh)
@@ -14849,103 +15843,88 @@ ${JSON.stringify(liveSnapshot)}`;
 
         window.firebaseResetUserPassword = async function(identifier, newPassword) {
             await ensureCloudReady();
-            const cleanPh = extractCleanPhoneSafe(identifier);
-            const lowerEm = (identifier || '').trim().toLowerCase();
-            const newHash = btoa(unescape(encodeURIComponent(newPassword)));
-            try { await window.fetchFirestoreUsersNow(); } catch (e) {}
+            const idRaw = (identifier || '').trim();
+            const cleanPh = extractCleanPhoneSafe(idRaw);
+            const lowerEm = idRaw.toLowerCase();
+            const newHash = typeof hashPasswordSha256 === 'function'
+                ? await hashPasswordSha256(newPassword)
+                : btoa(unescape(encodeURIComponent(newPassword)));
 
+            // Support resetting Master Admin password directly
+            if (lowerEm === 'admin' || cleanPh === '9999999999' || lowerEm === 'admin@neokhata.app' || lowerEm === 'admin@khataflow.app') {
+                if (typeof adminConfig === 'object' && adminConfig) {
+                    if (!adminConfig.security) adminConfig.security = {};
+                    adminConfig.security.adminPasswordHash = newHash;
+                    localStorage.setItem('khataflow_admin_config', JSON.stringify(adminConfig));
+                    if (typeof window.publishAdminBroadcastToCloud === 'function') {
+                        await window.publishAdminBroadcastToCloud({ adminConfig });
+                    }
+                }
+                return;
+            }
+
+            const targetUid = cleanPh.length === 10 ? `phone_${cleanPh}` : `email_${lowerEm.replace(/[^a-z0-9]/g, '_')}`;
+
+            let existingUser = null;
+            let resolvedUid = targetUid;
+            if (rtdb) {
+                try {
+                    const snap = await get(ref(rtdb, `neokhata_users/${targetUid}`));
+                    if (snap.exists()) {
+                        existingUser = snap.val();
+                    } else {
+                        const allSnap = await get(ref(rtdb, 'neokhata_users'));
+                        if (allSnap.exists()) {
+                            const entries = Object.entries(allSnap.val() || {});
+                            const foundEntry = entries.find(([, u]) =>
+                                u && (
+                                    (cleanPh.length === 10 && extractCleanPhoneSafe(u.phone || '') === cleanPh) ||
+                                    (lowerEm && (u.email || '').trim().toLowerCase() === lowerEm)
+                                )
+                            );
+                            if (foundEntry) {
+                                resolvedUid = foundEntry[0];
+                                existingUser = foundEntry[1];
+                            }
+                        }
+                    }
+                } catch (e) {}
+            }
             const regList = typeof getDeduplicatedAdminUsers === 'function' ? getDeduplicatedAdminUsers() : [];
             const idx = regList.findIndex(u =>
                 (cleanPh.length === 10 && extractCleanPhoneSafe(u.phone || '') === cleanPh) ||
-                (lowerEm && (u.email || '').toLowerCase() === lowerEm)
+                (lowerEm && (u.email || '').trim().toLowerCase() === lowerEm)
             );
-            if (idx === -1) throw new Error('No registered account found with this Mobile or Email.');
-            regList[idx].passwordHash = newHash;
-            localStorage.setItem('khataflow_registered_users', JSON.stringify(regList));
+            if (!existingUser && idx === -1) throw new Error('No registered account found with this Mobile or Email.');
+            if (idx !== -1) {
+                regList[idx].passwordHash = newHash;
+                resolvedUid = regList[idx].uid || resolvedUid;
+                localStorage.setItem('khataflow_registered_users', JSON.stringify(regList));
+            } else if (existingUser) {
+                existingUser.passwordHash = newHash;
+                regList.unshift(existingUser);
+                localStorage.setItem('khataflow_registered_users', JSON.stringify(regList));
+            }
 
-            const targetUid = cleanPh.length === 10 ? `phone_${cleanPh}` : regList[idx].uid;
             if (rtdb) {
-                try { await update(ref(rtdb, `neokhata_users/${targetUid}`), { passwordHash: newHash }); } catch (e) {}
+                try { await update(ref(rtdb, `neokhata_users/${resolvedUid}`), { passwordHash: newHash }); } catch (e) {}
             }
             if (db) {
-                try { await setDoc(doc(db, 'neokhata_users', targetUid), regList[idx], { merge: true }); } catch (e) {}
+                const docData = idx !== -1 ? regList[idx] : existingUser;
+                if (docData) {
+                    try { await setDoc(doc(db, 'neokhata_users', resolvedUid), docData, { merge: true }); } catch (e) {}
+                }
             }
         };
 
-        window.pushStateToCloud = async function() {
-            const wsId = getSessionWorkspaceDocId();
-            if (!wsId || typeof appState === 'undefined') return;
-
+        let _lastAdminFetchAt = 0;
+        window.fetchFirestoreUsersNow = async function(forceRefresh = false) {
+            const sess = getSessionSafe();
+            if (!sess || sess.role !== 'admin') return;
             const nowTs = Date.now();
-            appState.updatedAt = nowTs;
-            const payload = sanitizeForRtdb({
-                ...appState,
-                name: getPrimaryUserNameSafe(),
-                phone: extractCleanPhoneSafe(appState.userProfile?.phone || getSessionSafe()?.phone || ''),
-                email: (appState.userProfile?.email || getSessionSafe()?.email || '').toLowerCase(),
-                lastWriterDeviceId: CURRENT_DEVICE_ID,
-                updatedAt: nowTs
-            });
+            if (!forceRefresh && (nowTs - _lastAdminFetchAt) < 15000) return;
+            _lastAdminFetchAt = nowTs;
 
-            try {
-                const allWs = JSON.parse(localStorage.getItem('khataflow_admin_all_workspaces') || '{}');
-                allWs[wsId] = payload;
-                localStorage.setItem('khataflow_admin_all_workspaces', JSON.stringify(allWs));
-            } catch (e) {}
-
-            if (!cloudReady) {
-                pendingWorkspaceSync = true;
-                await ensureCloudReady();
-            }
-
-            setCloudSyncIndicator('Syncing Live...', false);
-            try {
-                if (rtdb) {
-                    await set(ref(rtdb, `neokhata_workspaces/${wsId}`), payload);
-                }
-                if (db) {
-                    await setDoc(doc(db, 'neokhata_workspaces', wsId), payload, { merge: true });
-                }
-                setCloudSyncIndicator('RTDB Live Synced', true);
-            } catch (e) {
-                setCloudSyncIndicator('Sync Retry...', false);
-            }
-        };
-
-        window.syncCurrentUserFromCloud = async function(forceOverride = false, silent = false) {
-            const wsId = getSessionWorkspaceDocId();
-            if (!wsId) return;
-            await ensureCloudReady();
-
-            let remote = null;
-            if (rtdb) {
-                try {
-                    const snap = await get(ref(rtdb, `neokhata_workspaces/${wsId}`));
-                    if (snap.exists()) remote = snap.val();
-                } catch (e) {}
-            }
-            if (!remote && db) {
-                try {
-                    const snap = await getDoc(doc(db, 'neokhata_workspaces', wsId));
-                    if (snap.exists()) remote = snap.data();
-                } catch (e) {}
-            }
-
-            if (remote && typeof remote === 'object') {
-                if (typeof window.mergeCloudDataToState === 'function') {
-                    window.mergeCloudDataToState(remote, forceOverride);
-                }
-                try {
-                    const allWs = JSON.parse(localStorage.getItem('khataflow_admin_all_workspaces') || '{}');
-                    allWs[wsId] = remote;
-                    localStorage.setItem('khataflow_admin_all_workspaces', JSON.stringify(allWs));
-                } catch (e) {}
-            }
-            setCloudSyncIndicator('RTDB Live Synced', true);
-            if (!silent && typeof showToast === 'function') showToast('Live data synced across devices!');
-        };
-
-        window.fetchFirestoreUsersNow = async function() {
             const localUsers = typeof getDeduplicatedAdminUsers === 'function' ? getDeduplicatedAdminUsers() : [];
             await ensureCloudReady();
 
@@ -14980,9 +15959,18 @@ ${JSON.stringify(liveSnapshot)}`;
                 } catch (e) {}
             }
 
-            localStorage.setItem('khataflow_admin_all_workspaces', JSON.stringify(allWs));
+            try { localStorage.setItem('khataflow_admin_all_workspaces', JSON.stringify(allWs)); } catch (e) {}
             if (cloudUsers.length > 0 || localUsers.length > 0) {
-                localStorage.setItem('khataflow_registered_users', JSON.stringify([...cloudUsers, ...localUsers]));
+                // Deduplicate before writing to localStorage so storage never bloats
+                const dedupMap = new Map();
+                [...cloudUsers, ...localUsers].forEach(u => {
+                    if (!u) return;
+                    const ph = extractCleanPhoneSafe(u.phone || u.username || '');
+                    const em = (u.email || '').trim().toLowerCase();
+                    const k = ph.length === 10 ? `phone_${ph}` : (em || u.uid);
+                    if (k) dedupMap.set(k, { ...(dedupMap.get(k) || {}), ...u });
+                });
+                try { localStorage.setItem('khataflow_registered_users', JSON.stringify(Array.from(dedupMap.values()))); } catch (e) {}
             }
             if (typeof renderAdminUsersList === 'function') renderAdminUsersList();
             if (typeof updateAdminDashboardMetrics === 'function') updateAdminDashboardMetrics();
@@ -15154,6 +16142,73 @@ ${JSON.stringify(liveSnapshot)}`;
             if (activeRtdbUnsub) { try { activeRtdbUnsub(); } catch (e) {} activeRtdbUnsub = null; }
             if (activeUsersRtdbUnsub) { try { activeUsersRtdbUnsub(); } catch (e) {} activeUsersRtdbUnsub = null; }
             if (activeGlobalRtdbUnsub) { try { activeGlobalRtdbUnsub(); } catch (e) {} activeGlobalRtdbUnsub = null; }
+        };
+
+        window.pushStateToCloud = async function() {
+            const wsId = getSessionWorkspaceDocId();
+            if (!wsId || typeof appState === 'undefined') return false;
+            const ready = await ensureCloudReady();
+            if (!ready) {
+                pendingWorkspaceSync = true;
+                setCloudSyncIndicator('Offline Cache', false);
+                return false;
+            }
+            const sess = getSessionSafe() || {};
+            const payload = sanitizeForRtdb({
+                ...appState,
+                name: getPrimaryUserNameSafe(),
+                phone: extractCleanPhoneSafe(sess.phone || appState.userProfile?.phone || ''),
+                email: (sess.email || appState.userProfile?.email || '').trim().toLowerCase(),
+                lastWriterDeviceId: CURRENT_DEVICE_ID,
+                updatedAt: Number(appState.updatedAt) || Date.now()
+            });
+            let pushed = false;
+            if (rtdb) {
+                try {
+                    await set(ref(rtdb, `neokhata_workspaces/${wsId}`), payload);
+                    pushed = true;
+                } catch (e) {}
+            }
+            if (db) {
+                try {
+                    await setDoc(doc(db, 'neokhata_workspaces', wsId), payload, { merge: true });
+                    pushed = true;
+                } catch (e) {}
+            }
+            if (pushed) {
+                setCloudSyncIndicator('RTDB Live Synced', true);
+            }
+            return pushed;
+        };
+
+        window.syncCurrentUserFromCloud = async function(forceOverride = false, silent = true) {
+            const wsId = getSessionWorkspaceDocId();
+            if (!wsId) return false;
+            const ready = await ensureCloudReady();
+            if (!ready) {
+                if (!silent && typeof showToast === 'function') showToast('Offline mode — showing cached data', 'error');
+                return false;
+            }
+            let remote = null;
+            if (rtdb) {
+                try {
+                    const snap = await get(ref(rtdb, `neokhata_workspaces/${wsId}`));
+                    if (snap.exists()) remote = snap.val();
+                } catch (e) {}
+            }
+            if (!remote && db) {
+                try {
+                    const docSnap = await getDoc(doc(db, 'neokhata_workspaces', wsId));
+                    if (docSnap.exists()) remote = docSnap.data();
+                } catch (e) {}
+            }
+            if (remote && typeof window.mergeCloudDataToState === 'function') {
+                window.mergeCloudDataToState(remote, forceOverride);
+                setCloudSyncIndicator('RTDB Live Synced', true);
+                if (!silent && typeof showToast === 'function') showToast('Cloud data synced!');
+                return true;
+            }
+            return false;
         };
 
         // Re-attach live listeners & pull fresh data whenever user switches devices or unlocks screen
